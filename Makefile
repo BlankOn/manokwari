@@ -10,7 +10,7 @@ LIBS= --pkg cairo --pkg gtk+-3.0 --pkg gio-unix-2.0 --pkg libgnome-menu --pkg gd
 BIN=blankon-panel
 
 blankon-panel:
-	valac -o $(BIN) $(SOURCES) $(LIBS)
+	valac -o $(BIN) $(SOURCES) $(LIBS) --vapidir vapi
 
 all: blankon-panel
 
