@@ -1,5 +1,6 @@
 SOURCES=panel-item.vala \
     main.vala \
+    panel-abstract-window.vala \
     panel-horizontal.vala \
     panel-menu.vala \
     panel-menu-box.vala \

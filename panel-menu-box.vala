@@ -1,18 +1,8 @@
 using Gtk;
 
-public class PanelMenuBox : Window {
+public class PanelMenuBox : PanelAbstractWindow {
     public PanelMenuBox () {
-        add_events (Gdk.EventMask.BUTTON_PRESS_MASK
-            | Gdk.EventMask.BUTTON_RELEASE_MASK
-            | Gdk.EventMask.POINTER_MOTION_MASK);
-
         set_size_request (100, 100); 
-        set_type_hint (Gdk.WindowTypeHint.MENU);
-        set_decorated (false);
-        set_resizable (false);
-        set_focus_on_map (true);
-        set_accept_focus (true);
-     
     }
 
     public override bool map_event (Gdk.Event event) {

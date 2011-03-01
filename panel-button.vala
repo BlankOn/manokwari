@@ -2,7 +2,7 @@ using Gtk;
 using Cairo;
 using GMenu;
 
-public class PanelButtonWindow : Gtk.Window {
+public class PanelButtonWindow : PanelAbstractWindow {
 
     private ImageSurface surface;
     private PanelMenuBox menuBox;
@@ -10,18 +10,9 @@ public class PanelButtonWindow : Gtk.Window {
 
     public PanelButtonWindow() {
         set_type_hint (Gdk.WindowTypeHint.DOCK);
-        add_events (Gdk.EventMask.BUTTON_PRESS_MASK
-            | Gdk.EventMask.BUTTON_RELEASE_MASK
-            | Gdk.EventMask.POINTER_MOTION_MASK);
-
         menuBox = new PanelMenuBox();
         set_visual (this.screen.get_rgba_visual ());
-        set_decorated(false);
-        set_keep_above(true);
-        stick();
-        resizable = false;
 
-        accept_focus = true;
         menuBox.set_transient_for(this);
 
         surface = new ImageSurface.from_png("/home/mdamt/blankon.png");

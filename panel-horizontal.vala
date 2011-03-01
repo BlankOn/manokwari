@@ -2,7 +2,7 @@ using Gtk;
 using Gdk;
 using Cairo;
 
-public class PanelHorizontal : Gtk.Window {
+public class PanelHorizontal : PanelAbstractWindow {
     private Alignment box;
     private Gdk.Rectangle rect;
     private MenuBar bar;
@@ -11,11 +11,6 @@ public class PanelHorizontal : Gtk.Window {
         set_type_hint (Gdk.WindowTypeHint.DOCK);
         box = new Alignment (1, 0, 0, 0);
         add (box);
-        set_decorated (false);
-        skip_taskbar_hint = true;
-        resizable = false;
-        can_focus = true;
-        stick ();
 
         bar = new MenuBar ();
         bar.can_focus = true;
@@ -31,8 +26,6 @@ public class PanelHorizontal : Gtk.Window {
         var screen = get_screen();
         screen.get_monitor_geometry (screen.get_primary_monitor(), out rect);
         move (rect.x, rect.y);
-
-
     }
 
     public override void get_preferred_width (out int min, out int max) {
