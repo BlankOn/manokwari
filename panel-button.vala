@@ -7,6 +7,7 @@ public class PanelButtonWindow : PanelAbstractWindow {
     private ImageSurface surface;
     private PanelMenuBox menuBox;
     private Gdk.Rectangle rect;
+    private Gdk.Pixbuf logo;
 
     public PanelButtonWindow() {
         set_type_hint (Gdk.WindowTypeHint.DOCK);
@@ -14,9 +15,9 @@ public class PanelButtonWindow : PanelAbstractWindow {
         set_visual (this.screen.get_rgba_visual ());
 
         menuBox.set_transient_for(this);
-
-        surface = new ImageSurface.from_png("/home/mdamt/blankon.png");
-        set_size_request (surface.get_width(), surface.get_height());
+    
+        set_size_request (40,40);
+        set_keep_above(true);
 
         Gdk.RGBA c = Gdk.RGBA();
         c.red = 0.0;
@@ -29,11 +30,16 @@ public class PanelButtonWindow : PanelAbstractWindow {
         var screen = get_screen();
         screen.get_monitor_geometry (screen.get_primary_monitor(), out rect);
         move (rect.x, rect.y);
+
+        var icon_theme = IconTheme.get_default();
+        logo = icon_theme.load_icon ("distributor-logo", 30, IconLookupFlags.GENERIC_FALLBACK);
     }
 
     public override bool draw (Context cr)
     {
-        cr.set_source_surface(surface, 0, 0);
+
+        if (logo != null)
+            Gdk.cairo_set_source_pixbuf (cr, logo, 0, 0);
         cr.paint();
         return false;
     }

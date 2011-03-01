@@ -11,7 +11,6 @@ public class PanelAbstractWindow : Window {
         set_resizable (false);
         set_focus_on_map (true);
         set_accept_focus (true);
-        set_keep_above(true);
         stick ();
      
     }

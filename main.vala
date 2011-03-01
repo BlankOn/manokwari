@@ -10,8 +10,8 @@ int main (string[] args) {
     var m = new PanelButtonWindow();
     m.set_transient_for(h);
 
-    m.show_all();
     h.show_all ();
+    m.show_all();
 
     Gtk.main ();
     return 0;
