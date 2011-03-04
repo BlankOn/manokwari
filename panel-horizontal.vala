@@ -29,13 +29,12 @@ public class PanelHorizontal : PanelAbstractWindow {
     }
 
     public override void get_preferred_width (out int min, out int max) {
-        // TODO
         min = max = rect.width;
     }
 
     public override void get_preferred_height (out int min, out int max) {
         // TODO
-        min = max = 32; 
+        min = max = 27; 
     }
 
 }

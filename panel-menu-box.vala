@@ -1,8 +1,24 @@
 using Gtk;
 
 public class PanelMenuBox : PanelAbstractWindow {
+    private Gdk.Rectangle rect;
+    private VBox box;
+
     public PanelMenuBox () {
-        set_size_request (100, 100); 
+        var screen = get_screen();
+        screen.get_monitor_geometry (screen.get_primary_monitor(), out rect);
+        move (rect.x, rect.y);
+        box = new VBox (false, 0);
+        add (box);
+    }
+
+    public override void get_preferred_width (out int min, out int max) {
+        min = max = 300; 
+    }
+
+    public override void get_preferred_height (out int min, out int max) {
+        // TODO
+        min = max = rect.height; 
     }
 
     public override bool map_event (Gdk.Event event) {
