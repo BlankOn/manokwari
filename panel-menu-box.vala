@@ -4,7 +4,9 @@ public class PanelMenuBox : PanelAbstractWindow {
     private Gdk.Rectangle rect;
     private VBox box;
     private PanelFavorites favorites;
+    private PanelApplications applications;
     private MenuBar favorite_bar;
+    private MenuBar applications_bar;
 
     public PanelMenuBox () {
         var screen = get_screen();
@@ -16,14 +18,20 @@ public class PanelMenuBox : PanelAbstractWindow {
         favorites = new PanelFavorites ();
         favorite_bar = new MenuBar ();
         favorite_bar.set_pack_direction (PackDirection.TTB);
-        update_favorites ();
 
-        box.pack_start (favorite_bar, true, true);
+        applications = new PanelApplications ();
+        applications_bar = new MenuBar ();
+        applications_bar.set_pack_direction (PackDirection.TTB);
+
+        update_content ();
+
+        box.pack_start (favorite_bar, false, false);
+        box.pack_start (applications_bar, false, false);
 
 
     }
 
-    public void update_favorites () {
+    public void update_content () {
         foreach (GMenu.TreeEntry item in favorites.list ()) {
             var menu = new PanelItem.with_label (item.get_display_name ());
             menu.always_show_image = true;
@@ -34,7 +42,32 @@ public class PanelMenuBox : PanelAbstractWindow {
             });
             favorite_bar.append (menu);
         }
-        favorite_bar.select_first (false);
+
+        foreach (GMenu.TreeItem item in applications.list ()) {
+            if (item.get_type () == GMenu.TreeItemType.ENTRY) {
+                GMenu.TreeEntry i = (GMenu.TreeEntry) item;
+                var menu = new PanelItem.with_label (i.get_display_name ());
+                menu.always_show_image = true;
+                menu.set_image (new Image.from_icon_name (i.get_icon (), IconSize.LARGE_TOOLBAR));
+                menu.load_app_info (i.get_desktop_file_path ());
+                menu.activate.connect (() => {
+                    dismiss ();
+                });
+                applications_bar.append (menu);
+            }
+            else if (item.get_type () == GMenu.TreeItemType.DIRECTORY) {
+                GMenu.TreeDirectory i = (GMenu.TreeDirectory) item;
+                var menu = new PanelItem.with_label (i.get_name ());
+                menu.always_show_image = true;
+                menu.set_image (new Image.from_icon_name (i.get_icon (), IconSize.LARGE_TOOLBAR));
+                menu.load_app_info (i.get_desktop_file_path ());
+                menu.activate.connect (() => {
+                    dismiss ();
+                });
+                applications_bar.append (menu);
+            }
+
+        }
     }
 
     public override void get_preferred_width (out int min, out int max) {
