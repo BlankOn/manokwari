@@ -3,6 +3,8 @@ using Gtk;
 public class PanelMenuBox : PanelAbstractWindow {
     private Gdk.Rectangle rect;
     private VBox box;
+    private PanelFavorites favorites;
+    private MenuBar favorite_bar;
 
     public PanelMenuBox () {
         var screen = get_screen();
@@ -10,6 +12,25 @@ public class PanelMenuBox : PanelAbstractWindow {
         move (rect.x, rect.y);
         box = new VBox (false, 0);
         add (box);
+
+        favorites = new PanelFavorites ();
+        favorite_bar = new MenuBar ();
+        favorite_bar.set_pack_direction (PackDirection.TTB);
+        update_favorites ();
+
+        box.pack_start (favorite_bar, true, true);
+
+
+    }
+
+    public void update_favorites () {
+        foreach (GMenu.TreeEntry item in favorites.list ()) {
+            var menu = new PanelItem.with_label (item.get_display_name ());
+            menu.always_show_image = true;
+            menu.set_image (new Image.from_icon_name (item.get_icon (), IconSize.LARGE_TOOLBAR));
+            favorite_bar.append (menu);
+        }
+        favorite_bar.select_first (false);
     }
 
     public override void get_preferred_width (out int min, out int max) {

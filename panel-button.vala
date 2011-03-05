@@ -48,7 +48,7 @@ public class PanelButtonWindow : PanelAbstractWindow {
         if (menuBox.get_visible ()) { 
             menuBox.hide();
         } else {
-            menuBox.show();
+            menuBox.show_all ();
         }
         return false;
     }

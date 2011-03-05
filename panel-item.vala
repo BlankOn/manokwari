@@ -1,19 +1,25 @@
 using Gtk;
 
-public class PanelItem : MenuItem {
-
-    private string icon_name;
-    private int type;
+public class PanelItem : ImageMenuItem {
 
     public PanelItem () {
-        set_label("ddd");
+        setup_connections ();
     }
 
-    public void update_data (string icon_name, string label, int type)
-    {
-        this.icon_name = icon_name;
-        this.type = type;
+    public PanelItem.with_label (string title) {
+        set_label (title);
+        setup_connections ();
+    }
 
-        set_label(label);
+    private void setup_connections () {
+        leave_notify_event.connect (() => {
+            deselect ();
+            return true;
+        });
+
+        enter_notify_event.connect (() => {
+            select ();
+            return true;
+        });
     }
 }

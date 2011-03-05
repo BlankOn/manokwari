@@ -16,25 +16,14 @@ public class PanelClockWindow : Window {
     }
 }
 
-public class PanelClock : MenuItem {
+public class PanelClock : PanelItem {
     private string clock_label = "00:00";
     private PanelClockWindow window;
     private bool active = false;
 
     public PanelClock() {
+        base ();
         window = new PanelClockWindow ();
-
-        // TODO move these into a base class
-        leave_notify_event.connect (() => {
-            deselect ();
-            return true;
-        });
-
-        enter_notify_event.connect (() => {
-            select ();
-            return true;
-        });
-
 
         activate.connect (() => {
             if (active) {
