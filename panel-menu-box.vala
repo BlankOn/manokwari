@@ -28,6 +28,10 @@ public class PanelMenuBox : PanelAbstractWindow {
             var menu = new PanelItem.with_label (item.get_display_name ());
             menu.always_show_image = true;
             menu.set_image (new Image.from_icon_name (item.get_icon (), IconSize.LARGE_TOOLBAR));
+            menu.load_app_info (item.get_desktop_file_path ());
+            menu.activate.connect (() => {
+                dismiss ();
+            });
             favorite_bar.append (menu);
         }
         favorite_bar.select_first (false);
@@ -67,12 +71,15 @@ public class PanelMenuBox : PanelAbstractWindow {
     }
 
     public override bool button_press_event (Gdk.EventButton event) {
+        dismiss ();
+        return true;
+    }
+
+    private void dismiss () {
         var device = get_current_event_device();
         var secondary = device.get_associated_device();
         device.ungrab(Gdk.CURRENT_TIME);
         secondary.ungrab(Gdk.CURRENT_TIME);
         hide();
-        return false;
     }
-
 }

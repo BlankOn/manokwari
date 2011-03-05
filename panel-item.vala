@@ -1,14 +1,21 @@
 using Gtk;
 
 public class PanelItem : ImageMenuItem {
+    private DesktopAppInfo info;
 
     public PanelItem () {
         setup_connections ();
+        info = null;
     }
 
     public PanelItem.with_label (string title) {
         set_label (title);
         setup_connections ();
+        info = null;
+    }
+
+    public void load_app_info (string filename) {
+        info = new DesktopAppInfo.from_filename (filename);
     }
 
     private void setup_connections () {
@@ -20,6 +27,12 @@ public class PanelItem : ImageMenuItem {
         enter_notify_event.connect (() => {
             select ();
             return true;
+        });
+
+        activate.connect (() => {
+            if (info != null) {
+                info.launch (null, new AppLaunchContext ());
+            }
         });
     }
 }
