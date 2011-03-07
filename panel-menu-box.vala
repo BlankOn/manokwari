@@ -20,8 +20,6 @@ public class PanelMenuBox : PanelAbstractWindow {
         favorite_bar.set_pack_direction (PackDirection.TTB);
 
         applications = new PanelApplications ();
-        applications_bar = new MenuBar ();
-        applications_bar.set_pack_direction (PackDirection.TTB);
 
         update_content ();
 
@@ -43,31 +41,7 @@ public class PanelMenuBox : PanelAbstractWindow {
             favorite_bar.append (menu);
         }
 
-        foreach (GMenu.TreeItem item in applications.list ()) {
-            if (item.get_type () == GMenu.TreeItemType.ENTRY) {
-                GMenu.TreeEntry i = (GMenu.TreeEntry) item;
-                var menu = new PanelItem.with_label (i.get_display_name ());
-                menu.always_show_image = true;
-                menu.set_image (new Image.from_icon_name (i.get_icon (), IconSize.LARGE_TOOLBAR));
-                menu.load_app_info (i.get_desktop_file_path ());
-                menu.activate.connect (() => {
-                    dismiss ();
-                });
-                applications_bar.append (menu);
-            }
-            else if (item.get_type () == GMenu.TreeItemType.DIRECTORY) {
-                GMenu.TreeDirectory i = (GMenu.TreeDirectory) item;
-                var menu = new PanelItem.with_label (i.get_name ());
-                menu.always_show_image = true;
-                menu.set_image (new Image.from_icon_name (i.get_icon (), IconSize.LARGE_TOOLBAR));
-                menu.load_app_info (i.get_desktop_file_path ());
-                menu.activate.connect (() => {
-                    dismiss ();
-                });
-                applications_bar.append (menu);
-            }
-
-        }
+        applications_bar = applications.menubar ();
     }
 
     public override void get_preferred_width (out int min, out int max) {

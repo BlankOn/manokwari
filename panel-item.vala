@@ -19,20 +19,22 @@ public class PanelItem : ImageMenuItem {
     }
 
     private void setup_connections () {
+        /*
+       
         leave_notify_event.connect (() => {
             deselect ();
             return true;
         });
 
         enter_notify_event.connect (() => {
-            select ();
-            return true;
+            //select ();
+            return false;
         });
 
         activate.connect (() => {
             if (info != null) {
                 info.launch (null, new AppLaunchContext ());
             }
-        });
+        });*/
     }
 }
