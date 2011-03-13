@@ -4,6 +4,8 @@ using Gtk;
 public class PanelApplications  {
     private MenuBar menu;
 
+    public signal void menu_clicked ();
+
     public PanelApplications () {
     }
 
@@ -13,9 +15,9 @@ public class PanelApplications  {
             case TreeItemType.DIRECTORY:
                 var i = (TreeDirectory) item;
                 var entry = new PanelItem.with_label (i.get_name ());
-                stdout.printf ("d-->%s\n", i.get_name());
                 entry.set_image (new Image.from_icon_name (i.get_icon (), IconSize.LARGE_TOOLBAR));
                 entry.show ();
+
 
                 shell.append (entry);
                 var popup = new Menu ();
@@ -31,6 +33,12 @@ public class PanelApplications  {
                 stdout.printf ("-->%s\n", i.get_display_name());
                 entry.set_image (new Image.from_icon_name (i.get_icon (), IconSize.LARGE_TOOLBAR));
                 entry.show ();
+
+                entry.activate.connect (() => {
+                    var info = new DesktopAppInfo.from_filename (i.get_desktop_file_path ());
+                    info.launch (null, new AppLaunchContext ());
+                    menu_clicked ();
+                });
                 shell.append (entry);
                 break;
             }

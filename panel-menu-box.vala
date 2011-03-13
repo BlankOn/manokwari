@@ -11,7 +11,7 @@ public class PanelMenuBox : PanelAbstractWindow {
     public PanelMenuBox () {
         var screen = get_screen();
         screen.get_monitor_geometry (screen.get_primary_monitor(), out rect);
-        move (rect.x, rect.y);
+        move (rect.x, rect.y + 100);
         box = new VBox (false, 0);
         add (box);
 
@@ -20,6 +20,9 @@ public class PanelMenuBox : PanelAbstractWindow {
         favorite_bar.set_pack_direction (PackDirection.TTB);
 
         applications = new PanelApplications ();
+        applications.menu_clicked.connect (() => {
+            dismiss ();
+        });
 
         update_content ();
 
