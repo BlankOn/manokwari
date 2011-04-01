@@ -24,7 +24,7 @@ public class PanelHorizontal : PanelAbstractWindow {
 
         box.pack_start (bar, true, true, 0);
         load_module ("libappmenu.so", bar);
-        load_module ("libdatetime.so", bar);
+//        load_module ("libsession.so", bar);
 
         bar.show ();
 
@@ -37,7 +37,7 @@ public class PanelHorizontal : PanelAbstractWindow {
     }
 
     private void load_module (string name, MenuBar menu_bar) {
-        var full_path = GLib.Path.build_filename ("/usr/lib/indicators/5", name);        
+        var full_path = GLib.Path.build_filename ("/usr/lib/indicators3/2", name);        
         var obj = new Indicator.Object.from_file (full_path);
 
         

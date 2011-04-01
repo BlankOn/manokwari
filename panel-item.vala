@@ -29,37 +29,14 @@ public class PanelItem : ImageMenuItem {
     private void setup_connections () {
 
         enter_notify_event.connect ((event) => {
-            if (parent != null) {
-                var e = Gdk.EventButton ();
-                e.type = Gdk.EventType.BUTTON_PRESS;
-                e.x = 0;
-                e.y = 0;
-                e.window = event.window;
-                e.button = 1;
-                parent.button_press_event (e);
-                e.type = Gdk.EventType.BUTTON_RELEASE;
-                parent.button_release_event (e);
-            }
-
+            set_state(StateType.PRELIGHT);
             return true;
         });
 
-        /*
-       
         leave_notify_event.connect (() => {
-            deselect ();
+            set_state(StateType.NORMAL);
             return true;
         });
 
-        enter_notify_event.connect (() => {
-            //select ();
-            return false;
-        });
-
-        activate.connect (() => {
-            if (info != null) {
-                info.launch (null, new AppLaunchContext ());
-            }
-        });*/
     }
 }
