@@ -1,15 +1,18 @@
 using GMenu;
 using Gtk;
 
-public class PanelApplications  {
+public class PanelMenuContent  {
     private MenuBar menu;
+    private string catalog;
 
     public signal void menu_clicked ();
 
-    public PanelApplications () {
+    public PanelMenuContent (MenuBar bar, string catalog) {
+        menu = bar;
+        this.catalog = catalog;
     }
 
-    private void update (TreeDirectory root, MenuShell shell) {
+    private void update_tree (TreeDirectory root, MenuShell shell) {
         foreach (TreeItem item in root.get_contents ()) {
             switch (item.get_type()) {
             case TreeItemType.DIRECTORY:
@@ -21,7 +24,7 @@ public class PanelApplications  {
 
                 shell.append (entry);
                 var popup = new Menu ();
-                update (i, popup);
+                update_tree (i, popup);
 
                 entry.set_submenu (popup);
 
@@ -45,13 +48,14 @@ public class PanelApplications  {
         }
     }
 
-    public MenuBar menubar () { 
-        menu = new MenuBar ();
-        menu.set_pack_direction (PackDirection.TTB);
-        var tree = GMenu.Tree.lookup ("applications.menu", TreeFlags.NONE);
+    public void populate () { 
+        var tree = GMenu.Tree.lookup (catalog, TreeFlags.NONE);
         var root = tree.get_root_directory ();
 
-        update(root, menu);
-        return menu;
+        update_tree (root, menu);
+    }
+
+    public void insert_separator () {
+        menu.append (new SeparatorMenuItem ());
     }
 }

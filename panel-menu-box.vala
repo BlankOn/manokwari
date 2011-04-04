@@ -3,48 +3,43 @@ using Gtk;
 public class PanelMenuBox : PanelAbstractWindow {
     private Gdk.Rectangle rect;
     private VBox box;
-    private PanelFavorites favorites;
-    private PanelApplications applications;
-    private MenuBar favorite_bar;
-    private MenuBar applications_bar;
+    private MenuBar menu_bar;
 
     public PanelMenuBox () {
+        PanelMenuContent favorites;
+        PanelMenuContent applications;
+
         var screen = get_screen();
         screen.get_monitor_geometry (screen.get_primary_monitor(), out rect);
         move (rect.x, rect.y + 100);
         box = new VBox (false, 0);
         add (box);
 
-        favorites = new PanelFavorites ();
-        favorite_bar = new MenuBar ();
-        favorite_bar.set_pack_direction (PackDirection.TTB);
+        var filler = new DrawingArea ();
+        filler.set_size_request(27, 27); // TODO
+        box.pack_start (filler, false, false, 0);
 
-        applications = new PanelApplications ();
+        menu_bar = new MenuBar ();
+        menu_bar.set_pack_direction (PackDirection.TTB);
+
+        favorites = new PanelMenuContent (menu_bar, "favorites.menu");
+
+        favorites.menu_clicked.connect (() => {
+            dismiss ();
+        });
+
+        applications = new PanelMenuContent (menu_bar, "applications.menu");
         applications.menu_clicked.connect (() => {
             dismiss ();
         });
 
-        update_content ();
 
-        box.pack_start (favorite_bar, false, false);
-        box.pack_start (applications_bar, false, false);
+        favorites.populate ();
+        favorites.insert_separator ();
+        applications.populate ();
 
+        box.pack_start (menu_bar, false, false);
 
-    }
-
-    public void update_content () {
-        foreach (GMenu.TreeEntry item in favorites.list ()) {
-            var menu = new PanelItem.with_label (item.get_display_name ());
-            menu.always_show_image = true;
-            menu.set_image (new Image.from_icon_name (item.get_icon (), IconSize.LARGE_TOOLBAR));
-            menu.load_app_info (item.get_desktop_file_path ());
-            menu.activate.connect (() => {
-                dismiss ();
-            });
-            favorite_bar.append (menu);
-        }
-
-        applications_bar = applications.menubar ();
     }
 
     public override void get_preferred_width (out int min, out int max) {
