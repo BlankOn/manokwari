@@ -23,10 +23,10 @@ public class PanelHorizontal : PanelAbstractWindow {
         bar.border_width = 0;
 
         box.pack_start (bar, true, true, 0);
-        load_module ("libappmenu.so", bar);
-//        load_module ("libsession.so", bar);
-
         bar.show ();
+        load_module ("libappmenu-gtk3.so", bar);
+        //load_module ("libdatetime-gtk3.so", bar);
+
 
         box.show_all();
 
@@ -36,25 +36,19 @@ public class PanelHorizontal : PanelAbstractWindow {
 
     }
 
-    private void load_module (string name, MenuBar menu_bar) {
-        var full_path = GLib.Path.build_filename ("/usr/lib/indicators3/2", name);        
-        var obj = new Indicator.Object.from_file (full_path);
-
-        
-        obj.entry_removed.connect ((io, entry) => {
-            stdout.printf("removed\n");
-            MenuItem widget = (MenuItem) item_map.get (entry);
-            widget.destroy ();
-        });
-
-        obj.entry_added.connect ((io, entry) => {
-            stdout.printf("added\n");
+    void add_(Indicator.Object obj, Indicator.ObjectEntry entry, MenuBar menu_bar) {
+            stdout.printf("adding from %s\n", name);
+            if (entry == null) {
+                stdout.printf("entry is null\n");
+                return;
+            }
             var menu_item = new MenuItem ();
             var box = new HBox (false, 3);
             var sensitive = false;
             var visible = false;
 
             if (entry.image != null) {
+                stdout.printf("entry has image\n");
                 box.pack_start (entry.image, false, false, 1);
                 entry.image.show.connect (() => {
                     stdout.printf("image show\n");
@@ -69,6 +63,7 @@ public class PanelHorizontal : PanelAbstractWindow {
                 visible = entry.image.get_visible ();
             }
             if (entry.label != null) {
+                stdout.printf("entry has label %s\n", entry.label.get_text());
                 box.pack_start (entry.label, false, false, 1);
                 entry.label.show.connect (() => {
                     stdout.printf("label show\n");
@@ -91,6 +86,9 @@ public class PanelHorizontal : PanelAbstractWindow {
                 menu_item.set_submenu (entry.menu);
             }
             menu_bar.append (menu_item);
+            menu_item.activate.connect (() => {
+               //Indicator.ObjectEntry.activate (io, entry, Gdk.CURRENT_TIME);
+            });
             if (visible)
                 menu_item.show ();
 
@@ -98,10 +96,28 @@ public class PanelHorizontal : PanelAbstractWindow {
                 menu_item.set_sensitive (sensitive);
 
             item_map.set ((Indicator.ObjectEntry*) entry, menu_item);
+    }
+
+    private void load_module (string name, MenuBar menu_bar) {
+        var full_path = GLib.Path.build_filename ("/usr/lib/indicators-gtk3-3/2", name);        
+        var obj = new Indicator.Object.from_file (full_path);
+
+        if (obj == null) {
+            return;
+        }
+
+        obj.entry_removed.connect ((io, entry) => {
+            stdout.printf("removed\n");
+            MenuItem widget = (MenuItem) item_map.get (entry);
+            widget.destroy ();
+        });
+
+        obj.entry_added.connect ((io, entry) => {
+            add_(io, entry, menu_bar);
         });
 
         obj.menu_show.connect ((io, entry, timestamp) => {
-            stdout.printf("show\n");
+            stdout.printf("show in %s\n", name);
             if (entry != null)
                 return;
 
@@ -112,8 +128,11 @@ public class PanelHorizontal : PanelAbstractWindow {
         });
 
         foreach (unowned Indicator.ObjectEntry entry in obj.get_entries ()) {
-            obj.entry_added (entry);
+            stdout.printf("1adding from %s\n", name);
+            add_ (obj, entry, menu_bar);
+            stdout.printf("3adding from %s\n", name);
         }
+
     }
 
     public override void get_preferred_width (out int min, out int max) {
