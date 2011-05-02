@@ -16,7 +16,7 @@ public class PanelWindowDescription : PanelAbstractWindow {
         label.set_text (s);
     }
 
-    private bool hide_description () {
+     bool hide_description () {
         if (_cancel_hiding)
             return false;
 
@@ -26,6 +26,7 @@ public class PanelWindowDescription : PanelAbstractWindow {
     }
 
     public PanelWindowDescription () {
+        set_type_hint (Gdk.WindowTypeHint.DOCK);
         add_events (Gdk.EventMask.STRUCTURE_MASK
             | Gdk.EventMask.LEAVE_NOTIFY_MASK);
         hide();
@@ -125,6 +126,7 @@ public class PanelWindowHost : PanelAbstractWindow {
     private Wnck.Screen screen;
 
     public PanelWindowHost () {
+        set_type_hint (Gdk.WindowTypeHint.DOCK);
         active = false;
         description = new PanelWindowDescription ();
         screen = Wnck.Screen.get_default ();
@@ -136,10 +138,10 @@ public class PanelWindowHost : PanelAbstractWindow {
         box.show ();
         description.hide ();
         show();
-        move (0, rect.height);
+        move (0, rect.height - get_window ().get_height ());
 
         description.hidden.connect (() => {
-            get_window().move (0, rect.height);
+            move (0, rect.height - get_window ().get_height ());
         });
 
         screen.window_opened.connect ((w) => {
