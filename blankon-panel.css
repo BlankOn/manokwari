@@ -19,6 +19,7 @@ PanelMenuBox {
 PanelWindowDescription {
     color: @window_desc_fg_color;
     background-color: @window_desc_bg_color;
+    height: 12;
 }
 
 MenuItem:hover,
@@ -28,10 +29,14 @@ PanelItem:hover {
 
 
 PanelItem {
-    font-size: 50;
     background-color: @bg_color;
 }
 
 PanelWindowEntry {
     background-color: @window_desc_bg_color;
+}
+
+PanelWindowDescription GtkLabel {
+    font-name: Times 50;
+    color: #fefefe;
 }

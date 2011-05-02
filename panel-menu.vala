@@ -6,12 +6,20 @@ public class PanelWindowDescription : PanelAbstractWindow {
     public signal void hidden ();
     private Gdk.Rectangle rect;
     private Label label;
+    private bool _cancel_hiding;
+
+    public void cancel_hiding() {
+        _cancel_hiding = true;
+    }
 
     public void set_label (string s) {
         label.set_text (s);
     }
 
     private bool hide_description () {
+        if (_cancel_hiding)
+            return false;
+
         hide ();
         hidden ();
         return false;
@@ -28,7 +36,8 @@ public class PanelWindowDescription : PanelAbstractWindow {
         add (label);
 
         leave_notify_event.connect (() => {
-            GLib.Timeout.add (200, hide_description); 
+            _cancel_hiding = false;
+            GLib.Timeout.add (250, hide_description); 
 
             return false; 
         });
@@ -54,7 +63,6 @@ public class PanelWindowEntry : DrawingArea {
     public signal void description_shown ();
 
     private bool show_description () {
-        stdout.printf("xxx2 %s\n", window_info.get_name ());
         description.set_label (window_info.get_name ());
         description.show_all ();
         description_shown ();
@@ -74,7 +82,8 @@ public class PanelWindowEntry : DrawingArea {
         screen.get_monitor_geometry (screen.get_primary_monitor(), out rect);
 
         enter_notify_event.connect ((event) => {
-            var i = GLib.Timeout.add (200, show_description); 
+            var i = GLib.Timeout.add (100, show_description); 
+            description.cancel_hiding ();
             return false; 
         });
 
@@ -83,7 +92,6 @@ public class PanelWindowEntry : DrawingArea {
         });
 
         button_press_event.connect ((event) => {
-            stdout.printf("yyy2\n");
             info.activate (Gdk.CURRENT_TIME);
             return false; 
         });
@@ -93,12 +101,12 @@ public class PanelWindowEntry : DrawingArea {
 
     public override void get_preferred_height (out int min, out int max) {
         // TODO
-        min = max = 20; 
+        min = max = 10; 
     }
 
     public override void get_preferred_width (out int min, out int max) {
         max = rect.width;
-        min = 20;
+        min = 10;
     }
 
     public override bool draw (Context cr) {
@@ -120,7 +128,7 @@ public class PanelWindowHost : PanelAbstractWindow {
         active = false;
         description = new PanelWindowDescription ();
         screen = Wnck.Screen.get_default ();
-        box = new HBox (true, 1);
+        box = new HBox (true, 0);
         add(box);
         var s = get_screen ();
         s.get_monitor_geometry (s.get_primary_monitor(), out rect);
@@ -134,11 +142,13 @@ public class PanelWindowHost : PanelAbstractWindow {
             get_window().move (0, rect.height);
         });
 
-        screen.window_opened.connect (() => {
-            update ();
+        screen.window_opened.connect ((w) => {
+            if (!w.is_skip_tasklist())
+                update ();
         });
-        screen.window_closed.connect (() => {
-            update ();
+        screen.window_closed.connect ((w) => {
+            if (!w.is_skip_tasklist())
+                update ();
         });
 
     }
@@ -149,7 +159,7 @@ public class PanelWindowHost : PanelAbstractWindow {
 
     public override void get_preferred_height (out int min, out int max) {
         // TODO
-        min = max = 20; 
+        min = max = 12; 
     }
 
     public void update () {
@@ -157,7 +167,7 @@ public class PanelWindowHost : PanelAbstractWindow {
             box.remove (w);
         }
         foreach (unowned Wnck.Window w in screen.get_windows()) {
-            if (!w.is_skip_tasklist ()) {
+            if (!w.is_skip_tasklist () && w.get_name() != "blankon-panel") {
                 var e = new PanelWindowEntry (w, description);
                 e.show ();
                 box.pack_start (e, true, true, 1);
