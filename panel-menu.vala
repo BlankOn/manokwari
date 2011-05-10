@@ -4,7 +4,6 @@ using Wnck;
 
 public class PanelWindowDescription : PanelAbstractWindow {
     public signal void hidden ();
-    private Gdk.Rectangle rect;
     private Label label;
     private bool _cancel_hiding;
 
@@ -30,8 +29,6 @@ public class PanelWindowDescription : PanelAbstractWindow {
         add_events (Gdk.EventMask.STRUCTURE_MASK
             | Gdk.EventMask.LEAVE_NOTIFY_MASK);
         hide();
-        var screen = get_screen ();
-        screen.get_monitor_geometry (screen.get_primary_monitor(), out rect);
         label = new Label ("");
         label.show ();
         add (label);
@@ -50,15 +47,17 @@ public class PanelWindowDescription : PanelAbstractWindow {
     }
 
     public override void get_preferred_width (out int min, out int max) {
-        min = max = rect.width;
+        var r = rect();
+        min = max = r.width;
     }
 
 
 }
 
 public class PanelWindowEntry : DrawingArea {
-    private Wnck.Window window_info;
     private Gdk.Rectangle rect;
+    private Wnck.Window window_info;
+    private Gtk.StateFlags state;
     private PanelWindowDescription description;
 
     public signal void description_shown ();
@@ -79,10 +78,18 @@ public class PanelWindowEntry : DrawingArea {
 
         window_info = info;
         description = d;
-        var screen = get_screen ();
+
+        var screen = get_screen();
         screen.get_monitor_geometry (screen.get_primary_monitor(), out rect);
 
+        leave_notify_event.connect ((event) => {
+            state = StateFlags.NORMAL;
+            queue_draw ();
+            return false;
+        });
         enter_notify_event.connect ((event) => {
+            state = StateFlags.PRELIGHT;
+            queue_draw ();
             var i = GLib.Timeout.add (100, show_description); 
             description.cancel_hiding ();
             return false; 
@@ -93,6 +100,8 @@ public class PanelWindowEntry : DrawingArea {
         });
 
         button_press_event.connect ((event) => {
+            state = StateFlags.SELECTED;
+            queue_draw ();
             info.activate (Gdk.CURRENT_TIME);
             return false; 
         });
@@ -112,6 +121,7 @@ public class PanelWindowEntry : DrawingArea {
 
     public override bool draw (Context cr) {
         StyleContext style = get_style_context ();
+        style.set_state (state);
         Gtk.render_background (style, cr, 0, 0, get_window ().get_width (), get_window ().get_height ());
         return false;
     }
@@ -119,7 +129,6 @@ public class PanelWindowEntry : DrawingArea {
 }
 
 public class PanelWindowHost : PanelAbstractWindow {
-    private Gdk.Rectangle rect;
     private PanelWindowDescription description;
     private bool active;
     private HBox box;
@@ -132,16 +141,15 @@ public class PanelWindowHost : PanelAbstractWindow {
         screen = Wnck.Screen.get_default ();
         box = new HBox (true, 0);
         add(box);
-        var s = get_screen ();
-        s.get_monitor_geometry (s.get_primary_monitor(), out rect);
 
         box.show ();
         description.hide ();
         show();
-        move (0, rect.height - get_window ().get_height ());
+        var r = rect();
+        move (0, r.height - get_window ().get_height ());
 
         description.hidden.connect (() => {
-            move (0, rect.height - get_window ().get_height ());
+            move (0, r.height - get_window ().get_height ());
         });
 
         screen.window_opened.connect ((w) => {
@@ -156,7 +164,8 @@ public class PanelWindowHost : PanelAbstractWindow {
     }
 
     public override void get_preferred_width (out int min, out int max) {
-        min = max = rect.width;
+        var r = rect();
+        min = max = r.width;
     }
 
     public override void get_preferred_height (out int min, out int max) {
@@ -165,6 +174,7 @@ public class PanelWindowHost : PanelAbstractWindow {
     }
 
     public void update () {
+        set_struts(); 
         foreach (unowned Widget w in box.get_children ()) {
             box.remove (w);
         }
