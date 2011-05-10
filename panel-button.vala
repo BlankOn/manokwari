@@ -5,17 +5,29 @@ using GMenu;
 public class PanelButtonWindow : PanelAbstractWindow {
 
     private ImageSurface surface;
-    private PanelMenuBox menuBox;
+    private PanelMenuBox menu_box;
     private Gdk.Rectangle rect;
     private Gdk.Pixbuf logo;
+    private bool hiding;
+
+    private bool hide_menu_box () {
+        stdout.printf ("xxxxxxxx\n");
+        if (!hiding)
+            return false;
+
+        menu_box.hide ();
+        hiding = false;
+        return false;
+    }
 
     public PanelButtonWindow() {
         set_type_hint (Gdk.WindowTypeHint.DOCK);
-        menuBox = new PanelMenuBox();
+        add_events (Gdk.EventMask.STRUCTURE_MASK
+            | Gdk.EventMask.ENTER_NOTIFY_MASK
+            | Gdk.EventMask.LEAVE_NOTIFY_MASK);
+        menu_box = new PanelMenuBox();
         set_visual (this.screen.get_rgba_visual ());
 
-        menuBox.set_transient_for(this);
-    
         set_size_request (40,40);
         set_keep_above(true);
 
@@ -33,6 +45,31 @@ public class PanelButtonWindow : PanelAbstractWindow {
 
         var icon_theme = IconTheme.get_default();
         logo = icon_theme.load_icon ("distributor-logo", 30, IconLookupFlags.GENERIC_FALLBACK);
+
+        leave_notify_event.connect (() => {
+            //hiding = true;
+            //GLib.Timeout.add (250, hide_menu_box); 
+            return false;
+        });
+        enter_notify_event.connect (() => {
+            if (hiding) 
+                return false;
+        stdout.printf ("xxxxxxxx1\n");
+            GLib.Timeout.add (100, show_menu_box); 
+            return false;
+        });
+        button_press_event.connect (() => {
+            if (hiding == false) { 
+        stdout.printf ("xxxxxxxx2\n");
+                hiding = true;
+                GLib.Timeout.add (250, hide_menu_box); 
+            } else {
+        stdout.printf ("xxxxxxxx3\n");
+                show_menu_box ();
+            }
+            return false;
+        });
+
     }
 
     public override bool draw (Context cr)
@@ -44,17 +81,10 @@ public class PanelButtonWindow : PanelAbstractWindow {
         return false;
     }
 
-    public override bool button_press_event (Gdk.EventButton event) {
-        if (menuBox.get_visible ()) { 
-            menuBox.hide();
-        } else {
-            menuBox.show_all ();
-        }
-        return false;
-    }
-
-    public override bool button_release_event (Gdk.EventButton event) {
-        //this.menu.activate();
+    private bool show_menu_box () {
+        menu_box.show_all ();
+        get_window ().raise ();
+        menu_box.get_window ().lower ();
         return false;
     }
 

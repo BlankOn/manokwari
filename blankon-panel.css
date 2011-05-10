@@ -32,8 +32,13 @@ PanelItem {
     background-color: @bg_color;
 }
 
-PanelWindowEntry {
+PanelWindowEntry:selected,
+PanelWindowEntry:prelight {
     background-color: @window_desc_bg_color;
+}
+
+PanelWindowEntry {
+    background-color: @bg_color;
 }
 
 PanelWindowDescription GtkLabel {

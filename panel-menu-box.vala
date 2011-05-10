@@ -9,9 +9,10 @@ public class PanelMenuBox : PanelAbstractWindow {
         PanelMenuContent favorites;
         PanelMenuContent applications;
 
+        set_type_hint (Gdk.WindowTypeHint.DOCK);
         var screen = get_screen();
         screen.get_monitor_geometry (screen.get_primary_monitor(), out rect);
-        move (rect.x, rect.y + 100);
+        move (rect.x, rect.y);
         box = new VBox (false, 0);
         add (box);
 
