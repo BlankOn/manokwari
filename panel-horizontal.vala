@@ -4,7 +4,6 @@ using Cairo;
 using Indicator;
 
 public class PanelHorizontal : PanelAbstractWindow {
-    private Gdk.Rectangle rect;
     private MenuBar bar;
     private Gee.HashMap <Indicator.ObjectEntry*, MenuItem> item_map;
 
@@ -30,9 +29,11 @@ public class PanelHorizontal : PanelAbstractWindow {
 
         box.show_all();
 
-        var screen = get_screen();
-        screen.get_monitor_geometry (screen.get_primary_monitor(), out rect);
-        move (rect.x, rect.y);
+        show();
+        var r = rect();
+        move (r.x, r.y);
+
+        set_struts(); 
 
     }
 
@@ -136,7 +137,8 @@ public class PanelHorizontal : PanelAbstractWindow {
     }
 
     public override void get_preferred_width (out int min, out int max) {
-        min = max = rect.width;
+        var r = rect();
+        min = max = r.width;
     }
 
     public override void get_preferred_height (out int min, out int max) {
