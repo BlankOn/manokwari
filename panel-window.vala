@@ -189,16 +189,17 @@ public class PanelWindowHost : PanelAbstractWindow {
         foreach (unowned Widget w in box.get_children ()) {
             box.remove (w);
         }
-        num_visible_windows = 0;
+        var num_windows = 0;
         foreach (unowned Wnck.Window w in screen.get_windows()) {
             if (!w.is_skip_tasklist () && w.get_name() != "blankon-panel") {
                 var e = new PanelWindowEntry (w, description);
                 e.show ();
                 box.pack_start (e, true, true, 1);
-                num_visible_windows ++;
+                num_windows ++;
             }
-            if (num_visible_windows == 0)
-                windows_gone();
         }
+        if (num_windows == 0)
+            windows_gone();
+        num_visible_windows = num_windows;
     }
 }
