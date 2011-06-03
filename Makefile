@@ -1,7 +1,7 @@
 SOURCES=panel-item.vala \
     main.vala \
     panel-abstract-window.vala \
-    panel-menu.vala \
+    panel-window.vala \
     panel-menu-box.vala \
     panel-button.vala \
     panel-menu-content.vala \
