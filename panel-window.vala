@@ -162,8 +162,10 @@ public class PanelWindowHost : PanelAbstractWindow {
         });
 
         screen.window_opened.connect ((w) => {
-            if (!w.is_skip_tasklist())
+            if (!w.is_skip_tasklist()) {
+                w.activate (Gdk.CURRENT_TIME);
                 update ();
+            }
         });
         screen.window_closed.connect ((w) => {
             if (!w.is_skip_tasklist())
