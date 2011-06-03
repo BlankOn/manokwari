@@ -133,8 +133,17 @@ public class PanelWindowHost : PanelAbstractWindow {
     private bool active;
     private HBox box;
     private Wnck.Screen screen;
+    private int num_visible_windows;
+
+    public signal void windows_gone();
+
+    public bool no_windows_around () {
+        update ();
+        return (num_visible_windows == 0);
+    }
 
     public PanelWindowHost () {
+        num_visible_windows = 0;
         set_type_hint (Gdk.WindowTypeHint.DOCK);
         active = false;
         description = new PanelWindowDescription ();
@@ -178,12 +187,16 @@ public class PanelWindowHost : PanelAbstractWindow {
         foreach (unowned Widget w in box.get_children ()) {
             box.remove (w);
         }
+        num_visible_windows = 0;
         foreach (unowned Wnck.Window w in screen.get_windows()) {
             if (!w.is_skip_tasklist () && w.get_name() != "blankon-panel") {
                 var e = new PanelWindowEntry (w, description);
                 e.show ();
                 box.pack_start (e, true, true, 1);
+                num_visible_windows ++;
             }
+            if (num_visible_windows == 0)
+                windows_gone();
         }
     }
 }

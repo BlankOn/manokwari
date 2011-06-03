@@ -70,6 +70,17 @@ public class PanelButtonWindow : PanelAbstractWindow {
             return false;
         });
 
+        // Window 
+        var w = new PanelWindowHost ();
+        w.show();
+        if (w.no_windows_around ())
+            show_menu_box ();
+
+        w.windows_gone.connect (() => {
+            show_menu_box ();
+        });
+
+
     }
 
     public override bool draw (Context cr)

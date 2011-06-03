@@ -14,8 +14,6 @@ int main (string[] args) {
     var m = new PanelButtonWindow();
     m.show_all();
 
-    var w = new PanelWindowHost ();
-    w.show();
 
     Gtk.main ();
     return 0;
