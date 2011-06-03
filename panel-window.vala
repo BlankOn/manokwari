@@ -205,4 +205,8 @@ public class PanelWindowHost : PanelAbstractWindow {
             windows_visible ();
         num_visible_windows = num_windows;
     }
+
+    public void dismiss () {
+        description.hide ();
+    }
 }

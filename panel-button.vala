@@ -10,6 +10,8 @@ public class PanelButtonWindow : PanelAbstractWindow {
     private Gdk.Pixbuf logo;
     private bool hiding;
 
+    public signal void menu_shown ();
+
     private bool hide_menu_box () {
         stdout.printf ("xxxxxxxx\n");
         if (!hiding)
@@ -93,6 +95,9 @@ public class PanelButtonWindow : PanelAbstractWindow {
                 menu_box.hide ();
         });
 
+        menu_shown.connect (() => {
+            w.dismiss ();
+        });
     }
 
     public override bool draw (Context cr)
@@ -108,6 +113,7 @@ public class PanelButtonWindow : PanelAbstractWindow {
         menu_box.show_all ();
         get_window ().raise ();
         menu_box.get_window ().lower ();
+        menu_shown ();
         return false;
     }
 
