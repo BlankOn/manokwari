@@ -5,6 +5,8 @@ public class PanelMenuBox : PanelAbstractWindow {
     private VBox box;
     private MenuBar menu_bar;
 
+    public signal void dismissed ();
+
     public PanelMenuBox () {
         PanelMenuContent favorites;
         PanelMenuContent applications;
@@ -86,6 +88,7 @@ public class PanelMenuBox : PanelAbstractWindow {
         var secondary = device.get_associated_device();
         device.ungrab(Gdk.CURRENT_TIME);
         secondary.ungrab(Gdk.CURRENT_TIME);
-        hide();
+        stdout.printf("Menu box dismissed \n");
+        dismissed ();
     }
 }

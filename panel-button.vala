@@ -46,11 +46,14 @@ public class PanelButtonWindow : PanelAbstractWindow {
         var icon_theme = IconTheme.get_default();
         logo = icon_theme.load_icon ("distributor-logo", 30, IconLookupFlags.GENERIC_FALLBACK);
 
-        leave_notify_event.connect (() => {
-            //hiding = true;
-            //GLib.Timeout.add (250, hide_menu_box); 
-            return false;
-        });
+        // Window 
+        var w = new PanelWindowHost ();
+        w.show();
+        if (w.no_windows_around ())
+            show_menu_box ();
+
+        // SIGNALS
+
         enter_notify_event.connect (() => {
             if (hiding) 
                 return false;
@@ -61,6 +64,10 @@ public class PanelButtonWindow : PanelAbstractWindow {
         button_press_event.connect (() => {
             if (hiding == false) { 
         stdout.printf ("xxxxxxxx2\n");
+                // Refuse to close if no windows around
+                if (w.no_windows_around ())
+                    return false;
+
                 hiding = true;
                 GLib.Timeout.add (250, hide_menu_box); 
             } else {
@@ -70,17 +77,21 @@ public class PanelButtonWindow : PanelAbstractWindow {
             return false;
         });
 
-        // Window 
-        var w = new PanelWindowHost ();
-        w.show();
-        if (w.no_windows_around ())
-            show_menu_box ();
-
         w.windows_gone.connect (() => {
         stdout.printf ("all windows gone\n");
             show_menu_box ();
         });
 
+        menu_box.dismissed.connect (() => {
+            if (w.no_windows_around ())
+                return;
+            menu_box.hide ();
+        });
+
+        w.windows_visible.connect (() => {
+            if (menu_box.visible) 
+                menu_box.hide ();
+        });
 
     }
 

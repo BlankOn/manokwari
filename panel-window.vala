@@ -136,6 +136,7 @@ public class PanelWindowHost : PanelAbstractWindow {
     private int num_visible_windows;
 
     public signal void windows_gone();
+    public signal void windows_visible();
 
     public bool no_windows_around () {
         update ();
@@ -199,7 +200,9 @@ public class PanelWindowHost : PanelAbstractWindow {
             }
         }
         if (num_windows == 0)
-            windows_gone();
+            windows_gone ();
+        else
+            windows_visible ();
         num_visible_windows = num_windows;
     }
 }
