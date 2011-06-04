@@ -12,21 +12,13 @@ public class PanelMenuContent  {
         this.catalog = catalog;
     }
 
-    private void update_tree (TreeDirectory root, MenuShell shell) {
+    private void update_tree (TreeDirectory root) {
         foreach (TreeItem item in root.get_contents ()) {
             switch (item.get_type()) {
             case TreeItemType.DIRECTORY:
                 var i = (TreeDirectory) item;
-                var entry = new PanelItem.with_label (i.get_name ());
-                entry.set_image (new Image.from_icon_name (i.get_icon (), IconSize.LARGE_TOOLBAR));
-                entry.show ();
-
-
-                shell.append (entry);
                 var popup = new Menu ();
-                update_tree (i, popup);
-
-                entry.set_submenu (popup);
+                update_tree (i);
 
                 break;
 
@@ -42,7 +34,7 @@ public class PanelMenuContent  {
                     info.launch (null, new AppLaunchContext ());
                     menu_clicked ();
                 });
-                shell.append (entry);
+                menu.append (entry);
                 break;
             }
         }
@@ -52,7 +44,7 @@ public class PanelMenuContent  {
         var tree = GMenu.Tree.lookup (catalog, TreeFlags.NONE);
         var root = tree.get_root_directory ();
 
-        update_tree (root, menu);
+        update_tree (root);
     }
 
     public void insert_separator () {
