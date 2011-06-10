@@ -166,6 +166,11 @@ public class PanelWindowHost : PanelAbstractWindow {
             if (!w.is_skip_tasklist()) {
                 w.activate (Gdk.CURRENT_TIME);
                 update ();
+
+                w.state_changed.connect((mask, state) => {
+                    stdout.printf ("w %s %d\n", w.get_name (), state);
+                    update ();
+                });
             }
         });
         screen.window_closed.connect ((w) => {
@@ -196,7 +201,8 @@ public class PanelWindowHost : PanelAbstractWindow {
                 var e = new PanelWindowEntry (w, description);
                 e.show ();
                 box.pack_start (e, true, true, 1);
-                num_windows ++;
+                if (!w.is_minimized ())
+                    num_windows ++;
             }
         }
         if (num_windows == 0)
