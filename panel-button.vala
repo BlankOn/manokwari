@@ -4,16 +4,13 @@ using GMenu;
 
 public class PanelButtonWindow : PanelAbstractWindow {
 
-    private ImageSurface surface;
     private PanelMenuBox menu_box;
-    private Gdk.Rectangle rect;
     private Gdk.Pixbuf logo;
     private bool hiding;
 
     public signal void menu_shown ();
 
     private bool hide_menu_box () {
-        stdout.printf ("xxxxxxxx\n");
         if (!hiding)
             return false;
 
@@ -41,9 +38,7 @@ public class PanelButtonWindow : PanelAbstractWindow {
         override_background_color(StateFlags.NORMAL, c);
         set_app_paintable(true);
         
-        var screen = get_screen();
-        screen.get_monitor_geometry (screen.get_primary_monitor(), out rect);
-        move (rect.x, rect.y);
+        move (rect ().x, rect ().y);
 
         var icon_theme = IconTheme.get_default();
         logo = icon_theme.load_icon ("distributor-logo", 30, IconLookupFlags.GENERIC_FALLBACK);

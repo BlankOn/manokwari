@@ -1,7 +1,6 @@
 using Gtk;
 
 public class PanelMenuBox : PanelAbstractWindow {
-    private Gdk.Rectangle rect;
     private VBox box;
     private MenuBar menu_bar;
 
@@ -12,9 +11,7 @@ public class PanelMenuBox : PanelAbstractWindow {
         PanelMenuContent applications;
 
         set_type_hint (Gdk.WindowTypeHint.DOCK);
-        var screen = get_screen();
-        screen.get_monitor_geometry (screen.get_primary_monitor(), out rect);
-        move (rect.x, rect.y);
+        move (rect ().x, rect ().y);
         box = new VBox (false, 0);
         add (box);
 
@@ -50,8 +47,7 @@ public class PanelMenuBox : PanelAbstractWindow {
     }
 
     public override void get_preferred_height (out int min, out int max) {
-        // TODO
-        min = max = rect.height; 
+        min = max = rect ().height; 
     }
 
     public override bool map_event (Gdk.Event event) {

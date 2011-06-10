@@ -90,7 +90,7 @@ public class PanelWindowEntry : DrawingArea {
         enter_notify_event.connect ((event) => {
             state = StateFlags.PRELIGHT;
             queue_draw ();
-            var i = GLib.Timeout.add (100, show_description); 
+            GLib.Timeout.add (100, show_description); 
             description.cancel_hiding ();
             return false; 
         });
@@ -132,7 +132,7 @@ public class PanelWindowHost : PanelAbstractWindow {
     private PanelWindowDescription description;
     private bool active;
     private HBox box;
-    private Wnck.Screen screen;
+    private new Wnck.Screen screen;
     private int num_visible_windows;
 
     public signal void windows_gone();

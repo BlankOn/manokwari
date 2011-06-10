@@ -17,7 +17,6 @@ public class PanelMenuContent  {
             switch (item.get_type()) {
             case TreeItemType.DIRECTORY:
                 var i = (TreeDirectory) item;
-                var popup = new Menu ();
                 update_tree (i);
 
                 break;
