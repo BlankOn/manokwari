@@ -90,6 +90,7 @@ public class PanelTray : PanelAbstractWindow {
 
     public PanelTray () {
         size = 0;
+        set_type_hint (Gdk.WindowTypeHint.DOCK);
         invisible = new Invisible ();
         invisible.add_events (Gdk.EventMask.PROPERTY_CHANGE_MASK |
                               Gdk.EventMask.STRUCTURE_MASK);
