@@ -54,6 +54,9 @@ public class PanelButtonWindow : PanelAbstractWindow {
         if (w.no_windows_around ())
             show_menu_box ();
 
+        var tray = new PanelTray ();
+        tray.show ();
+
         // SIGNALS
 
         enter_notify_event.connect (() => {

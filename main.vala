@@ -2,7 +2,6 @@ using Gtk;
 
 int main (string[] args) {
 
-
     Gtk.init (ref args);
     CssProvider css = CssProvider.get_default ();
     try {
