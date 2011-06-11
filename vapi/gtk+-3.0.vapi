@@ -3692,11 +3692,11 @@ namespace Gtk {
 		public bool ignore_hidden { get; set; }
 		public Gtk.SizeGroupMode mode { get; set; }
 	}
-	[CCode (cheader_filename = "gtk/gtk.h")]
+	[CCode (cheader_filename = "gtk/gtkx.h")]
 	public class Socket : Gtk.Container, Atk.Implementor, Gtk.Buildable {
 		[CCode (type = "GtkWidget*", has_construct_function = false)]
 		public Socket ();
-		public void add_id (Gtk.Window window);
+		public void add_id (long window);
 		public unowned Gtk.Window get_id ();
 		public unowned Gdk.Window get_plug_window ();
 		public virtual signal void plug_added ();
