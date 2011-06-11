@@ -24,7 +24,6 @@ public class PanelMenuContent  {
             case TreeItemType.ENTRY:
                 var i = (TreeEntry) item;
                 var entry = new PanelItem.with_label (i.get_display_name ());
-                stdout.printf ("-->%s\n", i.get_display_name());
                 entry.set_image (new Image.from_icon_name (i.get_icon (), IconSize.LARGE_TOOLBAR));
                 entry.show ();
 
