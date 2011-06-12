@@ -8,8 +8,6 @@ public class PanelMenuBox : PanelAbstractWindow {
     public signal void dismissed ();
 
     public PanelMenuBox () {
-        PanelMenuContent favorites;
-        PanelMenuContent applications;
         
         var viewport = new Viewport (null, null);
         var scrollable = new ScrolledWindow (null, null);
@@ -23,7 +21,6 @@ public class PanelMenuBox : PanelAbstractWindow {
         var filler = new DrawingArea ();
         filler.set_size_request(filler_height, filler_height);
 
-        scrollable.set_min_content_height (rect ().height -  filler_height - 10);
         box.pack_start (filler, false, false, 0);
         box.pack_start (scrollable, false, false, 0);
 
@@ -31,14 +28,23 @@ public class PanelMenuBox : PanelAbstractWindow {
         viewport.add (menu_bar);
         menu_bar.set_pack_direction (PackDirection.TTB);
 
-        favorites = new PanelMenuContent (menu_bar, "favorites.menu");
+        var bottom_bar = new MenuBar ();
+        bottom_bar.set_pack_direction (PackDirection.TTB);
+
+        box.pack_start (bottom_bar, false, false, 0);
+
+        var favorites = new PanelMenuContent (menu_bar, "favorites.menu");
 
         favorites.menu_clicked.connect (() => {
             dismiss ();
         });
 
-        applications = new PanelMenuContent (menu_bar, "applications.menu");
+        var applications = new PanelMenuContent (menu_bar, "applications.menu");
         applications.menu_clicked.connect (() => {
+            dismiss ();
+        });
+        var systems = new PanelMenuContent (bottom_bar, "systems.menu");
+        systems.menu_clicked.connect (() => {
             dismiss ();
         });
 
@@ -46,7 +52,10 @@ public class PanelMenuBox : PanelAbstractWindow {
         favorites.populate ();
         favorites.insert_separator ();
         applications.populate ();
+        applications.insert_separator ();
+        systems.populate ();
 
+        scrollable.set_min_content_height (rect ().height -  filler_height - 200); // TODO
     }
 
     public override void get_preferred_width (out int min, out int max) {
