@@ -203,7 +203,6 @@ public class PanelWindowHost : PanelAbstractWindow {
                 update ();
 
                 w.state_changed.connect((mask, state) => {
-                    stdout.printf ("w %s %d\n", w.get_name (), state);
                     update ();
                 });
             }

@@ -49,7 +49,7 @@ public class PanelButtonWindow : PanelAbstractWindow {
         if (w.no_windows_around ())
             show_menu_box ();
 
-        var tray = new PanelTray ();
+        var tray = new PanelTrayHost ();
         tray.show ();
 
         // SIGNALS

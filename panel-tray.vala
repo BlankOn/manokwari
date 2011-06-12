@@ -8,6 +8,8 @@ public class PanelTray : PanelAbstractWindow {
     private uint size;
     private uint default_size = 30;
 
+    public signal void new_item_added ();
+
     public override void get_preferred_height (out int min, out int max) {
         // TODO
         min = max = (int) default_size; 
@@ -34,6 +36,7 @@ public class PanelTray : PanelAbstractWindow {
         box.pack_start(w, true, true, 1);
         w.add_id (xid);
         update_size ();
+        new_item_added ();
     }
 
     private FilterReturn event_filter (Gdk.XEvent xev, Gdk.Event event) {
@@ -100,9 +103,54 @@ public class PanelTray : PanelAbstractWindow {
         box.show ();
 
         set_gravity (Gdk.Gravity.NORTH_EAST);
-        move(rect ().width - get_window ().get_width (), 0);
         setup_selection ();
     }
 }
 
+public class PanelTrayHost : PanelAbstractWindow {
+    private uint default_size = 50;
+    private PanelTray tray;
 
+    bool hide_tray () {
+        tray.hide ();
+        return false;
+    }
+
+    public override void get_preferred_height (out int min, out int max) {
+        // TODO
+        min = max = (int) default_size; 
+    }
+
+    public override void get_preferred_width (out int min, out int max) {
+        var r = rect();
+        min = max = 5;
+    }
+
+    public PanelTrayHost () {
+        set_type_hint (Gdk.WindowTypeHint.DOCK);
+        tray = new PanelTray ();
+        show_all ();
+        show_tray ();
+        set_gravity (Gdk.Gravity.NORTH);
+        move(rect ().width - get_window ().get_width (), 0);
+
+        button_press_event.connect ((event) => {
+            if (tray.visible)
+                tray.hide ();
+            else
+                show_tray ();
+            return false; 
+        });
+
+        tray.new_item_added.connect (() => {
+            if (!tray.visible)   
+                GLib.Timeout.add (3250, hide_tray);
+            show_tray ();
+        });
+    }
+
+    private void show_tray () {
+        tray.show ();
+        tray.move(rect ().width - tray.get_window ().get_width () - get_window ().get_width (), 0);
+    }
+}
