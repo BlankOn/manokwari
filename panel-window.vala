@@ -6,6 +6,7 @@ public class PanelWindowDescription : PanelAbstractWindow {
     public signal void hidden ();
     private Label label;
     private bool _cancel_hiding;
+    private Wnck.Window window_info;
 
     public void cancel_hiding() {
         _cancel_hiding = true;
@@ -24,6 +25,10 @@ public class PanelWindowDescription : PanelAbstractWindow {
         return false;
     }
 
+    public void set_window_info (Wnck.Window info) {
+        window_info = info;
+    }
+
     public PanelWindowDescription () {
         set_type_hint (Gdk.WindowTypeHint.DOCK);
         add_events (Gdk.EventMask.STRUCTURE_MASK
@@ -39,6 +44,13 @@ public class PanelWindowDescription : PanelAbstractWindow {
 
             return false; 
         });
+
+        button_press_event.connect ((event) => {
+            window_info.activate (Gdk.CURRENT_TIME);
+            return false; 
+        });
+
+
     }
 
     public override void get_preferred_height (out int min, out int max) {
@@ -57,6 +69,7 @@ public class PanelWindowDescription : PanelAbstractWindow {
 public class PanelWindowEntry : DrawingArea {
     private Gdk.Rectangle rect;
     private Wnck.Window window_info;
+    private Wnck.WindowState last_state;
     private Gtk.StateFlags state;
     private PanelWindowDescription description;
 
@@ -69,6 +82,16 @@ public class PanelWindowEntry : DrawingArea {
         return false;
     }
 
+    private void sync_window_states () {
+        if (window_info.is_minimized ()) {
+            state = StateFlags.INSENSITIVE;
+        } else {
+            state = StateFlags.NORMAL;
+        }
+        description.set_state_flags (state, true);
+        queue_draw ();
+    }
+
     public PanelWindowEntry (Wnck.Window info, PanelWindowDescription d) {
         add_events (Gdk.EventMask.STRUCTURE_MASK
             | Gdk.EventMask.BUTTON_PRESS_MASK
@@ -77,18 +100,29 @@ public class PanelWindowEntry : DrawingArea {
             | Gdk.EventMask.LEAVE_NOTIFY_MASK);
 
         window_info = info;
+        last_state = info.get_state ();
+        sync_window_states ();
         description = d;
+        d.set_window_info (info);
 
         var screen = get_screen();
         screen.get_monitor_geometry (screen.get_primary_monitor(), out rect);
 
+        window_info.state_changed.connect((mask, new_state) => {
+            if (new_state == last_state)
+                return;
+
+            sync_window_states ();
+        });
+
         leave_notify_event.connect ((event) => {
-            state = StateFlags.NORMAL;
-            queue_draw ();
+            sync_window_states ();
             return false;
         });
         enter_notify_event.connect ((event) => {
+            description.set_window_info (info);
             state = StateFlags.PRELIGHT;
+            description.set_state_flags (state, true);
             queue_draw ();
             GLib.Timeout.add (100, show_description); 
             description.cancel_hiding ();
@@ -101,8 +135,9 @@ public class PanelWindowEntry : DrawingArea {
 
         button_press_event.connect ((event) => {
             state = StateFlags.SELECTED;
+            description.set_state_flags (state, true);
             queue_draw ();
-            info.activate (Gdk.CURRENT_TIME);
+            window_info.activate (Gdk.CURRENT_TIME);
             return false; 
         });
 
@@ -123,7 +158,7 @@ public class PanelWindowEntry : DrawingArea {
         StyleContext style = get_style_context ();
         style.set_state (state);
         Gtk.render_background (style, cr, 0, 0, get_window ().get_width (), get_window ().get_height ());
-        return false;
+        return true;
     }
 
 }
