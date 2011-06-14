@@ -8,15 +8,13 @@ public class PanelWindowDescription : PanelAbstractWindow {
     private bool _cancel_hiding;
     private Wnck.Window window_info;
 
+    public signal void clicked ();
+
     public void cancel_hiding() {
         _cancel_hiding = true;
     }
 
-    public void set_label (string s) {
-        label.set_text (s);
-    }
-
-     bool hide_description () {
+    bool hide_description () {
         if (_cancel_hiding)
             return false;
 
@@ -27,6 +25,7 @@ public class PanelWindowDescription : PanelAbstractWindow {
 
     public void set_window_info (Wnck.Window info) {
         window_info = info;
+        label.set_text (info.get_name ());
     }
 
     public PanelWindowDescription () {
@@ -46,8 +45,8 @@ public class PanelWindowDescription : PanelAbstractWindow {
         });
 
         button_press_event.connect ((event) => {
-            window_info.activate (Gdk.CURRENT_TIME);
-            return false; 
+            activate_window ();
+            return true; 
         });
 
 
@@ -63,7 +62,10 @@ public class PanelWindowDescription : PanelAbstractWindow {
         min = max = r.width;
     }
 
-
+    public void activate_window () {
+        var t = new DateTime.now_local ();
+        window_info.activate ((uint32) t.to_unix());
+    }
 }
 
 public class PanelWindowEntry : DrawingArea {
@@ -76,7 +78,6 @@ public class PanelWindowEntry : DrawingArea {
     public signal void description_shown ();
 
     private bool show_description () {
-        description.set_label (window_info.get_name ());
         description.show_all ();
         description_shown ();
         return false;
@@ -92,7 +93,7 @@ public class PanelWindowEntry : DrawingArea {
         queue_draw ();
     }
 
-    public PanelWindowEntry (Wnck.Window info, PanelWindowDescription d) {
+    public PanelWindowEntry (Wnck.Window info, ref PanelWindowDescription d) {
         add_events (Gdk.EventMask.STRUCTURE_MASK
             | Gdk.EventMask.BUTTON_PRESS_MASK
             | Gdk.EventMask.BUTTON_RELEASE_MASK
@@ -137,12 +138,13 @@ public class PanelWindowEntry : DrawingArea {
             state = StateFlags.SELECTED;
             description.set_state_flags (state, true);
             queue_draw ();
-            window_info.activate (Gdk.CURRENT_TIME);
+            description.activate_window ();
             return false; 
         });
 
 
     }
+
 
     public override void get_preferred_height (out int min, out int max) {
         // TODO
@@ -233,7 +235,7 @@ public class PanelWindowHost : PanelAbstractWindow {
         var num_windows = 0;
         foreach (unowned Wnck.Window w in screen.get_windows()) {
             if (!w.is_skip_tasklist () && w.get_name() != "blankon-panel") {
-                var e = new PanelWindowEntry (w, description);
+                var e = new PanelWindowEntry (w, ref description);
                 e.show ();
                 box.pack_start (e, true, true, 1);
                 if (!w.is_minimized ())
