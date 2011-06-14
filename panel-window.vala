@@ -199,7 +199,8 @@ public class PanelWindowHost : PanelAbstractWindow {
 
         screen.window_opened.connect ((w) => {
             if (!w.is_skip_tasklist()) {
-                w.activate (Gdk.CURRENT_TIME);
+                var t = new DateTime.now_local ();
+                w.activate ((uint32) t.to_unix());
                 update ();
 
                 w.state_changed.connect((mask, state) => {
