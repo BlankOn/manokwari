@@ -38,6 +38,7 @@ public class PanelButtonWindow : PanelAbstractWindow {
         override_background_color(StateFlags.NORMAL, c);
         set_app_paintable(true);
         
+        show ();
         move (rect ().x, rect ().y);
 
         var icon_theme = IconTheme.get_default();
