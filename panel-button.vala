@@ -6,18 +6,9 @@ public class PanelButtonWindow : PanelAbstractWindow {
 
     private PanelMenuBox menu_box;
     private Gdk.Pixbuf logo;
-    private bool hiding;
+    private bool ignore_enter_notify;
 
     public signal void menu_shown ();
-
-    private bool hide_menu_box () {
-        if (!hiding)
-            return false;
-
-        menu_box.hide ();
-        hiding = false;
-        return false;
-    }
 
     public PanelButtonWindow() {
         set_type_hint (Gdk.WindowTypeHint.DOCK);
@@ -54,28 +45,47 @@ public class PanelButtonWindow : PanelAbstractWindow {
         tray.show ();
 
         // SIGNALS
+        leave_notify_event.connect (() => {
+            // This will be visited when the
+            // menu box is opened and the button got restacked
+            // Make sure the next enter notify without prior
+            // visit to here will be ignored
+            if (ignore_enter_notify) {
+                ignore_enter_notify = false;
+            } else {
+                ignore_enter_notify = true;
+            }
+            return true;
+        });
 
         enter_notify_event.connect (() => {
-            if (hiding) 
-                return false;
-        stdout.printf ("xxxxxxxx1\n");
-            GLib.Timeout.add (100, show_menu_box); 
-            return false;
+            // This will be visited when 
+            // the menu box is opened, and the button got restacked
+            // so ignore this when it happens.
+            if (ignore_enter_notify) {
+                return true;
+            }
+            show_menu_box (); 
+            ignore_enter_notify = true;
+            return true;
         });
+
         button_press_event.connect (() => {
-            if (hiding == false) { 
-        stdout.printf ("xxxxxxxx2\n");
-                // Refuse to close if no windows around
+            if (menu_box.visible) {
+                // If menu_box is visible, we want it to be closed
+                // when we got here.
+
+                // But refuse to close it when there's no windows around
                 if (w.no_windows_around ())
                     return false;
 
-                hiding = true;
-                GLib.Timeout.add (250, hide_menu_box); 
+                menu_box.hide ();
             } else {
-        stdout.printf ("xxxxxxxx3\n");
+                // Otherwise we want to show it
                 show_menu_box ();
             }
-            return false;
+
+           return true;
         });
 
         w.windows_gone.connect (() => {

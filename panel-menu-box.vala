@@ -6,6 +6,7 @@ public class PanelMenuBox : PanelAbstractWindow {
     private int filler_height = 27;
 
     public signal void dismissed ();
+    public signal void cancelled ();
 
     public PanelMenuBox () {
         
@@ -56,6 +57,14 @@ public class PanelMenuBox : PanelAbstractWindow {
         systems.populate ();
 
         scrollable.set_min_content_height (rect ().height -  filler_height - 200); // TODO
+
+        button_press_event.connect((event) => {
+            stdout.printf("button_press in menu\n");
+            dismiss ();
+            cancelled ();
+            return false;
+        });
+
     }
 
     public override void get_preferred_width (out int min, out int max) {
@@ -90,10 +99,6 @@ public class PanelMenuBox : PanelAbstractWindow {
         return true;
     }
 
-    public override bool button_press_event (Gdk.EventButton event) {
-        dismiss ();
-        return true;
-    }
 
     private void dismiss () {
         var device = get_current_event_device();
