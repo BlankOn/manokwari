@@ -122,7 +122,6 @@ public class PanelTrayHost : PanelAbstractWindow {
     }
 
     public override void get_preferred_width (out int min, out int max) {
-        var r = rect();
         min = max = 5;
     }
 
