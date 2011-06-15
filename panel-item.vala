@@ -28,6 +28,11 @@ public class PanelItem : ImageMenuItem {
 
     private void setup_connections () {
 
+        button_release_event.connect ((event) => {
+            activate ();
+            return false;
+        });
+
         enter_notify_event.connect ((event) => {
             set_state(StateType.PRELIGHT);
             return true;
