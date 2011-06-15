@@ -102,8 +102,8 @@ public class PanelWindowEntry : DrawingArea {
 
         window_info = info;
         last_state = info.get_state ();
-        sync_window_states ();
         description = d;
+        sync_window_states ();
         d.set_window_info (info);
 
         var screen = get_screen();
