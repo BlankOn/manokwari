@@ -6,6 +6,7 @@ public class PanelWindowDescription : PanelAbstractWindow {
     public signal void hidden ();
     private Label label;
     private bool _cancel_hiding;
+    private bool popup_shown = false;
     private Wnck.Window window_info;
 
     public signal void clicked ();
@@ -38,18 +39,40 @@ public class PanelWindowDescription : PanelAbstractWindow {
         add (label);
 
         leave_notify_event.connect (() => {
+            if (popup_shown)
+                return false;
+
             _cancel_hiding = false;
             GLib.Timeout.add (250, hide_description); 
 
-            return false; 
-        });
-
-        button_press_event.connect ((event) => {
-            activate_window ();
             return true; 
         });
 
+        button_press_event.connect ((event) => {
+            if (event.button == 3 && event.type == Gdk.EventType.BUTTON_PRESS) { // right click
+                show_popup (event);
+            } else {
+                activate_window ();
+            }
+            return true; 
+        });
+    }
 
+    public void show_popup (Gdk.EventButton event) {
+        var menu = new Wnck.ActionMenu (window_info);
+
+        var button = event.button;
+        var event_time = event.time;
+
+        menu.deactivate.connect (() => {
+            stdout.printf("xxxxx\n");
+            popup_shown = false;
+            hide ();
+        });
+        menu.attach_to_widget (this, null);
+
+        popup_shown = true;
+        menu.popup (null, null, null, button, event_time);
     }
 
     public override void get_preferred_height (out int min, out int max) {
