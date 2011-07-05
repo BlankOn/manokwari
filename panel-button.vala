@@ -72,13 +72,22 @@ public class PanelButtonWindow : PanelAbstractWindow {
 
         button_press_event.connect (() => {
             if (menu_box.visible) {
-                // If menu_box is visible, we want it to be closed
-                // when we got here.
+                // If menu_box is visible and showing first column, 
+                // then we want it to be closed when we got here.
 
                 // But refuse to close it when there's no windows around
-                if (w.no_windows_around ())
+                if (menu_box.get_active_column () == 0 
+                    && w.no_windows_around ())
                     return false;
+                
+                // If it's showing second column, just go back to 
+                // first column
+                if (menu_box.get_active_column () == 1) {
+                    menu_box.slide_left ();
+                    return true;
+                }
 
+                // Close it otherwise
                 menu_box.hide ();
             } else {
                 // Otherwise we want to show it

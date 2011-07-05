@@ -7,6 +7,8 @@
 @define-color window_desc_bg_hover_color #a0a0a0;
 @define-color window_desc_fg_hover_color #010101;
 
+
+PanelWindowPager,
 PanelTray,
 PanelWindowList,
 PanelWindowHost,
@@ -56,4 +58,11 @@ PanelWindowEntry:insensitive {
 PanelWindowDescription GtkLabel {
     font-name: Times 50;
     color: #fefefe;
+}
+
+PanelItem:prelight {
+    color: #fefefe;
+}
+PanelItem GtkLabel:prelight {
+    color: #ffffff;
 }
