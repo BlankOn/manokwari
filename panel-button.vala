@@ -6,6 +6,8 @@ public class PanelButtonWindow : PanelAbstractWindow {
 
     private PanelMenuBox menu_box;
     private Gdk.Pixbuf logo;
+    private Gdk.Pixbuf alternate_image;
+    private bool draw_logo = true;
     private bool ignore_enter_notify;
 
     public signal void menu_shown ();
@@ -34,6 +36,10 @@ public class PanelButtonWindow : PanelAbstractWindow {
 
         var icon_theme = IconTheme.get_default();
         logo = icon_theme.load_icon ("distributor-logo", 30, IconLookupFlags.GENERIC_FALLBACK);
+
+        set_alternate_image ("gtk-go-back-ltr");
+
+        update_logo_state ();
 
         // Window 
         var w = new PanelWindowHost ();
@@ -77,13 +83,16 @@ public class PanelButtonWindow : PanelAbstractWindow {
 
                 // But refuse to close it when there's no windows around
                 if (menu_box.get_active_column () == 0 
-                    && w.no_windows_around ())
+                    && w.no_windows_around ()) {
+                    update_logo_state ();
                     return false;
+                }
                 
                 // If it's showing second column, just go back to 
                 // first column
                 if (menu_box.get_active_column () == 1) {
                     menu_box.slide_left ();
+                    update_logo_state ();
                     return true;
                 }
 
@@ -99,6 +108,7 @@ public class PanelButtonWindow : PanelAbstractWindow {
 
         w.windows_gone.connect (() => {
         stdout.printf ("all windows gone\n");
+            update_logo_state ();
             show_menu_box ();
         });
 
@@ -106,6 +116,7 @@ public class PanelButtonWindow : PanelAbstractWindow {
             if (w.no_windows_around ())
                 return;
             menu_box.hide ();
+            update_logo_state ();
         });
 
         w.windows_visible.connect (() => {
@@ -116,13 +127,18 @@ public class PanelButtonWindow : PanelAbstractWindow {
         menu_shown.connect (() => {
             w.dismiss ();
         });
+
+        menu_box.sliding_right.connect (() => {
+            update_logo_state ();
+        });
     }
 
     public override bool draw (Context cr)
     {
-
-        if (logo != null)
+        if (logo != null && draw_logo)
             Gdk.cairo_set_source_pixbuf (cr, logo, 0, 0);
+        else if (alternate_image != null && draw_logo == false)
+            Gdk.cairo_set_source_pixbuf (cr, alternate_image, 0, 0);
         cr.paint();
         return false;
     }
@@ -135,5 +151,20 @@ public class PanelButtonWindow : PanelAbstractWindow {
         return false;
     }
 
+    public void set_alternate_image (string name) {
+        var icon_theme = IconTheme.get_default();
+        alternate_image = icon_theme.load_icon (name, 30, IconLookupFlags.GENERIC_FALLBACK);
+    }
+
+    public void update_logo_state () {
+        var previous = draw_logo;
+        if (menu_box.get_active_column () == 0)
+            draw_logo = true;
+        else
+            draw_logo = false;
+
+        if (previous != draw_logo)
+            queue_draw ();
+    }
 }
 

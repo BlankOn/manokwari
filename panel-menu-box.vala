@@ -89,6 +89,7 @@ public class PanelMenuBox : PanelAbstractWindow {
 
     public signal void dismissed ();
     public signal void cancelled ();
+    public signal void sliding_right ();
 
     private PanelAnimatedAdjustment adjustment;
 
@@ -113,6 +114,7 @@ public class PanelMenuBox : PanelAbstractWindow {
         adjustment.set_target (get_column_width ());
         adjustment.start ();
         active_column = 1;
+        sliding_right ();
     }
 
 
@@ -237,6 +239,8 @@ public class PanelMenuBox : PanelAbstractWindow {
         device.ungrab(Gdk.CURRENT_TIME);
         secondary.ungrab(Gdk.CURRENT_TIME);
         stdout.printf("Menu box dismissed \n");
+        adjustment.set_value (0);
+        active_column = 0;
         dismissed ();
     }
 }
