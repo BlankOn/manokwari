@@ -85,7 +85,6 @@ public class PanelMenuBox : PanelAbstractWindow {
 
         // All application (2nd) column
         var all_apps = new PanelMenuContent("Applications", "applications.menu");
-        all_apps.hide ();
         columns.pack_start (all_apps);
 
         all_apps_opener.activate.connect (() => {
@@ -101,7 +100,6 @@ public class PanelMenuBox : PanelAbstractWindow {
         all_apps.set_min_content_height (rect ().height - 200); // TODO
 
         var control_center = new PanelMenuContent("Settings", "systems.menu");
-        control_center.hide ();
         columns.pack_start (control_center);
 
         cc_opener.activate.connect (() => {
@@ -116,7 +114,10 @@ public class PanelMenuBox : PanelAbstractWindow {
         control_center.populate ();
         control_center.set_min_content_height (rect ().height - 200); // TODO
 
+        show_all ();
 
+        all_apps.hide ();
+        control_center.hide ();
 
         button_press_event.connect((event) => {
             // Only dismiss if within the area

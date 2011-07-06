@@ -144,10 +144,12 @@ public class PanelButtonWindow : PanelAbstractWindow {
     }
 
     private bool show_menu_box () {
-        menu_box.show_all ();
-        get_window ().raise ();
-        menu_box.get_window ().lower ();
-        menu_shown ();
+        if (menu_box.visible == false) {
+            menu_box.show ();
+            get_window ().raise ();
+            menu_box.get_window ().lower ();
+            menu_shown ();
+        }
         return false;
     }
 
