@@ -11,6 +11,7 @@ public class PanelMenuBox : PanelAbstractWindow {
     public signal void sliding_right ();
 
     private PanelAnimatedAdjustment adjustment;
+    private unowned Widget? content_widget = null;
 
     public int get_active_column () {
         return active_column;
@@ -24,12 +25,16 @@ public class PanelMenuBox : PanelAbstractWindow {
     }
 
     public void slide_left () {
+        stdout.printf ("%p\n", content_widget);
         adjustment.set_target (0);
         adjustment.start ();
         active_column = 0;
     }
 
     public void slide_right () {
+        stdout.printf ("%p\n", content_widget);
+        if (content_widget != null)
+            content_widget.show_all ();
         adjustment.set_target (get_column_width ());
         adjustment.start ();
         active_column = 1;
@@ -42,62 +47,77 @@ public class PanelMenuBox : PanelAbstractWindow {
         move (rect ().x, rect ().y);
 
         adjustment = new PanelAnimatedAdjustment (0, 0, rect ().width, 5, 0, 0);
+        adjustment.finished.connect (() => {
+            if (active_column == 0 && content_widget != null)
+                content_widget.hide ();
+        });
 
         // Create the columns
         columns = new HBox (true, 0);
 
         // Create outer scrollable
-        var panel_area = new PanelScrollableContent (adjustment, null, columns);
+        var panel_area = new PanelScrollableContent (adjustment, null);
+        panel_area.set_widget (columns);
 
         // Add to window
         add (panel_area);
-
-        var filler1 = new DrawingArea ();
-        filler1.set_size_request (250, 20);
 
         // Quick Launch (1st) column
         var quick_launch_box = new VBox (false, 0);
         columns.pack_start (quick_launch_box);
 
-        var quick_launch_bar = new VBox (false, 0);
-        quick_launch_box.pack_start (filler1, false, false, 20);
-        quick_launch_box.pack_start (quick_launch_bar, false, false, 0);
-        var favorites = new PanelMenuContent (quick_launch_bar, "favorites.menu");
+        var favorites = new PanelMenuContent(null, "favorites.menu");
+        quick_launch_box.pack_start (favorites, false, false, 0);
         favorites.populate ();
-        favorites.insert_separator ();
+        favorites.set_min_content_height (200);
 
         favorites.menu_clicked.connect (() => {
             dismiss ();
         });
 
         var all_apps_opener = new PanelItem.with_label ("All applications");
-        all_apps_opener.set_image ("");
-        all_apps_opener.activate.connect (() => {
-            slide_right (); 
-        });
-        quick_launch_bar.pack_start (all_apps_opener, false, false, 0);
+        all_apps_opener.set_image ("gnome-applications");
+        quick_launch_box.pack_start (all_apps_opener, false, false, 0);
+
+        var cc_opener = new PanelItem.with_label ("Settings");
+        cc_opener.set_image ("gnome-control-center");
+        quick_launch_box.pack_start (cc_opener, false, false, 0);
 
         // All application (2nd) column
-        var all_apps_bar = new VBox (false, 0);
-        var all_apps_area = new PanelScrollableContent (null, null, all_apps_bar);
-        all_apps_area.set_scrollbar_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
-        var all_apps_box = new VBox (false, 0);
-        columns.pack_start (all_apps_box);
+        var all_apps = new PanelMenuContent("Applications", "applications.menu");
+        all_apps.hide ();
+        columns.pack_start (all_apps);
 
-        var filler2 = new DrawingArea ();
-        all_apps_box.pack_start (filler2, false, false, 20);
-        all_apps_box.pack_start (all_apps_area, false, false, 0);
+        all_apps_opener.activate.connect (() => {
+            content_widget = all_apps;
+            slide_right (); 
+        });
 
-
-        var applications = new PanelMenuContent (all_apps_bar, "applications.menu");
-        applications.menu_clicked.connect (() => {
+        all_apps.menu_clicked.connect (() => {
             dismiss ();
         });
 
-        applications.populate ();
-        applications.insert_separator ();
+        all_apps.populate ();
+        all_apps.set_min_content_height (rect ().height - 200); // TODO
 
-        all_apps_area.set_min_content_height (rect ().height -  filler_height - 200); // TODO
+        var control_center = new PanelMenuContent("Settings", "systems.menu");
+        control_center.hide ();
+        columns.pack_start (control_center);
+
+        cc_opener.activate.connect (() => {
+            content_widget = control_center;
+            slide_right (); 
+        });
+
+        control_center.menu_clicked.connect (() => {
+            dismiss ();
+        });
+
+        control_center.populate ();
+        control_center.set_min_content_height (rect ().height - 200); // TODO
+
+
+
         button_press_event.connect((event) => {
             // Only dismiss if within the area
             // TODO: multihead

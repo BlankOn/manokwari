@@ -1,14 +1,28 @@
 using GMenu;
 using Gtk;
 
-public class PanelMenuContent  {
-    private VBox menu;
+public class PanelMenuContent : PanelScrollableContent {
+    private VBox bar;
     private string catalog;
 
     public signal void menu_clicked ();
 
-    public PanelMenuContent (VBox bar, string catalog) {
-        menu = bar;
+    public PanelMenuContent (string? label, string catalog) {
+        base (null, null);
+        bar = new VBox (false, 0);
+        set_widget (bar);
+        set_scrollbar_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
+
+        var filler = new DrawingArea ();
+        filler.set_size_request (250, 20);
+
+        bar.pack_start (filler, false, false, 20);
+        if (label != null) {
+            var l = new Label ("");
+            l.set_markup ("<big>" + label + "</big>");
+            bar.pack_start (l, false, false, 5);
+        }
+
         this.catalog = catalog;
     }
 
@@ -55,7 +69,7 @@ public class PanelMenuContent  {
         var tree = GMenu.Tree.lookup (catalog, TreeFlags.NONE);
         var root = tree.get_root_directory ();
 
-        update_tree (menu, 0, root);
+        update_tree (bar, 0, root);
     }
 
     public void insert_separator () {

@@ -9,6 +9,8 @@ public class PanelAnimatedAdjustment : Adjustment {
     private double time = 0;
     private double start_value = 0;
 
+    public signal void finished ();
+
     public PanelAnimatedAdjustment (double value, double lower, double upper, double step_increment, double page_increment, double page_size) {
         set_value (value);
         set_lower (lower);
@@ -66,14 +68,16 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
         if ((interpolated > target && direction == 1)
           ||(interpolated < target && direction == -1)
-           ) {
-           interpolated = target;
-           set_value (interpolated);
-           return false;
+          ) {
+            interpolated = target;
+            set_value (interpolated);
+            finished ();
+            return false;
         }
 
         if (time > duration) {
             time = 0;
+            finished ();
             return false;
         }
         time += 16;

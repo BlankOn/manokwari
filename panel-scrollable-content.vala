@@ -2,15 +2,20 @@ using Gtk;
 
 public class PanelScrollableContent : ScrolledWindow {
     private Viewport viewport;
+    private unowned Widget widget;
 
-    public class PanelScrollableContent (PanelAnimatedAdjustment? hadjustment, PanelAnimatedAdjustment? vadjustment, Widget w) {
+    public PanelScrollableContent (PanelAnimatedAdjustment? hadjustment, PanelAnimatedAdjustment? vadjustment) {
         set_hadjustment (hadjustment);
         set_vadjustment (vadjustment);
+    }
+
+    public void set_widget (Widget w) {
+        widget = w;
         viewport = new Viewport (hadjustment, vadjustment);
-        set_scrollbar_policy (PolicyType.NEVER, PolicyType.NEVER);
         add (viewport);
         viewport.add (w);
         viewport.show ();
+        set_scrollbar_policy (PolicyType.NEVER, PolicyType.NEVER);
         show ();
     }
 
