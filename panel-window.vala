@@ -55,10 +55,14 @@ public class PanelWindowPagerEntry : DrawingArea {
 
     public signal void pager_shown ();
 
-    private bool show_pager () {
+    private bool show_pager_handler () {
         pager.show_all ();
         pager_shown ();
         return false;
+    }
+
+    public void hide_pager () {
+        pager.hide ();
     }
 
     public PanelWindowPagerEntry () {
@@ -75,13 +79,13 @@ public class PanelWindowPagerEntry : DrawingArea {
 
         button_press_event.connect ((event) => {
             stdout.printf("cccc\n");
-            GLib.Timeout.add (100, show_pager); 
+            GLib.Timeout.add (100, show_pager_handler); 
             pager.cancel_hiding ();
             return false; 
         });
 
         enter_notify_event.connect ((event) => {
-            GLib.Timeout.add (100, show_pager); 
+            GLib.Timeout.add (100, show_pager_handler); 
             pager.cancel_hiding ();
             return false; 
         });
@@ -305,6 +309,7 @@ public class PanelWindowHost : PanelAbstractWindow {
 
     public signal void windows_gone();
     public signal void windows_visible();
+    public signal void description_shown ();
 
     public bool no_windows_around () {
         update (false);
@@ -335,6 +340,14 @@ public class PanelWindowHost : PanelAbstractWindow {
         var r = rect();
         move (0, r.height - get_window ().get_height ());
 
+        pager_entry.pager_shown.connect (() => {
+            description.hide ();
+        });
+
+        // Hide pager when description is shown
+        description_shown.connect (() => {
+           pager_entry.hide_pager ();
+        });
 
         description.hidden.connect (() => {
             move (0, r.height - get_window ().get_height ());
@@ -379,6 +392,11 @@ public class PanelWindowHost : PanelAbstractWindow {
             if (!w.is_skip_tasklist () && w.get_name() != "blankon-panel") {
                 var e = new PanelWindowEntry (w, ref description);
                 e.show ();
+                // Forward description_shown signal
+                // so the pager would close
+                e.description_shown.connect (() => {
+                    description_shown ();
+                });
                 box.pack_start (e, true, true, 1);
                 if (!w.is_minimized ())
                     num_windows ++;
