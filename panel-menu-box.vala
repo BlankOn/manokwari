@@ -25,17 +25,21 @@ public class PanelMenuBox : PanelAbstractWindow {
     }
 
     public void slide_left () {
-        stdout.printf ("%p\n", content_widget);
         adjustment.set_target (0);
         adjustment.start ();
         active_column = 0;
     }
 
     public void slide_right () {
-        stdout.printf ("%p\n", content_widget);
-        if (content_widget != null)
+        Allocation a;
+        
+        if (content_widget != null) {
             content_widget.show_all ();
-        adjustment.set_target (get_column_width ());
+            content_widget.get_allocation (out a);
+        } else
+            return;
+
+        adjustment.set_target (a.x);
         adjustment.start ();
         active_column = 1;
         sliding_right ();
