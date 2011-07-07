@@ -16,7 +16,7 @@ public class PanelMenuContent : PanelScrollableContent {
         var filler = new DrawingArea ();
         filler.set_size_request (250, 20);
 
-        bar.pack_start (filler, false, false, 20);
+        bar.pack_start (filler, false, false, 0);
         if (label != null) {
             var l = new Label ("");
             l.set_markup ("<big>" + label + "</big>");
