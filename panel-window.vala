@@ -24,8 +24,6 @@ public class PanelWindowPager : PanelAbstractWindow {
         add(pager);
         pager.show ();
         set_type_hint (Gdk.WindowTypeHint.DOCK);
-        add_events (Gdk.EventMask.STRUCTURE_MASK
-            | Gdk.EventMask.LEAVE_NOTIFY_MASK);
         hide();
 
         leave_notify_event.connect (() => {
@@ -40,7 +38,7 @@ public class PanelWindowPager : PanelAbstractWindow {
 
     public override void get_preferred_height (out int min, out int max) {
         // TODO
-        min = max = 100; 
+        min = max = 50; 
     }
 
     public override void get_preferred_width (out int min, out int max) {
@@ -143,8 +141,6 @@ public class PanelWindowDescription : PanelAbstractWindow {
 
     public PanelWindowDescription () {
         set_type_hint (Gdk.WindowTypeHint.DOCK);
-        add_events (Gdk.EventMask.STRUCTURE_MASK
-            | Gdk.EventMask.LEAVE_NOTIFY_MASK);
         hide();
         label = new Label ("");
         label.show ();
