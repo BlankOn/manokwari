@@ -66,7 +66,7 @@ public class PanelMenuBox : PanelAbstractWindow {
         var quick_launch_box = new VBox (false, 0);
         columns.pack_start (quick_launch_box);
 
-        var favorites = new PanelMenuContent(null, "favorites.menu");
+        var favorites = new PanelMenuContent("Favorites", "favorites.menu");
         quick_launch_box.pack_start (favorites, false, false, 0);
         favorites.populate ();
         favorites.set_min_content_height (200);
@@ -83,9 +83,13 @@ public class PanelMenuBox : PanelAbstractWindow {
         cc_opener.set_image ("gnome-control-center");
         quick_launch_box.pack_start (cc_opener, false, false, 0);
 
+        // Second column
+        var content_box = new VBox (false, 0);
+        columns.pack_start (content_box);
+
         // All application (2nd) column
         var all_apps = new PanelMenuContent("Applications", "applications.menu");
-        columns.pack_start (all_apps);
+        content_box.pack_start (all_apps);
 
         all_apps_opener.activate.connect (() => {
             content_widget = all_apps;
@@ -100,7 +104,7 @@ public class PanelMenuBox : PanelAbstractWindow {
         all_apps.set_min_content_height (rect ().height - 200); // TODO
 
         var control_center = new PanelMenuContent("Settings", "systems.menu");
-        columns.pack_start (control_center);
+        content_box.pack_start (control_center);
 
         cc_opener.activate.connect (() => {
             content_widget = control_center;
