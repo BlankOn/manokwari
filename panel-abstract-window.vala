@@ -86,6 +86,7 @@ public class PanelAbstractWindow : Gtk.Window {
             | Gdk.EventMask.BUTTON_RELEASE_MASK
             | Gdk.EventMask.ENTER_NOTIFY_MASK
             | Gdk.EventMask.LEAVE_NOTIFY_MASK
+            | Gdk.EventMask.STRUCTURE_MASK
             | Gdk.EventMask.POINTER_MOTION_MASK);
 
         skip_taskbar_hint = true;
