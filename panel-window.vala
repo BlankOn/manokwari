@@ -103,8 +103,6 @@ public class PanelWindowPagerEntry : DrawingArea {
     }
 
     public override bool draw (Context cr) {
-
-        stdout.printf("ccccfff\n");
         StyleContext style = get_style_context ();
         Gtk.render_background (style, cr, 0, 0, get_window ().get_width (), get_window ().get_height ());
         return true;
