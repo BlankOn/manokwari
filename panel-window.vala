@@ -134,7 +134,7 @@ public class PanelWindowDescription : PanelAbstractWindow {
 
     public void set_window_info (Wnck.Window info) {
         window_info = info;
-        label.set_text (info.get_name ());
+        label.set_markup ("<big>" + info.get_name () + "</big>");
     }
 
     public PanelWindowDescription () {
