@@ -7,7 +7,6 @@ public class PanelMenuBox : PanelAbstractWindow {
     private HBox columns;
 
     public signal void dismissed ();
-    public signal void cancelled ();
     public signal void sliding_right ();
 
     private PanelAnimatedAdjustment adjustment;
@@ -56,6 +55,8 @@ public class PanelMenuBox : PanelAbstractWindow {
     }
 
     private void hide_content_widget () {
+        if (content_widget == null)
+            return;
         content_widget.hide ();
     }
 
@@ -145,7 +146,6 @@ public class PanelMenuBox : PanelAbstractWindow {
             // TODO: multihead
             if (event.x > get_window().get_width ()) {
                 dismiss ();
-                cancelled ();
                 return true;
             }
             return false;
