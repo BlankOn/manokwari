@@ -114,8 +114,6 @@ public class PanelButtonWindow : PanelAbstractWindow {
 
         menu_box.dismissed.connect (() => {
             update_logo_state ();
-            if (w.no_windows_around ())
-                return;
             menu_box.hide ();
         });
 
