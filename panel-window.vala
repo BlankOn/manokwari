@@ -389,7 +389,9 @@ public class PanelWindowHost : PanelAbstractWindow {
         }
         var num_windows = 0;
         foreach (unowned Wnck.Window w in screen.get_windows()) {
-            if (!w.is_skip_tasklist () && w.get_name() != "blankon-panel") {
+            if (!w.is_skip_tasklist () 
+              && (w.get_name() != "blankon-panel")
+              && w.is_on_workspace (screen.get_active_workspace())) {
                 var e = new PanelWindowEntry (w, ref description);
                 e.show ();
                 // Forward description_shown signal
