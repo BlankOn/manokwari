@@ -27,6 +27,7 @@ public class PanelMenuBox : PanelAbstractWindow {
     private void reset () {
         adjustment.set_value (0);
         active_column = 0;
+        hide_content_widget ();
     }
 
     public void slide_left () {
@@ -39,7 +40,7 @@ public class PanelMenuBox : PanelAbstractWindow {
         Allocation a;
         
         if (content_widget != null) {
-            content_widget.show_all ();
+            show_content_widget ();
             content_widget.get_allocation (out a);
         } else
             return;
@@ -49,7 +50,14 @@ public class PanelMenuBox : PanelAbstractWindow {
         active_column = 1;
         sliding_right ();
     }
+    
+    private void show_content_widget () {
+        content_widget.show_all ();
+    }
 
+    private void hide_content_widget () {
+        content_widget.hide ();
+    }
 
     public PanelMenuBox () {
         set_type_hint (Gdk.WindowTypeHint.DOCK);
@@ -58,7 +66,7 @@ public class PanelMenuBox : PanelAbstractWindow {
         adjustment = new PanelAnimatedAdjustment (0, 0, rect ().width, 5, 0, 0);
         adjustment.finished.connect (() => {
             if (active_column == 0 && content_widget != null)
-                content_widget.hide ();
+                hide_content_widget ();
         });
 
         // Create the columns
@@ -183,7 +191,7 @@ public class PanelMenuBox : PanelAbstractWindow {
         device.ungrab(Gdk.CURRENT_TIME);
         secondary.ungrab(Gdk.CURRENT_TIME);
         stdout.printf("Menu box dismissed \n");
-        dismissed ();
         reset ();
+        dismissed ();
     }
 }
