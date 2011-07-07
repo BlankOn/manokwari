@@ -2,7 +2,8 @@ using Gtk;
 using Gdk;
 using X;
 
-public class PanelTray : PanelAbstractWindow {
+public class PanelTray : Layout {
+    private Gdk.Rectangle rect;
     private Invisible invisible;
     private HBox box;
     private uint size;
@@ -16,9 +17,8 @@ public class PanelTray : PanelAbstractWindow {
     }
 
     public override void get_preferred_width (out int min, out int max) {
-        var r = rect();
         min = (int) size;
-        max = r.width;
+        max = rect.width;
     }
 
     private void update_size () {
@@ -26,6 +26,14 @@ public class PanelTray : PanelAbstractWindow {
     }
 
     private void add_client (long xid) {
+
+        // Skips already added clients
+        foreach (unowned Widget w in box.get_children ()) {
+            long id = (long) ((Gtk.Socket) w).get_id ();
+            if (id == xid)
+                return;
+        }
+
         var w = new Gtk.Socket();
         w.show ();
         w.plug_removed.connect (() => {
@@ -91,9 +99,17 @@ public class PanelTray : PanelAbstractWindow {
         return true;
     }
 
+    class TrayWindow : PanelAbstractWindow {
+        public TrayWindow () {
+            set_type_hint (Gdk.WindowTypeHint.DOCK);
+        }
+    }
+
     public PanelTray () {
         size = 0;
-        set_type_hint (Gdk.WindowTypeHint.DOCK);
+
+        var screen = get_screen();
+        screen.get_monitor_geometry (screen.get_primary_monitor(), out rect);
         invisible = new Invisible ();
         invisible.add_events (Gdk.EventMask.PROPERTY_CHANGE_MASK |
                               Gdk.EventMask.STRUCTURE_MASK);
@@ -102,54 +118,7 @@ public class PanelTray : PanelAbstractWindow {
         add(box);
         box.show ();
 
-        set_gravity (Gdk.Gravity.NORTH_EAST);
         setup_selection ();
     }
 }
 
-public class PanelTrayHost : PanelAbstractWindow {
-    private uint default_size = 50;
-    private PanelTray tray;
-
-    bool hide_tray () {
-        tray.hide ();
-        return false;
-    }
-
-    public override void get_preferred_height (out int min, out int max) {
-        // TODO
-        min = max = (int) default_size; 
-    }
-
-    public override void get_preferred_width (out int min, out int max) {
-        min = max = 5;
-    }
-
-    public PanelTrayHost () {
-        set_type_hint (Gdk.WindowTypeHint.DOCK);
-        tray = new PanelTray ();
-        show_all ();
-        show_tray ();
-        set_gravity (Gdk.Gravity.NORTH);
-        move(rect ().width - get_window ().get_width (), 0);
-
-        button_press_event.connect ((event) => {
-            if (tray.visible)
-                tray.hide ();
-            else
-                show_tray ();
-            return false; 
-        });
-
-        tray.new_item_added.connect (() => {
-            if (!tray.visible)   
-                GLib.Timeout.add (3250, hide_tray);
-            show_tray ();
-        });
-    }
-
-    private void show_tray () {
-        tray.show ();
-        tray.move(rect ().width - tray.get_window ().get_width () - get_window ().get_width (), 0);
-    }
-}

@@ -14,9 +14,6 @@ public class PanelButtonWindow : PanelAbstractWindow {
 
     public PanelButtonWindow() {
         set_type_hint (Gdk.WindowTypeHint.DOCK);
-        add_events (Gdk.EventMask.STRUCTURE_MASK
-            | Gdk.EventMask.ENTER_NOTIFY_MASK
-            | Gdk.EventMask.LEAVE_NOTIFY_MASK);
         menu_box = new PanelMenuBox();
         set_visual (this.screen.get_rgba_visual ());
 
@@ -46,9 +43,6 @@ public class PanelButtonWindow : PanelAbstractWindow {
         w.show();
         if (w.no_windows_around ())
             show_menu_box ();
-
-        var tray = new PanelTrayHost ();
-        tray.show ();
 
         // SIGNALS
         leave_notify_event.connect (() => {

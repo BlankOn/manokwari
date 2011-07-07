@@ -141,6 +141,10 @@ public class PanelMenuBox : PanelAbstractWindow {
         all_apps.hide ();
         control_center.hide ();
 
+        var tray = new PanelTray ();
+        quick_launch_box.pack_end (tray, false, false, 20);
+        tray.show ();
+
         button_press_event.connect((event) => {
             // Only dismiss if within the area
             // TODO: multihead

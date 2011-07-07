@@ -20,7 +20,10 @@ PanelMenuBox {
     background-color: @bg_color;
 }
 
-
+GtkTooltip {
+    color: @fg_color;
+    background-color: @bg_color;
+}
 
 PanelWindowDescription {
     color: @window_desc_fg_color;
