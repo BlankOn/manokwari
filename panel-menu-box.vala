@@ -24,6 +24,11 @@ public class PanelMenuBox : PanelAbstractWindow {
         return 0;
     }
 
+    private void reset () {
+        adjustment.set_value (0);
+        active_column = 0;
+    }
+
     public void slide_left () {
         adjustment.set_target (0);
         adjustment.start ();
@@ -178,8 +183,7 @@ public class PanelMenuBox : PanelAbstractWindow {
         device.ungrab(Gdk.CURRENT_TIME);
         secondary.ungrab(Gdk.CURRENT_TIME);
         stdout.printf("Menu box dismissed \n");
-        adjustment.set_value (0);
-        active_column = 0;
         dismissed ();
+        reset ();
     }
 }
