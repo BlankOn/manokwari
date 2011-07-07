@@ -198,8 +198,7 @@ public class PanelWindowDescription : PanelAbstractWindow {
     }
 
     public void activate_window () {
-        var t = new DateTime.now_local ();
-        window_info.activate ((uint32) t.to_unix());
+        window_info.activate (get_current_event_time());
     }
 }
 
@@ -355,8 +354,7 @@ public class PanelWindowHost : PanelAbstractWindow {
 
         screen.window_opened.connect ((w) => {
             if (!w.is_skip_tasklist()) {
-                var t = new DateTime.now_local ();
-                w.activate ((uint32) t.to_unix());
+                w.activate (get_current_event_time());
                 update (true);
 
                 w.state_changed.connect((mask, state) => {
