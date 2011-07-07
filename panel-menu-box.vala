@@ -178,17 +178,15 @@ public class PanelMenuBox : PanelAbstractWindow {
 
     public override bool map_event (Gdk.Event event) {
         var w = get_window ().get_width ();
+        evbox.show ();
         evbox.get_window ().move_resize (rect ().x + w, rect ().y, rect ().width - w, rect ().height);
         return true;
     }
 
 
     private void dismiss () {
-        var device = get_current_event_device();
-        var secondary = device.get_associated_device();
-        device.ungrab(Gdk.CURRENT_TIME);
-        secondary.ungrab(Gdk.CURRENT_TIME);
         stdout.printf("Menu box dismissed \n");
+        evbox.hide ();
         reset ();
         dismissed ();
     }
