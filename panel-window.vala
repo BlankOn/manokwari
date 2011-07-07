@@ -369,6 +369,9 @@ public class PanelWindowHost : PanelAbstractWindow {
                 update (true);
         });
 
+        screen.active_workspace_changed.connect (() => {
+            update (true);
+        });
     }
 
     public override void get_preferred_width (out int min, out int max) {
