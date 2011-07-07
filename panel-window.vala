@@ -309,7 +309,7 @@ public class PanelWindowHost : PanelAbstractWindow {
     public signal void windows_visible();
 
     public bool no_windows_around () {
-        update ();
+        update (false);
         return (num_visible_windows == 0);
     }
 
@@ -346,16 +346,16 @@ public class PanelWindowHost : PanelAbstractWindow {
             if (!w.is_skip_tasklist()) {
                 var t = new DateTime.now_local ();
                 w.activate ((uint32) t.to_unix());
-                update ();
+                update (true);
 
                 w.state_changed.connect((mask, state) => {
-                    update ();
+                    update (true);
                 });
             }
         });
         screen.window_closed.connect ((w) => {
             if (!w.is_skip_tasklist())
-                update ();
+                update (true);
         });
 
     }
@@ -370,7 +370,7 @@ public class PanelWindowHost : PanelAbstractWindow {
         min = max = 12; 
     }
 
-    public void update () {
+    public void update (bool emit_change_signals) {
         set_struts(); 
         foreach (unowned Widget w in box.get_children ()) {
             if (w.get_name () != "PAGER") 
@@ -386,10 +386,12 @@ public class PanelWindowHost : PanelAbstractWindow {
                     num_windows ++;
             }
         }
-        if (num_windows == 0)
-            windows_gone ();
-        else
-            windows_visible ();
+        if (emit_change_signals) {
+            if (num_windows == 0)
+                windows_gone ();
+            else
+                windows_visible ();
+        }
         num_visible_windows = num_windows;
     }
 
