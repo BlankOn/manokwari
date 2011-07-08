@@ -55,6 +55,8 @@ public class PanelButtonWindow : PanelAbstractWindow {
             } else {
                 ignore_enter_notify = true;
             }
+            get_window ().raise ();
+
             return true;
         });
 
@@ -68,6 +70,11 @@ public class PanelButtonWindow : PanelAbstractWindow {
             show_menu_box (); 
             ignore_enter_notify = true;
             return true;
+        });
+
+        menu_box.enter_notify_event.connect (() => {
+            get_window ().raise ();
+            return false;
         });
 
         button_press_event.connect (() => {
