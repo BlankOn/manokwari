@@ -103,6 +103,11 @@ public class PanelMenuBox : PanelAbstractWindow {
         cc_opener.set_image ("gnome-control-center");
         quick_launch_box.pack_start (cc_opener, false, false, 0);
 
+        var places_opener = new PanelItem.with_label ("Places");
+        places_opener.set_image ("gtk-home");
+        quick_launch_box.pack_start (places_opener, false, false, 0);
+
+        //////////////////////////////////////////////////////
         // Second column
         var content_box = new VBox (false, 0);
         columns.pack_start (content_box);
@@ -146,6 +151,15 @@ public class PanelMenuBox : PanelAbstractWindow {
 
         control_center.populate ("systems.menu");
         control_center.set_min_content_height (rect ().height - 200); // TODO
+
+        var places = new PanelPlaces ();
+        content_box.pack_start (places);
+        places.set_min_content_height (rect ().height - 200); // TODO
+
+        places_opener.activate.connect (() => {
+            content_widget = places;
+            slide_right (); 
+        });
 
         show_all ();
 
