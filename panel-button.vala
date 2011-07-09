@@ -18,7 +18,6 @@ public class PanelButtonWindow : PanelAbstractWindow {
         set_visual (this.screen.get_rgba_visual ());
 
         set_size_request (40,40);
-        set_keep_above(true);
 
         Gdk.RGBA c = Gdk.RGBA();
         c.red = 0.0;
@@ -45,38 +44,6 @@ public class PanelButtonWindow : PanelAbstractWindow {
             show_menu_box ();
 
         // SIGNALS
-        leave_notify_event.connect (() => {
-            // This will be visited when the
-            // menu box is opened and the button got restacked
-            // Make sure the next enter notify without prior
-            // visit to here will be ignored
-            if (ignore_enter_notify) {
-                ignore_enter_notify = false;
-            } else {
-                ignore_enter_notify = true;
-            }
-            get_window ().raise ();
-
-            return true;
-        });
-
-        enter_notify_event.connect (() => {
-            // This will be visited when 
-            // the menu box is opened, and the button got restacked
-            // so ignore this when it happens.
-            if (ignore_enter_notify) {
-                return true;
-            }
-            show_menu_box (); 
-            ignore_enter_notify = true;
-            return true;
-        });
-
-        menu_box.enter_notify_event.connect (() => {
-            get_window ().raise ();
-            return false;
-        });
-
         button_press_event.connect (() => {
             if (menu_box.visible) {
                 // If menu_box is visible and showing first column, 

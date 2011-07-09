@@ -62,7 +62,7 @@ public class PanelMenuBox : PanelAbstractWindow {
     }
 
     public PanelMenuBox () {
-        set_type_hint (Gdk.WindowTypeHint.DOCK);
+        set_type_hint (Gdk.WindowTypeHint.DIALOG);
         move (rect ().x, rect ().y);
 
         adjustment = new PanelAnimatedAdjustment (0, 0, rect ().width, 5, 0, 0);
@@ -166,6 +166,14 @@ public class PanelMenuBox : PanelAbstractWindow {
             }
             return false;
         });
+
+        // Ignore any attempt to move this window
+        configure_event.connect ((event) => {
+            if (event.x != rect ().x ||
+                event.y != rect ().y)
+                move (rect ().x, rect ().y);
+            return false;
+        });
     }
 
     public override void get_preferred_width (out int min, out int max) {
@@ -173,16 +181,16 @@ public class PanelMenuBox : PanelAbstractWindow {
     }
 
     public override void get_preferred_height (out int min, out int max) {
-        min = max = rect ().height - 10; 
+        min = max = rect ().height; 
     }
 
     public override bool map_event (Gdk.Event event) {
         var w = get_window ().get_width ();
         evbox.show ();
         evbox.get_window ().move_resize (rect ().x + w, rect ().y, rect ().width - w, rect ().height);
+        get_window ().raise ();
         return true;
     }
-
 
     private void dismiss () {
         stdout.printf("Menu box dismissed \n");
