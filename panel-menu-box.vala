@@ -106,6 +106,13 @@ public class PanelMenuBox : PanelAbstractWindow {
         var content_box = new VBox (false, 0);
         columns.pack_start (content_box);
 
+        var back_button = new Button.from_stock (Stock.GO_BACK);
+        content_box.pack_start (back_button, false, false, 0);
+
+        back_button.clicked.connect (() => {
+            slide_left ();
+        });
+
         // All application (2nd) column
         var all_apps = new PanelMenuContent("Applications", "applications.menu");
         content_box.pack_start (all_apps);

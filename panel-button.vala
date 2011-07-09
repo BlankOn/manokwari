@@ -35,8 +35,6 @@ public class PanelButtonWindow : PanelAbstractWindow {
 
         set_alternate_image ("gtk-go-back-ltr");
 
-        update_logo_state ();
-
         // Window 
         var w = new PanelWindowHost ();
         w.show();
@@ -52,7 +50,6 @@ public class PanelButtonWindow : PanelAbstractWindow {
                 // But refuse to close it when there's no windows around
                 if (menu_box.get_active_column () == 0 
                     && w.no_windows_around ()) {
-                    update_logo_state ();
                     return false;
                 }
                 
@@ -60,7 +57,6 @@ public class PanelButtonWindow : PanelAbstractWindow {
                 // first column
                 if (menu_box.get_active_column () == 1) {
                     menu_box.slide_left ();
-                    update_logo_state ();
                     return true;
                 }
 
@@ -76,12 +72,10 @@ public class PanelButtonWindow : PanelAbstractWindow {
 
         w.windows_gone.connect (() => {
         stdout.printf ("all windows gone\n");
-            update_logo_state ();
             show_menu_box ();
         });
 
         menu_box.dismissed.connect (() => {
-            update_logo_state ();
             menu_box.hide ();
         });
 
@@ -92,10 +86,6 @@ public class PanelButtonWindow : PanelAbstractWindow {
 
         menu_shown.connect (() => {
             w.dismiss ();
-        });
-
-        menu_box.sliding_right.connect (() => {
-            update_logo_state ();
         });
     }
 
@@ -124,15 +114,5 @@ public class PanelButtonWindow : PanelAbstractWindow {
         alternate_image = icon_theme.load_icon (name, 30, IconLookupFlags.GENERIC_FALLBACK);
     }
 
-    public void update_logo_state () {
-        var previous = draw_logo;
-        if (menu_box.get_active_column () == 0)
-            draw_logo = true;
-        else
-            draw_logo = false;
-
-        if (previous != draw_logo)
-            queue_draw ();
-    }
 }
 
