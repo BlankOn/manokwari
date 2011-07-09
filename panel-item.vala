@@ -34,6 +34,7 @@ public class PanelItem : Box {
     private EventBox event_box;
     private Label label;
     private Image image;
+    private Gtk.Settings settings;
 
     public signal void activate ();
 
@@ -51,6 +52,7 @@ public class PanelItem : Box {
     }
 
     private void init () {
+        settings = Gtk.Settings.get_default ();
         box = new HBox (false, 0);
         event_box = new EventBox ();
         add (event_box);
@@ -95,7 +97,8 @@ public class PanelItem : Box {
     public void set_image (string image_name) {
         if (image_name != "") {
             image.set_from_icon_name (image_name, IconSize.LARGE_TOOLBAR); 
-            image.show ();
+            if (settings.gtk_menu_images)
+                image.show ();
             return;
         }
         image.clear ();
