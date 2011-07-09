@@ -7,7 +7,7 @@ public class PanelTray : Layout {
     private Invisible invisible;
     private HBox box;
     private uint size;
-    private uint default_size = 30;
+    private uint default_size = 25;
 
     public signal void new_item_added ();
 
@@ -18,7 +18,7 @@ public class PanelTray : Layout {
 
     public override void get_preferred_width (out int min, out int max) {
         min = (int) size;
-        max = rect.width;
+        max = min;
     }
 
     private void update_size () {
@@ -41,8 +41,10 @@ public class PanelTray : Layout {
             update_size ();
             return false;
         });
-        box.pack_start(w, true, true, 1);
+        box.pack_start(w, false, false, 1);
         w.add_id (xid);
+        w.get_plug_window ().resize ((int) default_size, (int) default_size);
+        stdout.printf("%d\n", w.get_plug_window ().get_width ());
         update_size ();
         new_item_added ();
     }
@@ -97,12 +99,6 @@ public class PanelTray : Layout {
 
         invisible.get_window().add_filter(event_filter);
         return true;
-    }
-
-    class TrayWindow : PanelAbstractWindow {
-        public TrayWindow () {
-            set_type_hint (Gdk.WindowTypeHint.DOCK);
-        }
     }
 
     public PanelTray () {
