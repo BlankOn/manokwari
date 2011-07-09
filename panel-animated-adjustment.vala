@@ -5,7 +5,7 @@ public class PanelAnimatedAdjustment : Adjustment {
     private double target = 0;
     private double target_delta = 0;
     private double interpolated = 0;
-    private double duration = 500;
+    private double duration = 300;
     private double time = 0;
     private double start_value = 0;
 

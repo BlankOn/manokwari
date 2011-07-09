@@ -14,7 +14,7 @@ public class PanelMenuContent : PanelScrollableContent {
         set_scrollbar_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
 
         var filler = new DrawingArea ();
-        filler.set_size_request (250, 20);
+        filler.set_size_request (300, 20);
 
         bar.pack_start (filler, false, false, 0);
         if (label != null) {
@@ -32,7 +32,7 @@ public class PanelMenuContent : PanelScrollableContent {
             case TreeItemType.DIRECTORY:
                 var i = (TreeDirectory) item;
 
-                var expander = new PanelExpanderItem (i.get_name ());
+                var expander = new PanelExpanderItem (i.get_name (), i.get_icon ());
                 parent.pack_start (expander, false, false, 0); 
                 var box = new VBox (false, 0);
                 expander.add (box);
@@ -58,7 +58,7 @@ public class PanelMenuContent : PanelScrollableContent {
                     menu_clicked ();
                 });
 
-                entry.append_filler (level * 10);
+                entry.append_filler (level * 20);
                 parent.pack_start (entry, false, false, 0);
                 break;
             }

@@ -1,8 +1,10 @@
 using Gtk;
 
 public class PanelExpanderItem : Expander {
+    private PanelItem item;
 
     public signal void expanding ();
+
 
     private bool expand_later () {
         set_expanded (true); 
@@ -10,8 +12,8 @@ public class PanelExpanderItem : Expander {
         return false;
     }
 
-    public PanelExpanderItem (string title) {
-         add_events (Gdk.EventMask.BUTTON_PRESS_MASK
+    public PanelExpanderItem (string title, string icon) {
+        add_events (Gdk.EventMask.BUTTON_PRESS_MASK
             | Gdk.EventMask.BUTTON_RELEASE_MASK
             | Gdk.EventMask.ENTER_NOTIFY_MASK
             | Gdk.EventMask.LEAVE_NOTIFY_MASK
@@ -19,12 +21,14 @@ public class PanelExpanderItem : Expander {
             | Gdk.EventMask.KEY_RELEASE_MASK
             | Gdk.EventMask.POINTER_MOTION_MASK);
 
+        item = new PanelItem.with_label (title);
+        item.set_image (icon);
+        set_label_widget (item);
         enter_notify_event.connect ((o, event) => {
             GLib.Timeout.add (250, expand_later);
             return true;
         });
 
-        set_label (title);
     }
 }
 
@@ -47,6 +51,9 @@ public class PanelItem : Box {
         label.set_text (title);
     }
 
+    public void set_text (string title) {
+        label.set_text (title);
+    }
     public void load_app_info (string filename) {
         info = new DesktopAppInfo.from_filename (filename);
     }
