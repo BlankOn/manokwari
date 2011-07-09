@@ -151,7 +151,7 @@ public class PanelMenuBox : PanelAbstractWindow {
         control_center.hide ();
 
         var tray = new PanelTray ();
-        quick_launch_box.pack_end (tray, false, false, 20);
+        quick_launch_box.pack_end (tray, false, false, 0);
         tray.show ();
 
         evbox = new Invisible ();
