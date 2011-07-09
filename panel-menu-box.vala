@@ -86,9 +86,9 @@ public class PanelMenuBox : PanelAbstractWindow {
         var quick_launch_box = new VBox (false, 0);
         columns.pack_start (quick_launch_box);
 
-        var favorites = new PanelMenuContent("Favorites", "favorites.menu");
+        var favorites = new PanelMenuContent("Favorites");
         quick_launch_box.pack_start (favorites, false, false, 0);
-        favorites.populate ();
+        favorites.populate ("favorites.menu");
         favorites.set_min_content_height (200);
 
         favorites.menu_clicked.connect (() => {
@@ -117,7 +117,7 @@ public class PanelMenuBox : PanelAbstractWindow {
         });
 
         // All application (2nd) column
-        var all_apps = new PanelMenuContent("Applications", "applications.menu");
+        var all_apps = new PanelMenuContent("Applications");
         content_box.pack_start (all_apps);
 
         all_apps_opener.activate.connect (() => {
@@ -129,10 +129,10 @@ public class PanelMenuBox : PanelAbstractWindow {
             dismiss ();
         });
 
-        all_apps.populate ();
+        all_apps.populate ("applications.menu");
         all_apps.set_min_content_height (rect ().height - 200); // TODO
 
-        var control_center = new PanelMenuContent("Settings", "systems.menu");
+        var control_center = new PanelMenuContent("Settings");
         content_box.pack_start (control_center);
 
         cc_opener.activate.connect (() => {
@@ -144,7 +144,7 @@ public class PanelMenuBox : PanelAbstractWindow {
             dismiss ();
         });
 
-        control_center.populate ();
+        control_center.populate ("systems.menu");
         control_center.set_min_content_height (rect ().height - 200); // TODO
 
         show_all ();

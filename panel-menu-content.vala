@@ -3,11 +3,10 @@ using Gtk;
 
 public class PanelMenuContent : PanelScrollableContent {
     private VBox bar;
-    private string catalog;
 
     public signal void menu_clicked ();
 
-    public PanelMenuContent (string? label, string catalog) {
+    public PanelMenuContent (string? label) {
         bar = new VBox (false, 0);
         set_widget (bar);
         set_scrollbar_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
@@ -21,8 +20,6 @@ public class PanelMenuContent : PanelScrollableContent {
             l.set_markup ("<big>" + label + "</big>");
             bar.pack_start (l, false, false, 5);
         }
-
-        this.catalog = catalog;
     }
 
     private void update_tree (VBox parent, int level, TreeDirectory root) {
@@ -64,7 +61,7 @@ public class PanelMenuContent : PanelScrollableContent {
         }
     }
 
-    public void populate () { 
+    public void populate (string catalog) { 
         var tree = GMenu.Tree.lookup (catalog, TreeFlags.NONE);
         var root = tree.get_root_directory ();
 
