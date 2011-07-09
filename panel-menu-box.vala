@@ -107,6 +107,7 @@ public class PanelMenuBox : PanelAbstractWindow {
         columns.pack_start (content_box);
 
         var back_button = new Button.from_stock (Stock.GO_BACK);
+        back_button.set_focus_on_click (false);
         content_box.pack_start (back_button, false, false, 0);
 
         back_button.clicked.connect (() => {
