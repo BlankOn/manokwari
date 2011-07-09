@@ -2,7 +2,7 @@ using GMenu;
 using Gtk;
 
 public class PanelMenuContent : PanelScrollableContent {
-    private VBox bar;
+    protected VBox bar;
 
     public signal void menu_clicked ();
 
