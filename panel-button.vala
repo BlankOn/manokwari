@@ -6,8 +6,6 @@ public class PanelButtonWindow : PanelAbstractWindow {
 
     private PanelMenuBox menu_box;
     private Gdk.Pixbuf logo;
-    private Gdk.Pixbuf alternate_image;
-    private bool draw_logo = true;
     private bool ignore_enter_notify;
 
     public signal void menu_shown ();
@@ -33,13 +31,15 @@ public class PanelButtonWindow : PanelAbstractWindow {
         var icon_theme = IconTheme.get_default();
         logo = icon_theme.load_icon ("distributor-logo", 30, IconLookupFlags.GENERIC_FALLBACK);
 
-        set_alternate_image ("gtk-go-back-ltr");
-
         // Window 
         var w = new PanelWindowHost ();
         w.show();
         if (w.no_windows_around ())
             show_menu_box ();
+
+        // Clock
+        var clock = new ClockWindow ();
+        clock.show ();
 
         // SIGNALS
         button_press_event.connect (() => {
@@ -91,10 +91,8 @@ public class PanelButtonWindow : PanelAbstractWindow {
 
     public override bool draw (Context cr)
     {
-        if (logo != null && draw_logo)
+        if (logo != null)
             Gdk.cairo_set_source_pixbuf (cr, logo, 0, 0);
-        else if (alternate_image != null && draw_logo == false)
-            Gdk.cairo_set_source_pixbuf (cr, alternate_image, 0, 0);
         cr.paint();
         return false;
     }
@@ -107,11 +105,6 @@ public class PanelButtonWindow : PanelAbstractWindow {
             menu_shown ();
         }
         return false;
-    }
-
-    public void set_alternate_image (string name) {
-        var icon_theme = IconTheme.get_default();
-        alternate_image = icon_theme.load_icon (name, 30, IconLookupFlags.GENERIC_FALLBACK);
     }
 
 }
