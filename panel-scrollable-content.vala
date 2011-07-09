@@ -4,9 +4,7 @@ public class PanelScrollableContent : ScrolledWindow {
     private Viewport viewport;
     private unowned Widget widget;
 
-    public PanelScrollableContent (PanelAnimatedAdjustment? hadjustment, PanelAnimatedAdjustment? vadjustment) {
-        set_hadjustment (hadjustment);
-        set_vadjustment (vadjustment);
+    public PanelScrollableContent () {
     }
 
     public void set_widget (Widget w) {

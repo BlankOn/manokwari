@@ -75,7 +75,8 @@ public class PanelMenuBox : PanelAbstractWindow {
         columns = new HBox (true, 0);
 
         // Create outer scrollable
-        var panel_area = new PanelScrollableContent (adjustment, null);
+        var panel_area = new PanelScrollableContent ();
+        panel_area.set_hadjustment (adjustment);
         panel_area.set_widget (columns);
 
         // Add to window

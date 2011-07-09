@@ -8,7 +8,6 @@ public class PanelMenuContent : PanelScrollableContent {
     public signal void menu_clicked ();
 
     public PanelMenuContent (string? label, string catalog) {
-        base (null, null);
         bar = new VBox (false, 0);
         set_widget (bar);
         set_scrollbar_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
