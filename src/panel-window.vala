@@ -1,6 +1,7 @@
 using Gtk;
 using Cairo;
 using Wnck;
+using Gee;
 
 public class PanelWindowPager : PanelAbstractWindow {
     public signal void hidden ();
@@ -271,10 +272,7 @@ public class PanelWindowEntry : DrawingArea {
             description.activate_window ();
             return false; 
         });
-
-
     }
-
 
     public override void get_preferred_height (out int min, out int max) {
         // TODO
@@ -301,6 +299,7 @@ public class PanelWindowHost : PanelAbstractWindow {
     private HBox box;
     private new Wnck.Screen screen;
     private int num_visible_windows;
+    private HashMap <Wnck.Window, PanelWindowEntry> entry_map ;
 
     public signal void windows_gone();
     public signal void windows_visible();
@@ -312,6 +311,8 @@ public class PanelWindowHost : PanelAbstractWindow {
     }
 
     public PanelWindowHost () {
+        entry_map = new HashMap <Wnck.Window, PanelWindowEntry> (); 
+
         num_visible_windows = 0;
         set_type_hint (Gdk.WindowTypeHint.DOCK);
         active = false;
@@ -359,8 +360,8 @@ public class PanelWindowHost : PanelAbstractWindow {
             }
         });
         screen.window_closed.connect ((w) => {
-            if (!w.is_skip_tasklist())
-                update (true);
+            var e = entry_map [w];
+            e.destroy ();
         });
 
         screen.active_workspace_changed.connect (() => {
@@ -380,16 +381,23 @@ public class PanelWindowHost : PanelAbstractWindow {
 
     public void update (bool emit_change_signals) {
         set_struts(); 
+
         foreach (unowned Widget w in box.get_children ()) {
-            if (w.get_name () != "PAGER") 
+            if (w is PanelWindowEntry)
                 box.remove (w);
         }
+
         var num_windows = 0;
         foreach (unowned Wnck.Window w in screen.get_windows()) {
             if (!w.is_skip_tasklist () 
               && (w.get_name() != "blankon-panel")
               && w.is_on_workspace (screen.get_active_workspace())) {
-                var e = new PanelWindowEntry (w, ref description);
+                var e = entry_map [w];
+                if (e == null) {
+                    e = new PanelWindowEntry (w, ref description);
+                    entry_map.set (w, e);
+                }
+
                 e.show ();
                 // Forward description_shown signal
                 // so the pager would close
