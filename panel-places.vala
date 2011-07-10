@@ -3,15 +3,6 @@ using GLib;
 
 public class PanelPlaces : PanelMenuContent {
 
-    public class UriItem : PanelItem {
-        public UserDirectory id { get; set; default = UserDirectory.DESKTOP;}
-
-        public UriItem (string label) 
-        {
-            set_text (label);
-        }
-    }
-
     public PanelPlaces () {
         base ("Places");
         init_contents ();
@@ -46,24 +37,52 @@ public class PanelPlaces : PanelMenuContent {
             if (path == null)
                 continue;
 
-            var dir = new UriItem (Filename.display_basename(path));
+            var dir = new PanelItem.with_label (Filename.display_basename(path));
             if (i == (int) UserDirectory.DESKTOP)
                 dir.set_image ("desktop");
             else
                 dir.set_image ("gtk-directory");
-            dir.id = (UserDirectory) i;
             bar.pack_start (dir, false, false, 0);
 
             dir.activate.connect (() => {
                 show_uri_from_path (path);
             });
         }
+
+        var file = File.new_for_path (Environment.get_home_dir () + "/.gtk-bookmarks");
+
+        if (file.query_exists ()) {
+            var input = new DataInputStream (file.read ());
+            string line;
+            while ((line = input.read_line (null)) != null) {
+                var fields = line.split (" ");
+                if (fields.length == 2) {
+                    var item = new PanelItem.with_label (fields [1]);
+                    item.set_image ("gtk-directory");
+                    bar.pack_start (item, false, false, 0);
+                    item.activate.connect (() => {
+                        stdout.printf("%s\n", fields[0]);
+                        try {
+                            show_uri (Gdk.Screen.get_default (), fields [0], get_current_event_time());
+                        } catch (Error e) {
+                            var dialog = new MessageDialog (null, DialogFlags.DESTROY_WITH_PARENT, MessageType.ERROR, ButtonsType.CLOSE, "Error opening '%s': %s", fields [1], e.message);
+                            dialog.response.connect (() => {
+                                dialog.destroy ();
+                            });
+                            dialog.show ();
+
+                        }
+                    });
+                }
+            }
+        }
+
     }
 
     private void setup_mounts () {
         insert_separator ();
         var vol_monitor = VolumeMonitor.get ();
-        foreach (unowned Mount mount in vol_monitor.get_mounts ()) {
+        foreach (Mount mount in vol_monitor.get_mounts ()) {
             if (mount == null)
                 continue;
 
