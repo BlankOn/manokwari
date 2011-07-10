@@ -100,6 +100,11 @@ public class PanelPlaces : PanelMenuContent {
         try {
             show_uri (Gdk.Screen.get_default (), f.get_uri (), get_current_event_time());
         } catch (Error e) {
+            var dialog = new MessageDialog (null, DialogFlags.DESTROY_WITH_PARENT, MessageType.ERROR, ButtonsType.CLOSE, "Error opening '%s': %s", path, e.message);
+            dialog.response.connect (() => {
+                    dialog.destroy ();
+                    });
+            dialog.show ();
         }
     }
 }
