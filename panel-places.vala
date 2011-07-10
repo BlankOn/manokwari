@@ -45,8 +45,11 @@ public class PanelPlaces : PanelMenuContent {
             if (path == null)
                 continue;
 
-            var dir = new UriItem ("Desktop");
-            dir.set_image ("gtk-dir");
+            var dir = new UriItem (Filename.display_basename(path));
+            if (i == (int) UserDirectory.DESKTOP)
+                dir.set_image ("desktop");
+            else
+                dir.set_image ("gtk-directory");
             dir.id = (UserDirectory) i;
             bar.pack_start (dir, false, false, 0);
 
