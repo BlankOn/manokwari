@@ -1,4 +1,10 @@
 using Gtk;
+[DBus (name = "org.gnome.SessionManager")]
+interface SessionManager : Object {
+    public abstract void shutdown () throws IOError;
+    public abstract void logout (uint32 mode) throws IOError;
+    public abstract bool can_shutdown () throws IOError;
+}
 
 
 public class PanelMenuBox : PanelAbstractWindow {
@@ -12,6 +18,8 @@ public class PanelMenuBox : PanelAbstractWindow {
 
     private PanelAnimatedAdjustment adjustment;
     private unowned Widget? content_widget = null;
+
+    private SessionManager session;
 
     public int get_active_column () {
         return active_column;
@@ -62,6 +70,8 @@ public class PanelMenuBox : PanelAbstractWindow {
     }
 
     public PanelMenuBox () {
+        session =  Bus.get_proxy_sync (BusType.SESSION,
+                                                  "org.gnome.SessionManager", "/org/gnome/SessionManager");
         set_type_hint (Gdk.WindowTypeHint.DIALOG);
         move (rect ().x, rect ().y);
 
@@ -106,6 +116,26 @@ public class PanelMenuBox : PanelAbstractWindow {
         var places_opener = new PanelItem.with_label ("Places");
         places_opener.set_image ("gtk-home");
         quick_launch_box.pack_start (places_opener, false, false, 0);
+
+        try {
+            var logout = new PanelItem.with_label ("Logout...");
+            logout.set_image ("system-logout");
+            quick_launch_box.pack_start (logout, false, false, 0);
+            logout.activate.connect (() => {
+                    session.logout (0);
+                    });
+
+            if (session.can_shutdown ()) {
+                var shutdown = new PanelItem.with_label ("Shutdown...");
+                shutdown.set_image ("system-shutdown");
+                quick_launch_box.pack_start (shutdown, false, false, 0);
+                shutdown.activate.connect (() => {
+                        session.shutdown ();
+                        });
+            }
+        } catch (Error e) {
+            stdout.printf ("Unable to connect to session manager\n");
+        }
 
         //////////////////////////////////////////////////////
         // Second column
