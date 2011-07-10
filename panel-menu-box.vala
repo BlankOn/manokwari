@@ -119,7 +119,7 @@ public class PanelMenuBox : PanelAbstractWindow {
 
         try {
             var logout = new PanelItem.with_label ("Logout...");
-            logout.set_image ("system-logout");
+            logout.set_image ("gnome-logout");
             quick_launch_box.pack_start (logout, false, false, 0);
             logout.activate.connect (() => {
                     session.logout (0);
