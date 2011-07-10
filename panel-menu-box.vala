@@ -195,6 +195,7 @@ public class PanelMenuBox : PanelAbstractWindow {
 
         all_apps.hide ();
         control_center.hide ();
+        places.hide ();
 
         var tray = new PanelTray ();
         quick_launch_box.pack_end (tray, false, false, 0);
