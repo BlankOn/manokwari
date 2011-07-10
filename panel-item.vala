@@ -111,6 +111,12 @@ public class PanelItem : Box {
         image.clear ();
     }
 
+    public void set_image_from_icon (Icon icon) {
+        image.set_from_gicon (icon, IconSize.LARGE_TOOLBAR); 
+        if (settings.gtk_menu_images)
+            image.show ();
+    }
+
     public void append_filler (int width) { 
         var filler = new DrawingArea ();
 
