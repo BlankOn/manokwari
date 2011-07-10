@@ -2,11 +2,16 @@ using Gtk;
 
 public class PanelExpanderItem : Expander {
     private PanelItem item;
+    private bool cancel_showing = false;
 
     public signal void expanding ();
 
 
     private bool expand_later () {
+        if (cancel_showing) {
+            cancel_showing = false;
+            return false;
+        }
         set_expanded (true); 
         expanding ();
         return false;
@@ -26,6 +31,11 @@ public class PanelExpanderItem : Expander {
         set_label_widget (item);
         enter_notify_event.connect ((o, event) => {
             GLib.Timeout.add (1000, expand_later);
+            return true;
+        });
+
+        leave_notify_event.connect ((o, event) => {
+            cancel_showing = true;
             return true;
         });
 
