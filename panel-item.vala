@@ -25,7 +25,7 @@ public class PanelExpanderItem : Expander {
         item.set_image (icon);
         set_label_widget (item);
         enter_notify_event.connect ((o, event) => {
-            GLib.Timeout.add (250, expand_later);
+            GLib.Timeout.add (1000, expand_later);
             return true;
         });
 
