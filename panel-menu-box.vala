@@ -179,7 +179,7 @@ public class PanelMenuBox : PanelAbstractWindow {
             dismiss ();
         });
 
-        control_center.populate ("systems.menu");
+        control_center.populate ("settings.menu");
         control_center.set_min_content_height (rect ().height - 200); // TODO
 
         var places = new PanelPlaces ();
