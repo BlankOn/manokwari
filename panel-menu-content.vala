@@ -69,6 +69,6 @@ public class PanelMenuContent : PanelScrollableContent {
     }
 
     public void insert_separator () {
-        //menu.append (new SeparatorMenuItem ());
+        bar.pack_start (new Separator (Orientation.HORIZONTAL), false, false, 10);
     }
 }
