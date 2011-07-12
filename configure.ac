@@ -32,6 +32,9 @@ LIBGNOME_MENU_REQUIRED=2.30.5
 LIBWNCK_REQUIRED=3.0.0
 
 PKG_CHECK_MODULES(BLANKON_PANEL, glib-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED gtk+-3.0 >= $GTK_REQUIRED atk >= $ATK_REQUIRED gee-1.0 >= $GEE_REQUIRED cairo >= $CAIRO_REQUIRED libgnome-menu >= $LIBGNOME_MENU_REQUIRED libwnck-3.0 >= $LIBWNCK_REQUIRED)
+
+BLANKON_PANEL_CFLAGS='-pthread -DGSEAL_ENABLE -I/usr/include/glib-2.0 -I/usr/lib/i386-linux-gnu/glib-2.0/include -I/usr/include/atk-1.0 -I/usr/include/pango-1.0 -I/usr/include/gio-unix-2.0/ -I/usr/include/freetype2 -I/usr/include/libpng12 -I/usr/include/gtk-3.0 -I/usr/include/cairo -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/pixman-1 -I/usr/include/gee-1.0 -I/usr/include/gnome-menus "-DGMENU_I_KNOW_THIS_IS_UNSTABLE" -I/usr/include/libwnck-3.0 "-DWNCK_I_KNOW_THIS_IS_UNSTABLE" -I/usr/include/startup-notification-1.0'
+
 AC_SUBST(BLANKON_PANEL_CFLAGS)
 AC_SUBST(BLANKON_PANEL_LIBS)
 
