@@ -1,0 +1,50 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2011 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Aji Kisworo Mukti <adzy@di.blankon.in>, 2011.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-07-12 23:48+0700\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Aji Kisworo Mukti <adzy@di.blankon.in\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: id\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/panel-menu-box.vala:99
+msgid "Favorites"
+msgstr "Favorit"
+
+#: src/panel-menu-box.vala:108
+msgid "All applications"
+msgstr "Semua aplikasi"
+
+#: src/panel-menu-box.vala:112 src/panel-menu-box.vala:170
+msgid "Settings"
+msgstr "Pengaturan"
+
+#: src/panel-menu-box.vala:116
+msgid "Places"
+msgstr "Lokasi"
+
+#: src/panel-menu-box.vala:121
+msgid "Logout..."
+msgstr "Keluar"
+
+#: src/panel-menu-box.vala:129
+msgid "Shutdown..."
+msgstr "Matikan"
+
+#: src/panel-menu-box.vala:155
+msgid "Applications"
+msgstr "Aplikasi"
+
+#: src/panel-places.vala:24
+msgid "Home"
+msgstr "Beranda"
