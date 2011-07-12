@@ -35,11 +35,11 @@ msgstr "Lokasi"
 
 #: src/panel-menu-box.vala:121
 msgid "Logout..."
-msgstr "Keluar"
+msgstr "Keluar..."
 
 #: src/panel-menu-box.vala:129
 msgid "Shutdown..."
-msgstr "Matikan"
+msgstr "Matikan..."
 
 #: src/panel-menu-box.vala:155
 msgid "Applications"
