@@ -117,7 +117,6 @@ public class PanelWindowDescription : PanelAbstractWindow {
     public signal void hidden ();
     private Label label;
     private bool _cancel_hiding;
-    private bool popup_shown = false;
     private Wnck.Window window_info;
 
     public signal void clicked ();
@@ -148,40 +147,12 @@ public class PanelWindowDescription : PanelAbstractWindow {
         add (label);
 
         leave_notify_event.connect (() => {
-            if (popup_shown)
-                return false;
-
             _cancel_hiding = false;
             GLib.Timeout.add (250, hide_description); 
 
             return true; 
         });
 
-        button_press_event.connect ((event) => {
-            if (event.button == 3 && event.type == Gdk.EventType.BUTTON_PRESS) { // right click
-                show_popup (event);
-            } else {
-                activate_window ();
-            }
-            return true; 
-        });
-    }
-
-    public void show_popup (Gdk.EventButton event) {
-        var menu = new Wnck.ActionMenu (window_info);
-
-        var button = event.button;
-        var event_time = event.time;
-
-        menu.deactivate.connect (() => {
-            stdout.printf("xxxxx\n");
-            popup_shown = false;
-            hide ();
-        });
-        menu.attach_to_widget (this, null);
-
-        popup_shown = true;
-        menu.popup (null, null, null, button, event_time);
     }
 
     public override void get_preferred_height (out int min, out int max) {
@@ -193,10 +164,6 @@ public class PanelWindowDescription : PanelAbstractWindow {
         var r = rect();
         min = max = r.width;
     }
-
-    public void activate_window () {
-        window_info.activate (get_current_event_time());
-    }
 }
 
 public class PanelWindowEntry : DrawingArea {
@@ -205,10 +172,9 @@ public class PanelWindowEntry : DrawingArea {
     private Wnck.WindowState last_state;
     private Gtk.StateFlags state;
     private PanelWindowDescription description;
+    private bool popup_shown = false;
 
     public signal void description_shown ();
-    public signal void entered ();
-    public signal void left ();
 
     private bool show_description () {
         description.show_all ();
@@ -251,7 +217,6 @@ public class PanelWindowEntry : DrawingArea {
 
         leave_notify_event.connect ((event) => {
             sync_window_states ();
-            left ();
             return false;
         });
         enter_notify_event.connect ((event) => {
@@ -261,7 +226,6 @@ public class PanelWindowEntry : DrawingArea {
             queue_draw ();
             GLib.Timeout.add (100, show_description); 
             description.cancel_hiding ();
-            entered ();
             return false; 
         });
 
@@ -270,12 +234,17 @@ public class PanelWindowEntry : DrawingArea {
         });
 
         button_press_event.connect ((event) => {
-            state = StateFlags.SELECTED;
-            description.set_state_flags (state, true);
-            queue_draw ();
-            description.activate_window ();
-            return false; 
+            if (event.button == 3 && event.type == Gdk.EventType.BUTTON_PRESS) { // right click
+                show_popup (event);
+            } else {
+                state = StateFlags.SELECTED;
+                description.set_state_flags (state, true);
+                queue_draw ();
+                window_info.activate (get_current_event_time());
+            }
+            return true; 
         });
+
     }
 
     public override void get_preferred_height (out int min, out int max) {
@@ -294,6 +263,22 @@ public class PanelWindowEntry : DrawingArea {
         Gtk.render_background (style, cr, 0, 0, get_window ().get_width (), get_window ().get_height ());
         return true;
     }
+
+    public void show_popup (Gdk.EventButton event) {
+        var menu = new Wnck.ActionMenu (window_info);
+
+        var button = event.button;
+        var event_time = event.time;
+
+        menu.deactivate.connect (() => {
+            popup_shown = false;
+        });
+        menu.attach_to_widget (this, null);
+
+        popup_shown = true;
+        menu.popup (null, null, null, button, event_time);
+    }
+
 
 }
 
