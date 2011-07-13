@@ -302,7 +302,7 @@ public class PanelWindowHost : PanelAbstractWindow {
     private bool active;
     private HBox box;
     private new Wnck.Screen screen;
-    private int num_visible_windows;
+    private int num_visible_windows = 0;
     private HashMap <Wnck.Window, PanelWindowEntry> entry_map ;
     private int height = 12;
 
@@ -370,7 +370,10 @@ public class PanelWindowHost : PanelAbstractWindow {
         });
         screen.window_closed.connect ((w) => {
             var e = entry_map [w];
-            e.destroy ();
+            if (e != null) {
+                e.destroy ();
+                entry_map.unset (w);
+            }
         });
 
         screen.active_workspace_changed.connect (() => {
@@ -378,7 +381,10 @@ public class PanelWindowHost : PanelAbstractWindow {
         });
 
         enter_notify_event.connect (() => {
-            resize (Size.Big);
+            // Only resize if there are visible windows
+            if (entry_map.size > 0) {
+                resize (Size.Big);
+            }
             return false;
         });
 
