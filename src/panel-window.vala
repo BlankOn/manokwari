@@ -207,6 +207,8 @@ public class PanelWindowEntry : DrawingArea {
     private PanelWindowDescription description;
 
     public signal void description_shown ();
+    public signal void entered ();
+    public signal void left ();
 
     private bool show_description () {
         description.show_all ();
@@ -249,6 +251,7 @@ public class PanelWindowEntry : DrawingArea {
 
         leave_notify_event.connect ((event) => {
             sync_window_states ();
+            left ();
             return false;
         });
         enter_notify_event.connect ((event) => {
@@ -258,6 +261,7 @@ public class PanelWindowEntry : DrawingArea {
             queue_draw ();
             GLib.Timeout.add (100, show_description); 
             description.cancel_hiding ();
+            entered ();
             return false; 
         });
 
@@ -300,10 +304,16 @@ public class PanelWindowHost : PanelAbstractWindow {
     private new Wnck.Screen screen;
     private int num_visible_windows;
     private HashMap <Wnck.Window, PanelWindowEntry> entry_map ;
+    private int height = 12;
 
     public signal void windows_gone();
     public signal void windows_visible();
     public signal void description_shown ();
+
+    enum Size {
+        Small = 12,
+        Big = 50
+    }
 
     public bool no_windows_around () {
         update (false);
@@ -330,7 +340,7 @@ public class PanelWindowHost : PanelAbstractWindow {
         outer_box.pack_start (box, true, true, 1);
         outer_box.show ();
 
-        box.show ();
+        box.show();
         description.hide ();
         show();
         var r = rect();
@@ -342,11 +352,10 @@ public class PanelWindowHost : PanelAbstractWindow {
 
         // Hide pager when description is shown
         description_shown.connect (() => {
-           pager_entry.hide_pager ();
+            pager_entry.hide_pager ();
         });
 
         description.hidden.connect (() => {
-            move (0, r.height - get_window ().get_height ());
         });
 
         screen.window_opened.connect ((w) => {
@@ -367,6 +376,27 @@ public class PanelWindowHost : PanelAbstractWindow {
         screen.active_workspace_changed.connect (() => {
             update (true);
         });
+
+        enter_notify_event.connect (() => {
+            resize (Size.Big);
+            return false;
+        });
+
+        leave_notify_event.connect ((e) => {
+            int x, y;
+            get_window ().get_position (out x, out y);
+            // If e.y is negative then it's outside the area
+            if (e.y < 0) {
+                resize (Size.Small);
+            }
+            return false;
+        });
+    }
+
+    private new void resize (Size size) {
+        height = size;
+        queue_resize ();
+        get_window ().move_resize (rect ().x, rect ().height - size, rect ().width, size);
     }
 
     public override void get_preferred_width (out int min, out int max) {
@@ -376,7 +406,8 @@ public class PanelWindowHost : PanelAbstractWindow {
 
     public override void get_preferred_height (out int min, out int max) {
         // TODO
-        min = max = 12; 
+            stdout.printf ("HH %d\n", height);
+        min = max = height; 
     }
 
     public void update (bool emit_change_signals) {
@@ -396,14 +427,16 @@ public class PanelWindowHost : PanelAbstractWindow {
                 if (e == null) {
                     e = new PanelWindowEntry (w, ref description);
                     entry_map.set (w, e);
+                    
+                    // Forward description_shown signal
+                    // so the pager would close
+                    e.description_shown.connect (() => {
+//                        description_shown ();
+                    });
+
                 }
 
                 e.show ();
-                // Forward description_shown signal
-                // so the pager would close
-                e.description_shown.connect (() => {
-                    description_shown ();
-                });
                 box.pack_start (e, true, true, 1);
                 if (!w.is_minimized ())
                     num_windows ++;
