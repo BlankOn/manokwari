@@ -119,6 +119,8 @@ public class PanelWindowEntry : DrawingArea {
     private Wnck.WindowState last_state;
     private Gtk.StateFlags state;
     private bool popup_shown = false;
+    public bool draw_info { private get; set; default = false; }
+    private Pango.Layout pango;
 
     private void sync_window_states () {
         if (window_info.is_minimized ()) {
@@ -130,6 +132,8 @@ public class PanelWindowEntry : DrawingArea {
     }
 
     public PanelWindowEntry (Wnck.Window info) {
+        pango = new Pango.Layout (new Pango.Context ());
+
         add_events (Gdk.EventMask.STRUCTURE_MASK
             | Gdk.EventMask.BUTTON_PRESS_MASK
             | Gdk.EventMask.BUTTON_RELEASE_MASK
@@ -187,6 +191,14 @@ public class PanelWindowEntry : DrawingArea {
         StyleContext style = get_style_context ();
         style.set_state (state);
         Gtk.render_background (style, cr, 0, 0, get_window ().get_width (), get_window ().get_height ());
+        if (draw_info) {
+            pango.set_font_description (style.get_font (state));
+            pango.set_text ("<big>" + window_info.get_name () + "</big>", -1);
+            //Gtk.render_layout (style, cr, 0, 0, pango);
+
+            Gdk.cairo_set_source_pixbuf (cr, window_info.get_icon (), 0, 0);
+            cr.paint ();
+        }
         return true;
     }
 
@@ -298,6 +310,13 @@ public class PanelWindowHost : PanelAbstractWindow {
         height = size;
         queue_resize ();
         get_window ().move_resize (rect ().x, rect ().height - size, rect ().width, size);
+        var draw_info = false;
+        if (size == Size.Big) {
+            draw_info = true;
+        }
+        foreach (PanelWindowEntry e in entry_map.values) {
+            e.draw_info = draw_info;
+        }
     }
 
     public override void get_preferred_width (out int min, out int max) {
