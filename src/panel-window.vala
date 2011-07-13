@@ -431,7 +431,7 @@ public class PanelWindowHost : PanelAbstractWindow {
                     // Forward description_shown signal
                     // so the pager would close
                     e.description_shown.connect (() => {
-//                        description_shown ();
+                        description_shown ();
                     });
 
                 }
