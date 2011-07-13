@@ -388,6 +388,7 @@ public class PanelWindowHost : PanelAbstractWindow {
             // If e.y is negative then it's outside the area
             if (e.y < 0) {
                 resize (Size.Small);
+                description.hide ();
             }
             return false;
         });
