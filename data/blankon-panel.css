@@ -1,0 +1,73 @@
+@define-color bg_color #00001e;
+@define-color fg_color #f2f2f2;
+@define-color window_desc_bg_color #4e70b0;
+@define-color window_desc_fg_color #00001e;
+@define-color window_desc_bg_minimized_color #606090;
+@define-color window_desc_fg_minimized_color #010101;
+@define-color window_desc_bg_hover_color #a0a0a0;
+@define-color window_desc_fg_hover_color #010101;
+
+
+PanelWindowPager,
+PanelTray,
+PanelWindowList,
+PanelWindowHost,
+GtkMenuItem,
+GtkMenu,
+GtkMenuBar,
+PanelMenuBox {
+    color: @fg_color;
+    background-color: @bg_color;
+}
+
+GtkTooltip {
+    color: @fg_color;
+    background-color: @bg_color;
+}
+
+PanelWindowDescription {
+    color: @window_desc_fg_color;
+    background-color: @window_desc_bg_color;
+    height: 12;
+}
+
+MenuItem:hover,
+PanelItem:hover {
+    background-color: #243188;
+}
+
+
+PanelItem {
+    background-color: @bg_color;
+}
+
+PanelWindowEntry {
+    background-color: @window_desc_bg_color;
+    color: @window_desc_fg_color;
+}
+
+PanelWindowDescription:prelight,
+PanelWindowEntry:prelight {
+    background-color: @window_desc_bg_hover_color;
+    color: @window_desc_fg_hover_color;
+}
+
+PanelWindowDescription:insensitive,
+PanelWindowEntry:insensitive {
+    background-color: @window_desc_bg_minimized_color;
+    color: @window_desc_fg_minimized_color;
+}
+
+PanelWindowDescription GtkLabel {
+    font-name: Times 50;
+    color: #fefefe;
+}
+
+PanelItem:prelight {
+    color: #fefefe;
+}
+PanelItem GtkLabel:prelight {
+    color: #ffffff;
+}
+
+
