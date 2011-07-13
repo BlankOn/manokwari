@@ -406,8 +406,6 @@ public class PanelWindowHost : PanelAbstractWindow {
     }
 
     public override void get_preferred_height (out int min, out int max) {
-        // TODO
-            stdout.printf ("HH %d\n", height);
         min = max = height; 
     }
 
