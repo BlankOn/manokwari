@@ -21,7 +21,7 @@ public class PanelPlaces : PanelMenuContent {
     }
 
     private void setup_home () {
-        var home = new PanelItem.with_label ("Home");
+        var home = new PanelItem.with_label ( _("Home") );
         home.set_image ("gtk-home");
         bar.pack_start (home, false, false, 0);
 

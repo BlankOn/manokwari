@@ -96,7 +96,7 @@ public class PanelMenuBox : PanelAbstractWindow {
         var quick_launch_box = new VBox (false, 0);
         columns.pack_start (quick_launch_box);
 
-        var favorites = new PanelMenuContent("Favorites");
+        var favorites = new PanelMenuContent( _("Favorites") );
         quick_launch_box.pack_start (favorites, false, false, 0);
         favorites.populate ("favorites.menu");
         favorites.set_min_content_height (200);
@@ -105,20 +105,20 @@ public class PanelMenuBox : PanelAbstractWindow {
             dismiss ();
         });
 
-        var all_apps_opener = new PanelItem.with_label ("All applications");
+        var all_apps_opener = new PanelItem.with_label ( _("All applications") );
         all_apps_opener.set_image ("gnome-applications");
         quick_launch_box.pack_start (all_apps_opener, false, false, 0);
 
-        var cc_opener = new PanelItem.with_label ("Settings");
+        var cc_opener = new PanelItem.with_label ( _("Settings") );
         cc_opener.set_image ("gnome-control-center");
         quick_launch_box.pack_start (cc_opener, false, false, 0);
 
-        var places_opener = new PanelItem.with_label ("Places");
+        var places_opener = new PanelItem.with_label ( _("Places") );
         places_opener.set_image ("gtk-home");
         quick_launch_box.pack_start (places_opener, false, false, 0);
 
         try {
-            var logout = new PanelItem.with_label ("Logout...");
+            var logout = new PanelItem.with_label ( _("Logout...") );
             logout.set_image ("gnome-logout");
             quick_launch_box.pack_start (logout, false, false, 0);
             logout.activate.connect (() => {
@@ -126,7 +126,7 @@ public class PanelMenuBox : PanelAbstractWindow {
                     });
 
             if (session.can_shutdown ()) {
-                var shutdown = new PanelItem.with_label ("Shutdown...");
+                var shutdown = new PanelItem.with_label ( _("Shutdown...") );
                 shutdown.set_image ("system-shutdown");
                 quick_launch_box.pack_start (shutdown, false, false, 0);
                 shutdown.activate.connect (() => {
@@ -152,7 +152,7 @@ public class PanelMenuBox : PanelAbstractWindow {
         });
 
         // All application (2nd) column
-        var all_apps = new PanelMenuContent("Applications");
+        var all_apps = new PanelMenuContent( _("Applications") );
         content_box.pack_start (all_apps);
 
         all_apps_opener.activate.connect (() => {
@@ -167,7 +167,7 @@ public class PanelMenuBox : PanelAbstractWindow {
         all_apps.populate ("applications.menu");
         all_apps.set_min_content_height (rect ().height - 200); // TODO
 
-        var control_center = new PanelMenuContent("Settings");
+        var control_center = new PanelMenuContent( _("Settings") );
         content_box.pack_start (control_center);
 
         cc_opener.activate.connect (() => {

@@ -1,1 +1,11 @@
-src/main.c
+src/blankon-panel.css
+src/main.vala
+src/panel-abstract-window.vala
+src/panel-animated-adjustment.vala
+src/panel-button.vala
+src/panel-clock.vala
+src/panel-item.vala
+src/panel-menu-content.vala
+src/panel-scrollable-content.vala
+src/panel-tray.vala
+src/panel-window.vala
