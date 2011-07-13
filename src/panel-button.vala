@@ -84,9 +84,6 @@ public class PanelButtonWindow : PanelAbstractWindow {
                 menu_box.hide ();
         });
 
-        menu_shown.connect (() => {
-            w.dismiss ();
-        });
     }
 
     public override bool draw (Context cr)

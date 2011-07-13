@@ -113,74 +113,12 @@ public class PanelWindowPagerEntry : DrawingArea {
 
 }
 
-public class PanelWindowDescription : PanelAbstractWindow {
-    public signal void hidden ();
-    private Label label;
-    private bool _cancel_hiding;
-    private Wnck.Window window_info;
-
-    public signal void clicked ();
-
-    public void cancel_hiding() {
-        _cancel_hiding = true;
-    }
-
-    bool hide_description () {
-        if (_cancel_hiding)
-            return false;
-
-        hide ();
-        hidden ();
-        return false;
-    }
-
-    public void set_window_info (Wnck.Window info) {
-        window_info = info;
-        label.set_markup ("<big>" + info.get_name () + "</big>");
-    }
-
-    public PanelWindowDescription () {
-        set_type_hint (Gdk.WindowTypeHint.DOCK);
-        hide();
-        label = new Label ("");
-        label.show ();
-        add (label);
-
-        leave_notify_event.connect (() => {
-            _cancel_hiding = false;
-            GLib.Timeout.add (250, hide_description); 
-
-            return true; 
-        });
-
-    }
-
-    public override void get_preferred_height (out int min, out int max) {
-        // TODO
-        min = max = 50; 
-    }
-
-    public override void get_preferred_width (out int min, out int max) {
-        var r = rect();
-        min = max = r.width;
-    }
-}
-
 public class PanelWindowEntry : DrawingArea {
     private Gdk.Rectangle rect;
     private Wnck.Window window_info;
     private Wnck.WindowState last_state;
     private Gtk.StateFlags state;
-    private PanelWindowDescription description;
     private bool popup_shown = false;
-
-    public signal void description_shown ();
-
-    private bool show_description () {
-        description.show_all ();
-        description_shown ();
-        return false;
-    }
 
     private void sync_window_states () {
         if (window_info.is_minimized ()) {
@@ -188,11 +126,10 @@ public class PanelWindowEntry : DrawingArea {
         } else {
             state = StateFlags.NORMAL;
         }
-        description.set_state_flags (state, true);
         queue_draw ();
     }
 
-    public PanelWindowEntry (Wnck.Window info, ref PanelWindowDescription d) {
+    public PanelWindowEntry (Wnck.Window info) {
         add_events (Gdk.EventMask.STRUCTURE_MASK
             | Gdk.EventMask.BUTTON_PRESS_MASK
             | Gdk.EventMask.BUTTON_RELEASE_MASK
@@ -201,9 +138,7 @@ public class PanelWindowEntry : DrawingArea {
 
         window_info = info;
         last_state = info.get_state ();
-        description = d;
         sync_window_states ();
-        d.set_window_info (info);
 
         var screen = get_screen();
         screen.get_monitor_geometry (screen.get_primary_monitor(), out rect);
@@ -220,17 +155,9 @@ public class PanelWindowEntry : DrawingArea {
             return false;
         });
         enter_notify_event.connect ((event) => {
-            description.set_window_info (info);
             state = StateFlags.PRELIGHT;
-            description.set_state_flags (state, true);
             queue_draw ();
-            GLib.Timeout.add (100, show_description); 
-            description.cancel_hiding ();
             return false; 
-        });
-
-        description_shown.connect (() => {
-            description.get_window().move (0, rect.height -  get_window ().get_height () - description.get_window ().get_height ());
         });
 
         button_press_event.connect ((event) => {
@@ -238,7 +165,6 @@ public class PanelWindowEntry : DrawingArea {
                 show_popup (event);
             } else {
                 state = StateFlags.SELECTED;
-                description.set_state_flags (state, true);
                 queue_draw ();
                 window_info.activate (get_current_event_time());
             }
@@ -283,7 +209,6 @@ public class PanelWindowEntry : DrawingArea {
 }
 
 public class PanelWindowHost : PanelAbstractWindow {
-    private PanelWindowDescription description;
     private bool active;
     private HBox box;
     private new Wnck.Screen screen;
@@ -293,7 +218,6 @@ public class PanelWindowHost : PanelAbstractWindow {
 
     public signal void windows_gone();
     public signal void windows_visible();
-    public signal void description_shown ();
 
     enum Size {
         Small = 12,
@@ -311,7 +235,6 @@ public class PanelWindowHost : PanelAbstractWindow {
         num_visible_windows = 0;
         set_type_hint (Gdk.WindowTypeHint.DOCK);
         active = false;
-        description = new PanelWindowDescription ();
         screen = Wnck.Screen.get_default ();
         var outer_box = new HBox (false, 0); 
         box = new HBox (true, 0);
@@ -326,22 +249,9 @@ public class PanelWindowHost : PanelAbstractWindow {
         outer_box.show ();
 
         box.show();
-        description.hide ();
         show();
         var r = rect();
         move (0, r.height - get_window ().get_height ());
-
-        pager_entry.pager_shown.connect (() => {
-            description.hide ();
-        });
-
-        // Hide pager when description is shown
-        description_shown.connect (() => {
-            pager_entry.hide_pager ();
-        });
-
-        description.hidden.connect (() => {
-        });
 
         screen.window_opened.connect ((w) => {
             if (!w.is_skip_tasklist()) {
@@ -379,7 +289,6 @@ public class PanelWindowHost : PanelAbstractWindow {
             // If e.y is negative then it's outside the area
             if (e.y < 0) {
                 resize (Size.Small);
-                description.hide ();
             }
             return false;
         });
@@ -415,15 +324,8 @@ public class PanelWindowHost : PanelAbstractWindow {
               && w.is_on_workspace (screen.get_active_workspace())) {
                 var e = entry_map [w];
                 if (e == null) {
-                    e = new PanelWindowEntry (w, ref description);
+                    e = new PanelWindowEntry (w);
                     entry_map.set (w, e);
-                    
-                    // Forward description_shown signal
-                    // so the pager would close
-                    e.description_shown.connect (() => {
-                        description_shown ();
-                    });
-
                 }
 
                 e.show ();
@@ -439,9 +341,5 @@ public class PanelWindowHost : PanelAbstractWindow {
                 windows_visible ();
         }
         num_visible_windows = num_windows;
-    }
-
-    public void dismiss () {
-        description.hide ();
     }
 }
