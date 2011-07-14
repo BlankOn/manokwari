@@ -121,6 +121,8 @@ public class PanelWindowEntry : DrawingArea {
     private bool popup_shown = false;
     public bool draw_info { private get; set; default = false; }
     private Pango.Layout pango;
+    private int Margin = 5;
+    private bool oversize = false;
 
     private void sync_window_states () {
         if (window_info.is_minimized ()) {
@@ -132,7 +134,7 @@ public class PanelWindowEntry : DrawingArea {
     }
 
     public PanelWindowEntry (Wnck.Window info) {
-        pango = new Pango.Layout (new Pango.Context ());
+        pango = new Pango.Layout (get_pango_context ());
 
         add_events (Gdk.EventMask.STRUCTURE_MASK
             | Gdk.EventMask.BUTTON_PRESS_MASK
@@ -161,6 +163,10 @@ public class PanelWindowEntry : DrawingArea {
         enter_notify_event.connect ((event) => {
             state = StateFlags.PRELIGHT;
             queue_draw ();
+            if (oversize)
+                set_tooltip_text (window_info.get_name ());
+            else
+                set_tooltip_text ("");
             return false; 
         });
 
@@ -179,12 +185,12 @@ public class PanelWindowEntry : DrawingArea {
 
     public override void get_preferred_height (out int min, out int max) {
         // TODO
-        min = max = 10; 
+        min = max = Margin * 2; 
     }
 
     public override void get_preferred_width (out int min, out int max) {
         max = rect.width;
-        min = 10;
+        min = Margin * 2;
     }
 
     public override bool draw (Context cr) {
@@ -192,11 +198,48 @@ public class PanelWindowEntry : DrawingArea {
         style.set_state (state);
         Gtk.render_background (style, cr, 0, 0, get_window ().get_width (), get_window ().get_height ());
         if (draw_info) {
+            var dir = get_direction ();
+            int icon_x = 0, icon_y = 0;
+            int text_start = 0;
+            unowned Gdk.Pixbuf icon = window_info.get_icon ();
+            var w = get_window ().get_width ();
+            var h = get_window ().get_height ();
+            int icon_margin = Margin;
+            if (icon != null) {
+                icon_margin = h / 2 - icon.get_height () / 2;
+                if (icon_margin < 0)
+                    icon_margin = Margin;
+                if (dir == TextDirection.LTR) {
+                    icon_x = icon_margin;
+                    icon_y = icon_margin;
+                    text_start = icon_x + icon.get_width () + icon_margin;
+                } else {
+                    icon_x = w - icon.get_width () - icon_margin;
+                    icon_y = icon_margin;
+                    text_start = icon_x - icon_margin;
+                }
+                Gdk.cairo_set_source_pixbuf (cr, window_info.get_icon (), icon_x, icon_y);
+            }
             pango.set_font_description (style.get_font (state));
-            pango.set_text ("<big>" + window_info.get_name () + "</big>", -1);
-            //Gtk.render_layout (style, cr, 0, 0, pango);
+            pango.set_markup ("<big>" + window_info.get_name () + "</big>", -1);
+            int text_x, text_y, text_w, text_h;
+            var text_margin = icon_margin; 
+            pango.get_pixel_size (out text_w, out text_h);
+            text_y = h / 2 - text_h / 2; 
+            oversize = false;
+            if (dir == TextDirection.LTR) {
+                text_x = text_start; 
+                if (text_x + text_w > w)
+                    oversize = true;
+            } else {
+                text_x = text_start - text_w; 
+                if (text_x < 0) {
+                    text_x = Margin;
+                    oversize = true;
+                }
+            }
+            Gtk.render_layout (style, cr, text_x, text_y, pango);
 
-            Gdk.cairo_set_source_pixbuf (cr, window_info.get_icon (), 0, 0);
             cr.paint ();
         }
         return true;
