@@ -43,7 +43,9 @@ VALA_PACKAGES="--pkg atk --pkg gdk-x11-3.0 --pkg gee-1.0 --pkg cairo --pkg gtk+-
 AC_SUBST(VALA_PACKAGES)
 
 AC_CONFIG_FILES([Makefile
-	data/Makefile.in
+	data/Makefile
+	data/blankon-panel.desktop
+	data/blankon-panel.css
 	src/Makefile
 	po/Makefile.in])
 
