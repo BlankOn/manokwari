@@ -5,7 +5,7 @@ int main (string[] args) {
     Gtk.init (ref args);
     CssProvider css = CssProvider.get_default ();
     try {
-        css.load_from_path ("blankon-panel.css");
+        css.load_from_path ("/usr/share/blankon-panel/blankon-panel.css");
     }    catch (Error e) {
         stdout.printf ("Unable to load css file\n");
     }

@@ -5,7 +5,7 @@ AM_CPPFLAGS = \
 	-include $(CONFIG_HEADER) \
 	$(NULL)
 
-bin_PROGRAMS = blankon_panel
+bin_PROGRAMS = blankon-panel
 
 blankon_panel_SOURCES = panel-item.vala \
     main.vala \
