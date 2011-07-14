@@ -119,10 +119,11 @@ public class PanelWindowEntry : DrawingArea {
     private Wnck.WindowState last_state;
     private Gtk.StateFlags state;
     private bool popup_shown = false;
-    public bool draw_info { private get; set; default = false; }
     private Pango.Layout pango;
     private int Margin = 5;
     private bool oversize = false;
+
+    public bool draw_info { private get; set; default = false; }
 
     private void sync_window_states () {
         if (window_info.is_minimized ()) {
@@ -174,9 +175,13 @@ public class PanelWindowEntry : DrawingArea {
             if (event.button == 3 && event.type == Gdk.EventType.BUTTON_PRESS) { // right click
                 show_popup (event);
             } else {
-                state = StateFlags.SELECTED;
-                queue_draw ();
-                window_info.activate (get_current_event_time());
+                if (window_info.is_active ()) {
+                    window_info.minimize ();
+                } else {
+                    state = StateFlags.SELECTED;
+                    queue_draw ();
+                    window_info.activate (get_current_event_time());
+                }
             }
             return true; 
         });
