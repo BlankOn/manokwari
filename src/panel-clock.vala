@@ -33,13 +33,23 @@ public class ClockWindow : PanelAbstractWindow {
         clock = new PanelClock ();
         add (clock);
         show_all ();
+        screen_size_changed.connect (() => {
+            reposition ();
+        });
     }
 
     public override bool map_event (Gdk.Event event) {
+        reposition ();
+        return true;
+    }
+
+    public new void reposition () {
         int w = clock.get_allocated_width ();
         int h = clock.get_allocated_height ();
         set_size_request (w, h);
+
         move (rect ().width - w - (w / 2), rect ().y + h / 2);
-        return true;
+        queue_resize ();
     }
+
 }

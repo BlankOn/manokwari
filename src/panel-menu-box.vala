@@ -10,6 +10,8 @@ interface SessionManager : Object {
 public class PanelMenuBox : PanelAbstractWindow {
     private int filler_height = 27;
     private int active_column = 0;
+    private int content_top_margin = 150;
+    private int favorite_height = 250;
     private Invisible evbox;
     private HBox columns;
 
@@ -99,7 +101,7 @@ public class PanelMenuBox : PanelAbstractWindow {
         var favorites = new PanelMenuContent( _("Favorites") );
         quick_launch_box.pack_start (favorites, false, false, 0);
         favorites.populate ("favorites.menu");
-        favorites.set_min_content_height (200);
+        favorites.set_min_content_height (favorite_height);
 
         favorites.menu_clicked.connect (() => {
             dismiss ();
@@ -165,7 +167,7 @@ public class PanelMenuBox : PanelAbstractWindow {
         });
 
         all_apps.populate ("applications.menu");
-        all_apps.set_min_content_height (rect ().height - 200); // TODO
+        all_apps.set_min_content_height (rect ().height - content_top_margin);
 
         var control_center = new PanelMenuContent( _("Settings") );
         content_box.pack_start (control_center);
@@ -180,11 +182,11 @@ public class PanelMenuBox : PanelAbstractWindow {
         });
 
         control_center.populate ("settings.menu");
-        control_center.set_min_content_height (rect ().height - 200); // TODO
+        control_center.set_min_content_height (rect ().height - content_top_margin); 
 
         var places = new PanelPlaces ();
         content_box.pack_start (places);
-        places.set_min_content_height (rect ().height - 200); // TODO
+        places.set_min_content_height (rect ().height - content_top_margin);
 
         places_opener.activate.connect (() => {
             content_widget = places;
@@ -228,6 +230,13 @@ public class PanelMenuBox : PanelAbstractWindow {
                 event.y != rect ().y)
                 move (rect ().x, rect ().y);
             return false;
+        });
+
+        screen_size_changed.connect (() =>  {
+            all_apps.set_min_content_height (rect ().height - content_top_margin);
+            control_center.set_min_content_height (rect ().height - content_top_margin); 
+            places.set_min_content_height (rect ().height - content_top_margin);
+            queue_resize ();
         });
     }
 

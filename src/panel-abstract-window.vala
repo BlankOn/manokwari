@@ -2,6 +2,8 @@ using Gtk;
 using Gdk;
 
 public class PanelAbstractWindow : Gtk.Window {
+    public signal void screen_size_changed ();
+
     protected Gdk.Rectangle rect () {
         Gdk.Rectangle r;
         var screen = get_screen();
@@ -94,6 +96,9 @@ public class PanelAbstractWindow : Gtk.Window {
         set_accept_focus (true);
         stick ();
      
+        var screen = get_screen();
+        screen.size_changed.connect (() => {
+            screen_size_changed ();
+        });
     }
-
 }

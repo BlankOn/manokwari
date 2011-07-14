@@ -34,6 +34,11 @@ public class PanelWindowPager : PanelAbstractWindow {
             return true; 
         });
 
+        map_event.connect (() => {
+            move (rect ().x, rect ().y + rect ().height -  get_window ().get_height ());
+            get_window ().raise ();
+            return false;
+        });
     }
 
 
@@ -46,6 +51,7 @@ public class PanelWindowPager : PanelAbstractWindow {
         var r = rect();
         min = max = 100;
     }
+
 }
 
 public class PanelWindowPagerEntry : DrawingArea {
@@ -89,9 +95,6 @@ public class PanelWindowPagerEntry : DrawingArea {
             return false; 
         });
 
-        pager_shown.connect (() => {
-            pager.get_window().move (0, rect.height -  get_window ().get_height () - pager.get_window ().get_height ());
-        });
 
     }
 
@@ -311,7 +314,11 @@ public class PanelWindowHost : PanelAbstractWindow {
         box.show();
         show();
         var r = rect();
-        move (0, r.height - get_window ().get_height ());
+        reposition ();
+
+        screen_size_changed.connect (() => {
+            reposition ();
+        });
 
         screen.window_opened.connect ((w) => {
             if (!w.is_skip_tasklist()) {
@@ -410,5 +417,10 @@ public class PanelWindowHost : PanelAbstractWindow {
             }
         }
         num_visible_windows = num_windows;
+    }
+
+    public new void reposition () {
+        move (rect ().x, rect ().y + rect ().height - get_window ().get_height ());
+        queue_resize ();
     }
 }
