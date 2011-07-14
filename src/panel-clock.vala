@@ -1,8 +1,8 @@
 using Gtk;
 
-public class Clock : Label {
+public class PanelClock : Label {
 	
-	public Clock () {
+	public PanelClock () {
 		Timeout.add (1000 * 30, update);
         update ();
 	}
@@ -18,7 +18,7 @@ public class Clock : Label {
 }
 
 public class ClockWindow : PanelAbstractWindow {
-    private Clock clock;
+    private PanelClock clock;
     public ClockWindow () {
         set_type_hint (Gdk.WindowTypeHint.DOCK);
         set_visual (this.screen.get_rgba_visual ());
@@ -30,7 +30,7 @@ public class ClockWindow : PanelAbstractWindow {
         override_background_color(StateFlags.NORMAL, c);
         set_app_paintable(true);
 
-        clock = new Clock ();
+        clock = new PanelClock ();
         add (clock);
         show_all ();
     }
