@@ -236,6 +236,7 @@ public class PanelMenuBox : PanelAbstractWindow {
             all_apps.set_min_content_height (rect ().height - content_top_margin);
             control_center.set_min_content_height (rect ().height - content_top_margin); 
             places.set_min_content_height (rect ().height - content_top_margin);
+            move (rect ().x, rect ().y);
             queue_resize ();
         });
     }
