@@ -70,11 +70,6 @@ public class PanelButtonWindow : PanelAbstractWindow {
            return true;
         });
 
-        w.windows_gone.connect (() => {
-        stdout.printf ("all windows gone\n");
-            show_menu_box ();
-        });
-
         menu_box.dismissed.connect (() => {
             menu_box.hide ();
         });

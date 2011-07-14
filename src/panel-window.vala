@@ -402,10 +402,12 @@ public class PanelWindowHost : PanelAbstractWindow {
             }
         }
         if (emit_change_signals) {
-            if (num_windows == 0)
+            if (num_windows == 0) {
+                resize (Size.Small); 
                 windows_gone ();
-            else
+            } else {
                 windows_visible ();
+            }
         }
         num_visible_windows = num_windows;
     }
