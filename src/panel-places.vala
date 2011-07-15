@@ -3,6 +3,7 @@ using GLib;
 
 public class PanelPlaces : PanelMenuContent {
     private VolumeMonitor vol_monitor;
+    public signal void error ();
 
     public PanelPlaces () {
         base ("Places");
@@ -31,6 +32,7 @@ public class PanelPlaces : PanelMenuContent {
         setup_home ();
         setup_special_dirs ();
         setup_mounts ();
+        setup_network ();
     }
 
     private void setup_home () {
@@ -108,9 +110,42 @@ public class PanelPlaces : PanelMenuContent {
             item.set_image_from_icon (mount.get_icon ());
             bar.pack_start (item, false, false, 0);
             item.activate.connect (() => {
-                show_uri_from_path (mount.get_root().get_uri ());
+                try {
+                    show_uri (Gdk.Screen.get_default (), mount.get_root().get_uri (), get_current_event_time());
+                } catch (Error e) {
+                    error ();
+                    show_dialog (_("Error opening mount point '%s': %s").printf (mount.get_root ().get_uri (), e.message));
+                }
             });
         }
+    }
+
+    private void setup_network () {
+        insert_separator ();
+        var network = new PanelItem.with_label (_("Network"));
+        network.set_image ("gtk-network");
+        bar.pack_start (network, false, false, 0);
+        network.activate.connect (() => {
+            try {
+                show_uri (Gdk.Screen.get_default (), "network:///", get_current_event_time());
+            } catch (Error e) {
+                error ();
+                show_dialog (_("Error opening Network: %s").printf (e.message));
+            }
+        });
+        var item = new PanelItem.with_label (_("Connect to server..."));
+        item.set_image ("gnome-fs-network");
+        bar.pack_start (item, false, false, 0);
+        item.activate.connect (() => {
+            try {
+                var app = AppInfo.create_from_commandline ("nautilus-connect-server", "Nautilus", AppInfoCreateFlags.NONE);
+                app.launch (null, null);
+            } catch (Error e) {
+                error ();
+                show_dialog (_("Error opening Network: %s").printf (e.message));
+            }
+        });
+
     }
 
     private void show_uri_from_path (string? path) {
@@ -118,11 +153,16 @@ public class PanelPlaces : PanelMenuContent {
         try {
             show_uri (Gdk.Screen.get_default (), f.get_uri (), get_current_event_time());
         } catch (Error e) {
-            var dialog = new MessageDialog (null, DialogFlags.DESTROY_WITH_PARENT, MessageType.ERROR, ButtonsType.CLOSE, "Error opening '%s': %s", path, e.message);
-            dialog.response.connect (() => {
-                    dialog.destroy ();
-                    });
-            dialog.show ();
+            error ();
+            show_dialog (_("Error opening '%s': %s").printf (path, e.message));
         }
+    }
+
+    private void show_dialog (string message) {
+        var dialog = new MessageDialog (null, DialogFlags.DESTROY_WITH_PARENT, MessageType.ERROR, ButtonsType.CLOSE, message);
+        dialog.response.connect (() => {
+            dialog.destroy ();
+        });
+        dialog.show ();
     }
 }

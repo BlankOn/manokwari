@@ -188,6 +188,10 @@ public class PanelMenuBox : PanelAbstractWindow {
         content_box.pack_start (places);
         places.set_min_content_height (rect ().height - content_top_margin);
 
+        places.error.connect (() => {
+            dismiss ();
+        });
+
         places_opener.activate.connect (() => {
             content_widget = places;
             slide_right (); 
