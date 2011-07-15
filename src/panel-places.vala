@@ -4,6 +4,7 @@ using GLib;
 public class PanelPlaces : PanelMenuContent {
     private VolumeMonitor vol_monitor;
     public signal void error ();
+    public signal void launching ();
 
     public PanelPlaces () {
         base ("Places");
@@ -79,13 +80,9 @@ public class PanelPlaces : PanelMenuContent {
                         item.activate.connect (() => {
                             try {
                                 show_uri (Gdk.Screen.get_default (), fields [0], get_current_event_time());
+                                launching ();
                             } catch (Error e) {
-                                var dialog = new MessageDialog (null, DialogFlags.DESTROY_WITH_PARENT, MessageType.ERROR, ButtonsType.CLOSE, "Error opening '%s': %s", fields [1], e.message);
-                                dialog.response.connect (() => {
-                                    dialog.destroy ();
-                                });
-                                dialog.show ();
-
+                                show_dialog (_("Error opening '%s': %s").printf(fields [1], e.message));
                             }
                         });
                     }
@@ -112,6 +109,7 @@ public class PanelPlaces : PanelMenuContent {
             item.activate.connect (() => {
                 try {
                     show_uri (Gdk.Screen.get_default (), mount.get_root().get_uri (), get_current_event_time());
+                    launching ();
                 } catch (Error e) {
                     error ();
                     show_dialog (_("Error opening mount point '%s': %s").printf (mount.get_root ().get_uri (), e.message));
@@ -128,6 +126,7 @@ public class PanelPlaces : PanelMenuContent {
         network.activate.connect (() => {
             try {
                 show_uri (Gdk.Screen.get_default (), "network:///", get_current_event_time());
+                launching ();
             } catch (Error e) {
                 error ();
                 show_dialog (_("Error opening Network: %s").printf (e.message));
@@ -140,6 +139,7 @@ public class PanelPlaces : PanelMenuContent {
             try {
                 var app = AppInfo.create_from_commandline ("nautilus-connect-server", "Nautilus", AppInfoCreateFlags.NONE);
                 app.launch (null, null);
+                launching();
             } catch (Error e) {
                 error ();
                 show_dialog (_("Error opening Network: %s").printf (e.message));
@@ -152,6 +152,7 @@ public class PanelPlaces : PanelMenuContent {
         var f = File.new_for_path (path);
         try {
             show_uri (Gdk.Screen.get_default (), f.get_uri (), get_current_event_time());
+            launching();
         } catch (Error e) {
             error ();
             show_dialog (_("Error opening '%s': %s").printf (path, e.message));

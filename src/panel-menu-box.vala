@@ -191,6 +191,10 @@ public class PanelMenuBox : PanelAbstractWindow {
         places.error.connect (() => {
             dismiss ();
         });
+        places.launching.connect (() => {
+            dismiss ();
+        });
+
 
         places_opener.activate.connect (() => {
             content_widget = places;
