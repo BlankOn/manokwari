@@ -34,8 +34,13 @@ public class PanelPlaces : PanelMenuContent {
     }
 
     public void reset () {
-        // TODO: Remove bar's content
+
+        foreach (unowned Widget w in bar.get_children ()) {
+            w.destroy ();
+        }
+
         init_contents ();
+        show_all ();
     }
 
     private void init_contents () {
