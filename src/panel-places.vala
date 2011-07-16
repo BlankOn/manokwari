@@ -3,12 +3,18 @@ using GLib;
 
 public class PanelPlaces : PanelMenuContent {
     private VolumeMonitor vol_monitor;
+    private File bookmark_file;
+    private FileMonitor bookmark_monitor;
+
     public signal void error ();
     public signal void launching ();
 
     public PanelPlaces () {
         base ("Places");
         vol_monitor = VolumeMonitor.get ();
+        bookmark_file = File.new_for_path (Environment.get_home_dir () + "/.gtk-bookmarks");
+        bookmark_monitor = bookmark_file.monitor_file (FileMonitorFlags.NONE, null);
+
         init_contents ();
         show_all ();
 
@@ -22,6 +28,9 @@ public class PanelPlaces : PanelMenuContent {
             reset ();
         });
 
+        bookmark_monitor.changed.connect (() => {
+            reset ();
+        });
     }
 
     public void reset () {
@@ -65,11 +74,10 @@ public class PanelPlaces : PanelMenuContent {
             });
         }
 
-        var file = File.new_for_path (Environment.get_home_dir () + "/.gtk-bookmarks");
 
-        if (file.query_exists ()) {
+        if (bookmark_file.query_exists ()) {
             try {
-                var input = new DataInputStream (file.read ());
+                var input = new DataInputStream (bookmark_file.read ());
                 string line;
                 while ((line = input.read_line (null)) != null) {
                     var fields = line.split (" ");
