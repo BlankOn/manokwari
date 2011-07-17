@@ -65,6 +65,8 @@ public class PanelTray : HBox {
                     add_client (xevent->xclient.data.l [2]);
                     return Gdk.FilterReturn.REMOVE;
                 }
+            } else {
+                    stdout.printf("req: d\n");
             }
         }
 

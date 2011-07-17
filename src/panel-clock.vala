@@ -19,8 +19,15 @@ public class PanelClock : Label {
 
 public class ClockWindow : PanelAbstractWindow {
     private PanelClock clock;
+    private Gdk.DeviceManager device_manager;
+
     public ClockWindow () {
         set_type_hint (Gdk.WindowTypeHint.DOCK);
+        device_manager = Gdk.Display.get_default ().get_device_manager ();
+        add_events (Gdk.EventMask.STRUCTURE_MASK
+            | Gdk.EventMask.ENTER_NOTIFY_MASK
+            | Gdk.EventMask.LEAVE_NOTIFY_MASK);
+
         set_visual (this.screen.get_rgba_visual ());
         Gdk.RGBA c = Gdk.RGBA();
         c.red = 0.0;
@@ -36,6 +43,51 @@ public class ClockWindow : PanelAbstractWindow {
         screen_size_changed.connect (() => {
             reposition ();
         });
+
+        enter_notify_event.connect (() => {
+            setup_hole ();
+            GLib.Timeout.add (1000, try_bring_back);
+            return false;
+        });
+    }
+
+    public void bring_back () {
+        set_opacity (1.0);
+        get_window ().input_shape_combine_region (null, 0, 0);
+    }
+
+    public bool try_bring_back () {
+        int x, y;
+
+        set_opacity (0.3);
+        var pointer = device_manager.get_client_pointer ();
+        pointer.get_position (null, out x, out y);
+
+        int wx, wy;
+        get_window ().get_position (out wx, out wy);
+        if (x >= wx && x <= wx + get_window ().get_width () &&
+            y >= wy && y <= wy + get_window ().get_height ()) {
+            // Cursor is nside clock's window
+            // Try to bring back next time
+            return true;
+        }
+
+        // Cursor is outside clock's window
+        // Let's bring it back now
+        bring_back ();
+        return false;
+    }
+
+    public void setup_hole () {
+        set_opacity (0.1);
+        Cairo.RectangleInt r = Cairo.RectangleInt();
+        r.x = 0;
+        r.y = 0;
+        r.width = 1;
+        r.height = 1;
+
+        var region = new Cairo.Region.rectangle (r);
+        get_window ().input_shape_combine_region (region, 0, 0);
     }
 
     public override bool map_event (Gdk.Event event) {

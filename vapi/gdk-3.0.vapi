@@ -70,7 +70,7 @@ namespace Gdk {
 		public int get_n_axes ();
 		public int get_n_keys ();
 		public unowned string get_name ();
-		public void get_position (out unowned Gdk.Screen screen, int x, int y);
+		public void get_position (out unowned Gdk.Screen screen, out int x, out int y);
 		public Gdk.InputSource get_source ();
 		public void get_state (Gdk.Window window, double axes, Gdk.ModifierType mask);
 		public unowned Gdk.Window get_window_at_position (int win_x, int win_y);
