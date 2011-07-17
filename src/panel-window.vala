@@ -343,6 +343,9 @@ public class PanelWindowHost : PanelAbstractWindow {
         var r = rect();
         reposition ();
 
+        resize (Size.BIG);
+        set_struts(); 
+
         screen_size_changed.connect (() => {
             reposition ();
         });
@@ -415,7 +418,6 @@ public class PanelWindowHost : PanelAbstractWindow {
     }
 
     public void update (bool emit_change_signals) {
-        set_struts(); 
 
         foreach (unowned Widget w in box.get_children ()) {
             if (w is PanelWindowEntry)
