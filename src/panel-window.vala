@@ -6,6 +6,7 @@ using Gee;
 public class PanelWindowPager : PanelAbstractWindow {
     public signal void hidden ();
     private bool _cancel_hiding;
+    private ToggleButton desktop;
 
     public void cancel_hiding() {
         _cancel_hiding = true;
@@ -20,12 +21,33 @@ public class PanelWindowPager : PanelAbstractWindow {
         return false;
     }
 
+    public void reset_show_desktop () {
+        desktop.set_active (false);
+    }
+
     public PanelWindowPager () {
+        var box = new HBox (false, 0);
         var pager = new Wnck.Pager ();
-        add(pager);
+        add (box);
+        box.pack_start (pager, false, false, 0);
         pager.show ();
+
+        var icon = new Image.from_icon_name ("user-desktop", IconSize.LARGE_TOOLBAR);
+        desktop = new ToggleButton ();
+        desktop.set_tooltip_text (_("Click here to hide all windows and show desktop"));
+        desktop.add(icon);
+        box.pack_start (desktop, true, true, 0);
+        desktop.show_all ();
+
+        box.show ();
+
         set_type_hint (Gdk.WindowTypeHint.DOCK);
         hide();
+
+        desktop.toggled.connect (() => {
+            Wnck.Screen screen = Wnck.Screen.get_default ();
+            screen.toggle_showing_desktop (desktop.get_active ());
+        });
 
         leave_notify_event.connect (() => {
             _cancel_hiding = false;
@@ -49,7 +71,7 @@ public class PanelWindowPager : PanelAbstractWindow {
 
     public override void get_preferred_width (out int min, out int max) {
         var r = rect();
-        min = max = 100;
+        min = max = 200;
     }
 
 }
@@ -98,6 +120,10 @@ public class PanelWindowPagerEntry : DrawingArea {
 
     }
 
+    public void reset_show_desktop () {
+        // Forward to pager
+        pager.reset_show_desktop ();
+    }
 
     public override void get_preferred_height (out int min, out int max) {
         // TODO
@@ -279,8 +305,9 @@ public class PanelWindowHost : PanelAbstractWindow {
     private HashMap <Wnck.Window, PanelWindowEntry> entry_map ;
     private int height = 12;
 
-    public signal void windows_gone();
-    public signal void windows_visible();
+    public signal void windows_gone (); // Emitted when all windows have gone, either closed or minimized
+    public signal void windows_visible (); // Emitted when there is at least one window visible
+    public signal void all_windows_visible (); // Emitted when all normal windows visible
 
     enum Size {
         SMALL = 12,
@@ -359,6 +386,10 @@ public class PanelWindowHost : PanelAbstractWindow {
             }
             return false;
         });
+
+        all_windows_visible.connect (() => {
+            pager_entry.reset_show_desktop ();
+        });
     }
 
     private new void resize (Size size) {
@@ -391,6 +422,7 @@ public class PanelWindowHost : PanelAbstractWindow {
                 box.remove (w);
         }
 
+        var num_total_windows = 0;
         var num_windows = 0;
         foreach (unowned Wnck.Window w in screen.get_windows()) {
             if (!w.is_skip_tasklist () 
@@ -406,6 +438,7 @@ public class PanelWindowHost : PanelAbstractWindow {
                 box.pack_start (e, true, true, 1);
                 if (!w.is_minimized ())
                     num_windows ++;
+                num_total_windows ++;
             }
         }
         if (emit_change_signals) {
@@ -415,6 +448,9 @@ public class PanelWindowHost : PanelAbstractWindow {
             } else {
                 windows_visible ();
             }
+
+            if (num_windows == num_total_windows)
+                all_windows_visible ();
         }
         num_visible_windows = num_windows;
     }
