@@ -208,8 +208,13 @@ public class PanelMenuBox : PanelAbstractWindow {
         places.hide ();
 
         var tray = new PanelTray ();
-        quick_launch_box.pack_end (tray, false, false, 0);
+        quick_launch_box.pack_end (tray, false, false, 3);
         tray.show ();
+
+        map_event.connect (() => {
+            tray.update_size ();
+            return false;
+        });
 
         evbox = new Invisible ();
         evbox.add_events (Gdk.EventMask.BUTTON_PRESS_MASK

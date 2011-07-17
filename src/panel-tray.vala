@@ -2,51 +2,54 @@ using Gtk;
 using Gdk;
 using X;
 
-public class PanelTray : Layout {
-    private Gdk.Rectangle rect;
+public class PanelTray : HBox {
     private Invisible invisible;
-    private HBox box;
     private uint size;
-    private uint default_size = 25;
+    private uint default_size = 24;
 
     public signal void new_item_added ();
 
-    public override void get_preferred_height (out int min, out int max) {
-        // TODO
-        min = max = (int) default_size; 
+    enum Message {
+        REQUEST_DOCK,
+        BEGIN,
+        CANCEL
     }
 
-    public override void get_preferred_width (out int min, out int max) {
-        min = (int) size;
-        max = min;
-    }
-
-    private void update_size () {
-        size = default_size * box.get_children ().length ();
+    public void update_size () { 
+        foreach (unowned Widget w in get_children ()) {
+            if (w is Gtk.Socket) {
+                var window = ((Gtk.Socket)w).get_plug_window ();
+                if (window != null && window is Gdk.Window)
+                    window.resize ((int) default_size, (int) default_size);
+            }
+            w.set_size_request ((int) default_size, (int) default_size);
+        }
     }
 
     private void add_client (long xid) {
 
         // Skips already added clients
-        foreach (unowned Widget w in box.get_children ()) {
+        foreach (unowned Widget w in get_children ()) {
             long id = (long) ((Gtk.Socket) w).get_id ();
             if (id == xid)
                 return;
         }
 
         var w = new Gtk.Socket();
+        pack_start (w, false, false, 0);
         w.show ();
-        w.plug_removed.connect (() => {
-            box.remove (w);
-            update_size ();
-            return false;
-        });
-        box.pack_start(w, false, false, 1);
+
         w.add_id (xid);
-        w.get_plug_window ().resize ((int) default_size, (int) default_size);
-        stdout.printf("%d\n", w.get_plug_window ().get_width ());
-        update_size ();
         new_item_added ();
+
+        hide ();
+        show_all ();
+        w.plug_removed.connect (() => {
+            w.destroy ();
+        show_all ();
+            return true;
+        });
+
     }
 
     private FilterReturn event_filter (Gdk.XEvent xev, Gdk.Event event) {
@@ -58,7 +61,10 @@ public class PanelTray : Layout {
                  
         if(xevent->type == X.EventType.ClientMessage) {
             if (xevent->xclient.message_type == display.intern_atom ("_NET_SYSTEM_TRAY_OPCODE", false)) {
-                add_client (xevent->xclient.data.l [2]);
+                if (xevent->xclient.data.l [1] == Message.REQUEST_DOCK) {
+                    add_client (xevent->xclient.data.l [2]);
+                    return Gdk.FilterReturn.REMOVE;
+                }
             }
         }
 
@@ -104,16 +110,11 @@ public class PanelTray : Layout {
     public PanelTray () {
         size = 0;
 
-        var screen = get_screen();
-        screen.get_monitor_geometry (screen.get_primary_monitor(), out rect);
         invisible = new Invisible ();
         invisible.add_events (Gdk.EventMask.PROPERTY_CHANGE_MASK |
                               Gdk.EventMask.STRUCTURE_MASK);
         invisible.realize();
-        box = new HBox(true, 0);
-        add(box);
-        box.show ();
-
+        show ();
         setup_selection ();
     }
 }
