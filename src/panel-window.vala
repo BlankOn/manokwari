@@ -283,8 +283,8 @@ public class PanelWindowHost : PanelAbstractWindow {
     public signal void windows_visible();
 
     enum Size {
-        Small = 12,
-        Big = 50
+        SMALL = 12,
+        BIG = 50
     }
 
     public bool no_windows_around () {
@@ -345,7 +345,7 @@ public class PanelWindowHost : PanelAbstractWindow {
         enter_notify_event.connect (() => {
             // Only resize if there are visible windows
             if (entry_map.size > 0) {
-                resize (Size.Big);
+                resize (Size.BIG);
             }
             return false;
         });
@@ -355,7 +355,7 @@ public class PanelWindowHost : PanelAbstractWindow {
             get_window ().get_position (out x, out y);
             // If e.y is negative then it's outside the area
             if (e.y < 0) {
-                resize (Size.Small);
+                resize (Size.SMALL);
             }
             return false;
         });
@@ -366,7 +366,7 @@ public class PanelWindowHost : PanelAbstractWindow {
         queue_resize ();
         get_window ().move_resize (rect ().x, rect ().height - size, rect ().width, size);
         var draw_info = false;
-        if (size == Size.Big) {
+        if (size == Size.BIG) {
             draw_info = true;
         }
         foreach (PanelWindowEntry e in entry_map.values) {
@@ -410,7 +410,7 @@ public class PanelWindowHost : PanelAbstractWindow {
         }
         if (emit_change_signals) {
             if (num_windows == 0) {
-                resize (Size.Small); 
+                resize (Size.SMALL); 
                 windows_gone ();
             } else {
                 windows_visible ();
