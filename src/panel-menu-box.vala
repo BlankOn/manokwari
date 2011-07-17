@@ -8,12 +8,12 @@ interface SessionManager : Object {
 
 
 public class PanelMenuBox : PanelAbstractWindow {
-    private int filler_height = 27;
     private int active_column = 0;
     private int content_top_margin = 150;
     private int favorite_height = 250;
     private Invisible evbox;
     private HBox columns;
+    private PanelTray tray;
 
     public signal void dismissed ();
     public signal void sliding_right ();
@@ -99,7 +99,7 @@ public class PanelMenuBox : PanelAbstractWindow {
 
         // Quick Launch (1st) column
         var quick_launch_box = new VBox (false, 0);
-        columns.pack_start (quick_launch_box);
+        columns.pack_start (quick_launch_box, false, false, 0);
 
         var favorites = new PanelMenuContent( _("Favorites") );
         quick_launch_box.pack_start (favorites, false, false, 0);
@@ -204,14 +204,18 @@ public class PanelMenuBox : PanelAbstractWindow {
             slide_right (); 
         });
 
+        tray = new PanelTray ();
+        quick_launch_box.pack_end (tray, false, false, 3);
 
         show_all ();
-        all_apps.hide ();
-        places.hide ();
 
-        var tray = new PanelTray ();
-        quick_launch_box.pack_end (tray, false, false, 3);
-        tray.show_all ();
+        // Hide these otherwise the tray will be pushed
+        // way outside of the screen height because
+        // these guys have their content height defined 
+        // up there
+        all_apps.hide ();
+        control_center.hide ();
+        places.hide ();
 
         map_event.connect (() => {
             tray.update_size ();
@@ -277,6 +281,7 @@ public class PanelMenuBox : PanelAbstractWindow {
         evbox.show ();
         evbox.get_window ().move_resize (rect ().x + w, rect ().y, rect ().width - w, rect ().height);
         get_window ().raise ();
+        tray.show_all();
         return true;
     }
 
