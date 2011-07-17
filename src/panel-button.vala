@@ -15,7 +15,7 @@ public class PanelButtonWindow : PanelAbstractWindow {
         menu_box = new PanelMenuBox();
         set_visual (this.screen.get_rgba_visual ());
 
-        set_size_request (40,40);
+        set_size_request (28,28);
 
         Gdk.RGBA c = Gdk.RGBA();
         c.red = 0.0;
