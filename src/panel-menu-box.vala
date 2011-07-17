@@ -17,6 +17,7 @@ public class PanelMenuBox : PanelAbstractWindow {
 
     public signal void dismissed ();
     public signal void sliding_right ();
+    public signal void about_to_show_content ();
 
     private PanelAnimatedAdjustment adjustment;
     private unowned Widget? content_widget = null;
@@ -48,7 +49,9 @@ public class PanelMenuBox : PanelAbstractWindow {
 
     public void slide_right () {
         Allocation a;
-        
+       
+        about_to_show_content (); // hide all contents first
+
         if (content_widget != null) {
             show_content_widget ();
             content_widget.get_allocation (out a);
@@ -201,15 +204,14 @@ public class PanelMenuBox : PanelAbstractWindow {
             slide_right (); 
         });
 
-        show_all ();
 
+        show_all ();
         all_apps.hide ();
-        control_center.hide ();
         places.hide ();
 
         var tray = new PanelTray ();
         quick_launch_box.pack_end (tray, false, false, 3);
-        tray.show ();
+        tray.show_all ();
 
         map_event.connect (() => {
             tray.update_size ();
@@ -252,6 +254,14 @@ public class PanelMenuBox : PanelAbstractWindow {
             move (rect ().x, rect ().y);
             queue_resize ();
         });
+        
+        // Hide all contents when activating a content
+        about_to_show_content.connect (() => {
+            all_apps.hide ();
+            control_center.hide ();
+            places.hide ();
+        });
+
     }
 
     public override void get_preferred_width (out int min, out int max) {
