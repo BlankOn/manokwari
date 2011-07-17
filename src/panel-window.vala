@@ -423,4 +423,8 @@ public class PanelWindowHost : PanelAbstractWindow {
         move (rect ().x, rect ().y + rect ().height - get_window ().get_height ());
         queue_resize ();
     }
+
+    public void dismiss () {
+        resize (Size.SMALL);
+    }
 }

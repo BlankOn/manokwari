@@ -74,6 +74,11 @@ public class PanelButtonWindow : PanelAbstractWindow {
             menu_box.hide ();
         });
 
+        menu_box.map_event.connect (() => {
+            w.dismiss ();
+            return false;
+        });
+
         w.windows_visible.connect (() => {
             if (menu_box.visible) 
                 menu_box.hide ();
