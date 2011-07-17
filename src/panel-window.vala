@@ -343,7 +343,6 @@ public class PanelWindowHost : PanelAbstractWindow {
         var r = rect();
         reposition ();
 
-        resize (Size.BIG);
         set_struts(); 
 
         screen_size_changed.connect (() => {
@@ -402,6 +401,8 @@ public class PanelWindowHost : PanelAbstractWindow {
         var draw_info = false;
         if (size == Size.BIG) {
             draw_info = true;
+        } else {
+            set_struts(); 
         }
         foreach (PanelWindowEntry e in entry_map.values) {
             e.draw_info = draw_info;
