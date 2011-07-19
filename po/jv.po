@@ -1,0 +1,74 @@
+# BlankOn Panel
+# Copyright (C) 2011 THE blankon-panel'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the blankon-panel package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: blankon-panel VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-07-19 19:34+0000\n"
+"PO-Revision-Date: 2011-07-19 22:35+0300\n"
+"Last-Translator: Akhmat Safrudin <somat@di.blankon.in>\n" 
+"Language-Team: Javanese <blankon-dev@googlegroups.com>\n"
+"Language: jv\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../src/panel-menu-box.vala:104
+msgid "Favorites"
+msgstr "Kesenengan"
+
+#: ../src/panel-menu-box.vala:113
+msgid "All applications"
+msgstr "Aplikasi"
+
+#: ../src/panel-menu-box.vala:117 ../src/panel-menu-box.vala:175
+msgid "Settings"
+msgstr "Tatanan"
+
+#: ../src/panel-menu-box.vala:121
+msgid "Places"
+msgstr "Panggonan"
+
+#: ../src/panel-menu-box.vala:126
+msgid "Logout..."
+msgstr "Metu..."
+
+#: ../src/panel-menu-box.vala:134
+msgid "Shutdown..."
+msgstr "Pateni..."
+
+#. All application (2nd) column
+#: ../src/panel-menu-box.vala:160
+msgid "Applications"
+msgstr "Aplikasi"
+
+#: ../src/panel-places.vala:54
+msgid "Home"
+msgstr "Omah"
+
+#: ../src/panel-places.vala:98 ../src/panel-places.vala:171
+#, c-format
+msgid "Error opening '%s': %s"
+msgstr "Ono sing salah anggone mbuka '%s': %s"
+
+#: ../src/panel-places.vala:128
+#, c-format
+msgid "Error opening mount point '%s': %s"
+msgstr "Ono sing salah anggone mbuka cantelan '%s': %s"
+
+#: ../src/panel-places.vala:136
+msgid "Network"
+msgstr "Jaringan"
+
+#: ../src/panel-places.vala:145 ../src/panel-places.vala:158
+#, c-format
+msgid "Error opening Network: %s"
+msgstr "Ono sing salah anggone mbuka jaringan: %s"
+
+#: ../src/panel-places.vala:148
+msgid "Connect to server..."
+msgstr "Nyambung maring server/tukang laden..."
+
+
