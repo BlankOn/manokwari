@@ -1,50 +1,73 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) 2011 THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
+# BlankOn Panel
+# Copyright (C) 2011 THE blankon-panel'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the blankon-panel package.
 # Aji Kisworo Mukti <adzy@di.blankon.in>, 2011.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: blankon-panel VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-12 23:48+0700\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Aji Kisworo Mukti <adzy@di.blankon.in\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"POT-Creation-Date: 2011-07-19 19:34+0000\n"
+"PO-Revision-Date: 2011-07-19 22:35+0300\n"
+"Last-Translator: Mohammad Anwari <mdamt@di.blankon.in>\n" 
+"Language-Team: Indonesian <blankon-dev@googlegroups.com>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/panel-menu-box.vala:99
+#: ../src/panel-menu-box.vala:104
 msgid "Favorites"
 msgstr "Favorit"
 
-#: src/panel-menu-box.vala:108
+#: ../src/panel-menu-box.vala:113
 msgid "All applications"
-msgstr "Semua aplikasi"
+msgstr "Aplikasi"
 
-#: src/panel-menu-box.vala:112 src/panel-menu-box.vala:170
+#: ../src/panel-menu-box.vala:117 ../src/panel-menu-box.vala:175
 msgid "Settings"
 msgstr "Pengaturan"
 
-#: src/panel-menu-box.vala:116
+#: ../src/panel-menu-box.vala:121
 msgid "Places"
 msgstr "Lokasi"
 
-#: src/panel-menu-box.vala:121
+#: ../src/panel-menu-box.vala:126
 msgid "Logout..."
 msgstr "Keluar..."
 
-#: src/panel-menu-box.vala:129
+#: ../src/panel-menu-box.vala:134
 msgid "Shutdown..."
 msgstr "Matikan..."
 
-#: src/panel-menu-box.vala:155
+#. All application (2nd) column
+#: ../src/panel-menu-box.vala:160
 msgid "Applications"
 msgstr "Aplikasi"
 
-#: src/panel-places.vala:24
+#: ../src/panel-places.vala:54
 msgid "Home"
 msgstr "Beranda"
+
+#: ../src/panel-places.vala:98 ../src/panel-places.vala:171
+#, c-format
+msgid "Error opening '%s': %s"
+msgstr "Ada kesalahan teknis saat membuka '%s': %s"
+
+#: ../src/panel-places.vala:128
+#, c-format
+msgid "Error opening mount point '%s': %s"
+msgstr "Ada kesalahan teknis saat membuka kaitan '%s': %s"
+
+#: ../src/panel-places.vala:136
+msgid "Network"
+msgstr "Jaringan"
+
+#: ../src/panel-places.vala:145 ../src/panel-places.vala:158
+#, c-format
+msgid "Error opening Network: %s"
+msgstr "Ada kesalahan teknis saat membuka jaringan: %s"
+
+#: ../src/panel-places.vala:148
+msgid "Connect to server..."
+msgstr "Hubungkan ke server/peladen..."
