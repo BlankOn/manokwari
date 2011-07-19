@@ -5,7 +5,7 @@ using GMenu;
 public class PanelButtonWindow : PanelAbstractWindow {
 
     private PanelMenuBox menu_box;
-    private Gdk.Pixbuf logo;
+    private Image image;
     private bool ignore_enter_notify;
 
     public signal void menu_shown ();
@@ -25,11 +25,11 @@ public class PanelButtonWindow : PanelAbstractWindow {
         override_background_color(StateFlags.NORMAL, c);
         set_app_paintable(true);
         
+        image = new Image.from_icon_name("distributor-logo", IconSize.LARGE_TOOLBAR);
+        add (image);
+
         show ();
         move (rect ().x, rect ().y);
-
-        var icon_theme = IconTheme.get_default();
-        logo = icon_theme.load_icon ("distributor-logo", 30, IconLookupFlags.GENERIC_FALLBACK);
 
         // Window 
         var w = new PanelWindowHost ();
@@ -70,6 +70,17 @@ public class PanelButtonWindow : PanelAbstractWindow {
            return true;
         });
 
+
+        enter_notify_event.connect (() => {
+            set_state(StateType.PRELIGHT);
+            return false;
+        });
+
+        leave_notify_event.connect (() => {
+            set_state(StateType.NORMAL);
+            return false;
+        });
+
         menu_box.dismissed.connect (() => {
             menu_box.hide ();
         });
@@ -86,13 +97,6 @@ public class PanelButtonWindow : PanelAbstractWindow {
 
     }
 
-    public override bool draw (Context cr)
-    {
-        if (logo != null)
-            Gdk.cairo_set_source_pixbuf (cr, logo, 0, 0);
-        cr.paint();
-        return false;
-    }
 
     private bool show_menu_box () {
         if (menu_box.visible == false) {
