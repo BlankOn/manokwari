@@ -392,6 +392,13 @@ public class PanelWindowHost : PanelAbstractWindow {
         all_windows_visible.connect (() => {
             pager_entry.reset_show_desktop ();
         });
+
+        configure_event.connect (() => {
+            if (get_window ().get_height () == Size.SMALL) {
+                set_struts(); 
+            }
+            return false;
+        });
     }
 
     private new void resize (Size size) {
@@ -401,8 +408,7 @@ public class PanelWindowHost : PanelAbstractWindow {
         var draw_info = false;
         if (size == Size.BIG) {
             draw_info = true;
-        } else {
-            set_struts(); 
+            stdout.printf("%d %d\n", size, get_window().get_height());
         }
         foreach (PanelWindowEntry e in entry_map.values) {
             e.draw_info = draw_info;
