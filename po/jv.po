@@ -33,7 +33,7 @@ msgstr "Panggonan"
 
 #: ../src/panel-menu-box.vala:126
 msgid "Logout..."
-msgstr "Metu..."
+msgstr "Medal..."
 
 #: ../src/panel-menu-box.vala:134
 msgid "Shutdown..."
