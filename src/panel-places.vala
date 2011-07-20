@@ -10,7 +10,7 @@ public class PanelPlaces : PanelMenuContent {
     public signal void launching ();
 
     public PanelPlaces () {
-        base ("Places");
+        base (_("Places"));
         vol_monitor = VolumeMonitor.get ();
         bookmark_file = File.new_for_path (Environment.get_home_dir () + "/.gtk-bookmarks");
         bookmark_monitor = bookmark_file.monitor_file (FileMonitorFlags.NONE, null);
