@@ -154,9 +154,11 @@ public class PanelWindowEntry : DrawingArea {
 
     public bool draw_info { private get; set; default = false; }
 
-    private void sync_window_states () {
+    public void sync_window_states () {
         if (window_info.is_minimized ()) {
             state = StateFlags.INSENSITIVE;
+        } else if (window_info.is_active()) {
+            state = StateFlags.ACTIVE;
         } else {
             state = StateFlags.NORMAL;
         }
@@ -207,10 +209,9 @@ public class PanelWindowEntry : DrawingArea {
                 if (window_info.is_active ()) {
                     window_info.minimize ();
                 } else {
-                    state = StateFlags.SELECTED;
-                    queue_draw ();
                     window_info.activate (get_current_event_time());
                 }
+                sync_window_states ();
             }
             return true; 
         });
@@ -364,6 +365,13 @@ public class PanelWindowHost : PanelAbstractWindow {
             if (e != null) {
                 e.destroy ();
                 entry_map.unset (w);
+            }
+        });
+
+
+        screen.active_window_changed.connect (() => {
+            foreach (PanelWindowEntry e in entry_map.values) {
+                e.sync_window_states ();
             }
         });
 
