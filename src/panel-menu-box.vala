@@ -78,7 +78,6 @@ public class PanelMenuBox : PanelAbstractWindow {
         session =  Bus.get_proxy_sync (BusType.SESSION,
                                                   "org.gnome.SessionManager", "/org/gnome/SessionManager");
         set_type_hint (Gdk.WindowTypeHint.DIALOG);
-        move (rect ().x, rect ().y);
 
         adjustment = new PanelAnimatedAdjustment (0, 0, rect ().width, 5, 0, 0);
         adjustment.finished.connect (() => {
@@ -208,6 +207,8 @@ public class PanelMenuBox : PanelAbstractWindow {
         quick_launch_box.pack_end (tray, false, false, 3);
 
         show_all ();
+
+        move (rect ().x, rect ().y);
 
         // Hide these otherwise the tray will be pushed
         // way outside of the screen height because
