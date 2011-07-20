@@ -355,7 +355,11 @@ public class PanelWindowHost : PanelAbstractWindow {
                 w.activate (get_current_event_time());
                 update (true);
 
-                w.state_changed.connect((mask, state) => {
+                w.state_changed.connect(() => {
+                    update (true);
+                });
+
+                w.workspace_changed.connect(() => {
                     update (true);
                 });
             }
