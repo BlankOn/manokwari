@@ -33,7 +33,7 @@ public class PanelMenuContent : PanelScrollableContent {
                 var box = new VBox (false, 0);
                 expander.add (box);
                 update_tree (box, level + 1, i);
-                expander.expanding.connect(() => {
+                expander.activate.connect(() => {
                     foreach (unowned Widget w in parent.get_children ()) {
                         if (w is Expander && w != expander) {
                             ((PanelExpanderItem)w).set_expanded (false);
