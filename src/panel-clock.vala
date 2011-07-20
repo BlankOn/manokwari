@@ -8,10 +8,12 @@ public class PanelClock : Label {
 	}
 	
 	private bool update () {
-		char buffer[20];
+		char bufferClock[20];
+		char bufferDate[50];
 		Time t = Time.local (time_t ());
-		t.strftime (buffer, "%I:%M");
-		set_markup ("<big><big>" + (string) buffer + "</big></big>");
+		t.strftime (bufferClock, "%I:%M");
+		t.strftime (bufferDate, "%a, %e %b %Y");
+		set_markup ("<u><span font='24' weight='bold'>" + (string) bufferClock + "</span></u>" + "\n" + "<span font='10'>" + (string) bufferDate + "</span>");
 		return true;
 	}
 	
