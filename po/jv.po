@@ -33,7 +33,7 @@ msgstr "Panggonan"
 
 #: ../src/panel-menu-box.vala:126
 msgid "Logout..."
-msgstr "Metu..."
+msgstr "Medal..."
 
 #: ../src/panel-menu-box.vala:134
 msgid "Shutdown..."
@@ -51,12 +51,12 @@ msgstr "Omah"
 #: ../src/panel-places.vala:98 ../src/panel-places.vala:171
 #, c-format
 msgid "Error opening '%s': %s"
-msgstr "Ono sing salah anggone mbuka '%s': %s"
+msgstr "Wonten ingkang salah anggone mbuka '%s': %s"
 
 #: ../src/panel-places.vala:128
 #, c-format
 msgid "Error opening mount point '%s': %s"
-msgstr "Ono sing salah anggone mbuka cantelan '%s': %s"
+msgstr "Wonten ingkang salah anggone mbuka cantelan '%s': %s"
 
 #: ../src/panel-places.vala:136
 msgid "Network"
@@ -65,7 +65,7 @@ msgstr "Jaringan"
 #: ../src/panel-places.vala:145 ../src/panel-places.vala:158
 #, c-format
 msgid "Error opening Network: %s"
-msgstr "Ono sing salah anggone mbuka jaringan: %s"
+msgstr "Wonten ingkang salah anggone mbuka jaringan: %s"
 
 #: ../src/panel-places.vala:148
 msgid "Connect to server..."
