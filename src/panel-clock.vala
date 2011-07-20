@@ -4,6 +4,7 @@ public class PanelClock : Label {
 	
 	public PanelClock () {
 		Timeout.add (1000 * 30, update);
+        set_justify (Justification.CENTER);
         update ();
 	}
 	
