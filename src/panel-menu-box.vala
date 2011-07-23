@@ -22,7 +22,7 @@ public class PanelMenuBox : PanelAbstractWindow {
     private PanelAnimatedAdjustment adjustment;
     private unowned Widget? content_widget = null;
 
-    private SessionManager session;
+    private SessionManager session = null;
 
     public int get_active_column () {
         return active_column;
@@ -75,8 +75,12 @@ public class PanelMenuBox : PanelAbstractWindow {
     }
 
     public PanelMenuBox () {
-        session =  Bus.get_proxy_sync (BusType.SESSION,
+        try {
+            session =  Bus.get_proxy_sync (BusType.SESSION,
                                                   "org.gnome.SessionManager", "/org/gnome/SessionManager");
+        } catch (Error e) {
+            stdout.printf ("Unable to connect to session manager\n");
+        }
         set_type_hint (Gdk.WindowTypeHint.DIALOG);
 
         adjustment = new PanelAnimatedAdjustment (0, 0, rect ().width, 5, 0, 0);
@@ -120,24 +124,34 @@ public class PanelMenuBox : PanelAbstractWindow {
         places_opener.set_image ("gtk-home");
         quick_launch_box.pack_start (places_opener, false, false, 0);
 
-        try {
+        if (session != null) {
             var logout = new PanelItem.with_label ( _("Logout...") );
             logout.set_image ("gnome-logout");
             quick_launch_box.pack_start (logout, false, false, 0);
             logout.activate.connect (() => {
+                try {
                     session.logout (0);
-                    });
+                } catch (Error e) {
+                    show_dialog (_("Unable to logout: %s").printf (e.message));
+                }
+            });
 
-            if (session.can_shutdown ()) {
-                var shutdown = new PanelItem.with_label ( _("Shutdown...") );
-                shutdown.set_image ("system-shutdown");
-                quick_launch_box.pack_start (shutdown, false, false, 0);
-                shutdown.activate.connect (() => {
-                        session.shutdown ();
-                        });
+            try {
+                if (session.can_shutdown ()) {
+                    var shutdown = new PanelItem.with_label ( _("Shutdown...") );
+                    shutdown.set_image ("system-shutdown");
+                    quick_launch_box.pack_start (shutdown, false, false, 0);
+                    shutdown.activate.connect (() => {
+                        try {
+                            session.shutdown ();
+                        } catch (Error e) {
+                            show_dialog (_("Unable to shutdown: %s").printf (e.message));
+                        }
+                    });
+                }
+            } catch (Error e) {
+                stdout.printf ("Can't determine can shutdown or not");
             }
-        } catch (Error e) {
-            stdout.printf ("Unable to connect to session manager\n");
         }
 
         //////////////////////////////////////////////////////
@@ -289,4 +303,14 @@ public class PanelMenuBox : PanelAbstractWindow {
         reset ();
         dismissed ();
     }
+
+    private void show_dialog (string message) {
+        dismiss ();
+        var dialog = new MessageDialog (null, DialogFlags.DESTROY_WITH_PARENT, MessageType.ERROR, ButtonsType.CLOSE, message);
+        dialog.response.connect (() => {
+            dialog.destroy ();
+        });
+        dialog.show ();
+    }
+
 }

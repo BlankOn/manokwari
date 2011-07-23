@@ -13,7 +13,11 @@ public class PanelPlaces : PanelMenuContent {
         base (_("Places"));
         vol_monitor = VolumeMonitor.get ();
         bookmark_file = File.new_for_path (Environment.get_home_dir () + "/.gtk-bookmarks");
-        bookmark_monitor = bookmark_file.monitor_file (FileMonitorFlags.NONE, null);
+        try {
+            bookmark_monitor = bookmark_file.monitor_file (FileMonitorFlags.NONE, null);
+        } catch (Error e) {
+            stdout.printf ("Can't monitor bookmark file: %s", e.message);
+        }
 
         init_contents ();
         show_all ();

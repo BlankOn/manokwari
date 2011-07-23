@@ -26,7 +26,7 @@ public class PanelItem : Box {
     private Image image;
     private Gtk.Settings settings;
 
-    public signal void activate ();
+    public new signal void activate ();
 
     public PanelItem () {
         init ();

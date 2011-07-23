@@ -70,7 +70,6 @@ public class PanelWindowPager : PanelAbstractWindow {
     }
 
     public override void get_preferred_width (out int min, out int max) {
-        var r = rect();
         min = max = 200;
     }
 
@@ -258,7 +257,6 @@ public class PanelWindowEntry : DrawingArea {
             pango.set_font_description (style.get_font (state));
             pango.set_markup ("<big>" + window_info.get_name () + "</big>", -1);
             int text_x, text_y, text_w, text_h;
-            var text_margin = icon_margin; 
             pango.get_pixel_size (out text_w, out text_h);
             text_y = h / 2 - text_h / 2; 
             oversize = false;
@@ -341,7 +339,6 @@ public class PanelWindowHost : PanelAbstractWindow {
 
         box.show();
         show();
-        var r = rect();
         reposition ();
 
         set_struts(); 

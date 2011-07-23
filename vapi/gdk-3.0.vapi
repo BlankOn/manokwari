@@ -377,7 +377,7 @@ namespace Gdk {
 		public bool has_native ();
 		public void hide ();
 		public void iconify ();
-		public void input_shape_combine_region (Cairo.Region shape_region, int offset_x, int offset_y);
+		public void input_shape_combine_region (Cairo.Region? shape_region, int offset_x, int offset_y);
 		public void invalidate_maybe_recurse (Cairo.Region region, Gdk.WindowChildFunc child_func);
 		public void invalidate_rect (Gdk.Rectangle? rect, bool invalidate_children);
 		public void invalidate_region (Cairo.Region region, bool invalidate_children);

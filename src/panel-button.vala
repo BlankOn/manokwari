@@ -6,7 +6,6 @@ public class PanelButtonWindow : PanelAbstractWindow {
 
     private PanelMenuBox menu_box;
     private Image image;
-    private bool ignore_enter_notify;
 
     public signal void menu_shown ();
 
