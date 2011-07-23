@@ -100,9 +100,8 @@ public class PanelMenuBox : PanelAbstractWindow {
         var quick_launch_box = new VBox (false, 0);
         columns.pack_start (quick_launch_box, false, false, 0);
 
-        var favorites = new PanelMenuContent( _("Favorites") );
+        var favorites = new PanelMenuXdg("favorites.menu",  _("Favorites") );
         quick_launch_box.pack_start (favorites, false, false, 0);
-        favorites.populate ("favorites.menu");
         favorites.set_min_content_height (favorite_height);
 
         favorites.menu_clicked.connect (() => {
@@ -156,7 +155,7 @@ public class PanelMenuBox : PanelAbstractWindow {
         });
 
         // All application (2nd) column
-        var all_apps = new PanelMenuContent( _("Applications") );
+        var all_apps = new PanelMenuXdg("applications.menu", _("Applications") );
         content_box.pack_start (all_apps);
 
         all_apps_opener.activate.connect (() => {
@@ -168,10 +167,9 @@ public class PanelMenuBox : PanelAbstractWindow {
             dismiss ();
         });
 
-        all_apps.populate ("applications.menu");
         all_apps.set_min_content_height (rect ().height - content_top_margin);
 
-        var control_center = new PanelMenuContent( _("Settings") );
+        var control_center = new PanelMenuXdg("settings.menu",  _("Settings") );
         content_box.pack_start (control_center);
 
         cc_opener.activate.connect (() => {
@@ -183,7 +181,6 @@ public class PanelMenuBox : PanelAbstractWindow {
             dismiss ();
         });
 
-        control_center.populate ("settings.menu");
         control_center.set_min_content_height (rect ().height - content_top_margin); 
 
         var places = new PanelPlaces ();
