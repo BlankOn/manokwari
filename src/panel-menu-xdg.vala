@@ -4,10 +4,12 @@ using Gtk;
 // This class opens an xdg menu and populates it
 public class PanelMenuXdg : PanelMenuContent {
 
+    private string catalog;
 
-    public PanelMenuXdg (string file, string? label) {
+    public PanelMenuXdg (string catalog, string? label) {
         base (label);
-        populate (file);
+        this.catalog = catalog;
+        populate ();
     }
 
     private void update_tree (VBox parent, int level, TreeDirectory root) {
@@ -57,11 +59,19 @@ public class PanelMenuXdg : PanelMenuContent {
         }
     }
 
-    public void populate (string catalog) { 
+    private void populate () { 
         var tree = GMenu.Tree.lookup (catalog, TreeFlags.NONE);
         var root = tree.get_root_directory ();
 
         update_tree (bar, 0, root);
     }
 
+    public void repopulate () {
+        foreach (unowned Widget w in bar.get_children ()) {
+            if (w is PanelExpanderItem ||
+                w is PanelItem)
+                bar.remove (w);
+        }
+        populate ();
+    }
 }

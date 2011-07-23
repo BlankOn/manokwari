@@ -65,7 +65,8 @@ public class PanelMenuBox : PanelAbstractWindow {
     }
     
     private void show_content_widget () {
-        content_widget.show_all ();
+        if (content_widget != null)
+            content_widget.show_all ();
     }
 
     private void hide_content_widget () {
@@ -245,6 +246,37 @@ public class PanelMenuBox : PanelAbstractWindow {
             return true;
         });
 
+        // Monitor changes to the directory
+
+        var xdg_menu_dir = File.new_for_path ("/etc/xdg/menus");
+        try {
+            var xdg_menu_monitor = xdg_menu_dir.monitor (FileMonitorFlags.NONE, null);
+            xdg_menu_monitor.changed.connect (() => {
+               favorites.repopulate (); 
+               favorites.show_all ();
+               all_apps.repopulate (); 
+               control_center.repopulate ();
+
+               show_content_widget ();
+            });
+        } catch (Error e) {
+            stdout.printf ("Can't monitor /etc/xdg/menus directory: %s\n", e.message);
+        }
+
+        var apps_dir = File.new_for_path ("/usr/share/applications");
+        try {
+            var apps_monitor = apps_dir.monitor (FileMonitorFlags.NONE, null);
+            apps_monitor.changed.connect (() => {
+               all_apps.repopulate (); 
+               control_center.repopulate ();
+
+               show_content_widget ();
+            });
+        } catch (Error e) {
+            stdout.printf ("Can't monitor applications directory: %s\n", e.message);
+        }
+
+        // Signal connections
         button_press_event.connect((event) => {
             // Only dismiss if within the area
             // TODO: multihead
