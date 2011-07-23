@@ -131,6 +131,7 @@ public class PanelMenuBox : PanelAbstractWindow {
             quick_launch_box.pack_start (logout, false, false, 0);
             logout.activate.connect (() => {
                 try {
+                    dismiss ();
                     session.logout (0);
                 } catch (Error e) {
                     show_dialog (_("Unable to logout: %s").printf (e.message));
@@ -144,6 +145,7 @@ public class PanelMenuBox : PanelAbstractWindow {
                     quick_launch_box.pack_start (shutdown, false, false, 0);
                     shutdown.activate.connect (() => {
                         try {
+                            dismiss ();
                             session.shutdown ();
                         } catch (Error e) {
                             show_dialog (_("Unable to shutdown: %s").printf (e.message));
