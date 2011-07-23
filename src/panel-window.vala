@@ -8,8 +8,14 @@ public class PanelWindowPager : PanelAbstractWindow {
     private bool _cancel_hiding;
     private ToggleButton desktop;
 
+    bool allow_hiding () {
+        _cancel_hiding = false;
+        return false;
+    }
+
     public void cancel_hiding() {
         _cancel_hiding = true;
+        GLib.Timeout.add (250, allow_hiding); 
     }
 
     bool hide_pager () {
@@ -50,8 +56,7 @@ public class PanelWindowPager : PanelAbstractWindow {
         });
 
         leave_notify_event.connect (() => {
-            _cancel_hiding = false;
-            GLib.Timeout.add (250, hide_pager); 
+            hide_pager (); 
 
             return true; 
         });
@@ -81,12 +86,6 @@ public class PanelWindowPagerEntry : DrawingArea {
 
     public signal void pager_shown ();
 
-    private bool show_pager_handler () {
-        pager.show_all ();
-        pager_shown ();
-        return false;
-    }
-
     public void hide_pager () {
         pager.hide ();
     }
@@ -104,18 +103,11 @@ public class PanelWindowPagerEntry : DrawingArea {
         screen.get_monitor_geometry (screen.get_primary_monitor(), out rect);
 
         button_press_event.connect ((event) => {
-            stdout.printf("cccc\n");
-            GLib.Timeout.add (100, show_pager_handler); 
+            pager.show_all ();
+            pager_shown ();
             pager.cancel_hiding ();
             return false; 
         });
-
-        enter_notify_event.connect ((event) => {
-            GLib.Timeout.add (100, show_pager_handler); 
-            pager.cancel_hiding ();
-            return false; 
-        });
-
 
     }
 
