@@ -32,8 +32,9 @@ public class PanelWindowPager : PanelAbstractWindow {
     }
 
     public PanelWindowPager () {
-        var box = new HBox (false, 0);
+        var box = new VBox (false, 0);
         var pager = new Wnck.Pager ();
+        pager.set_orientation (Orientation.VERTICAL);
         add (box);
         box.pack_start (pager, false, false, 0);
         pager.show ();
@@ -62,7 +63,8 @@ public class PanelWindowPager : PanelAbstractWindow {
         });
 
         map_event.connect (() => {
-            move (rect ().x, rect ().y + rect ().height -  get_window ().get_height ());
+            move (rect ().x + rect ().width - get_window ().get_width (), 
+                  rect ().y + rect ().height -  get_window ().get_height ());
             get_window ().raise ();
             return false;
         });
@@ -71,11 +73,11 @@ public class PanelWindowPager : PanelAbstractWindow {
 
     public override void get_preferred_height (out int min, out int max) {
         // TODO
-        min = max = 50; 
+        min = max = 150;
     }
 
     public override void get_preferred_width (out int min, out int max) {
-        min = max = 200;
+        min = max = 80;
     }
 
 }
@@ -344,7 +346,7 @@ public class PanelWindowHost : PanelAbstractWindow {
         var pager_entry = new PanelWindowPagerEntry ();
         pager_entry.set_name ("PAGER");
         pager_entry.show ();
-        outer_box.pack_start (pager_entry, false, false, 1);
+        outer_box.pack_end (pager_entry, false, false, 1);
 
         outer_box.pack_start (box, true, true, 1);
         outer_box.show ();
