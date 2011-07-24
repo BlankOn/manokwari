@@ -143,6 +143,10 @@ public class PanelWindowEntry : DrawingArea {
     private int Margin = 5;
     private bool oversize = false;
 
+    const TargetEntry[] target_list = {
+        { "STRING",     0, 0 }
+    };
+
     public bool draw_info { private get; set; default = false; }
 
     public void sync_window_states () {
@@ -171,6 +175,13 @@ public class PanelWindowEntry : DrawingArea {
 
         var screen = get_screen();
         screen.get_monitor_geometry (screen.get_primary_monitor(), out rect);
+
+        Gtk.drag_dest_set (
+                this,
+                DestDefaults.MOTION,
+                target_list,
+                Gdk.DragAction.COPY
+                );
 
         window_info.state_changed.connect((mask, new_state) => {
             if (new_state == last_state)
@@ -207,6 +218,15 @@ public class PanelWindowEntry : DrawingArea {
             return true; 
         });
 
+        drag_motion.connect (() => {
+            var w = get_toplevel ();
+            if (w is PanelWindowHost) {
+                ((PanelWindowHost) w).activate ();
+            }
+            window_info.activate (get_current_event_time());
+            sync_window_states ();
+            return false;
+        });
     }
 
     public override void get_preferred_height (out int min, out int max) {
@@ -328,8 +348,8 @@ public class PanelWindowHost : PanelAbstractWindow {
 
         outer_box.pack_start (box, true, true, 1);
         outer_box.show ();
-
         box.show();
+
         show();
         reposition ();
 
@@ -472,5 +492,9 @@ public class PanelWindowHost : PanelAbstractWindow {
 
     public void dismiss () {
         resize (Size.SMALL);
+    }
+
+    public new void activate () {
+        resize (Size.BIG);
     }
 }
