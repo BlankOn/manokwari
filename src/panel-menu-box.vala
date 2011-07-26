@@ -9,10 +9,10 @@ interface SessionManager : Object {
 
 public class PanelMenuBox : PanelAbstractWindow {
     private int active_column = 0;
-    private int content_top_margin = 150;
-    private int favorite_height = 250;
+    private int column_width = 300;
+
     private Invisible evbox;
-    private HBox columns;
+    private Layout columns;
     private PanelTray tray;
 
     public signal void dismissed ();
@@ -48,17 +48,14 @@ public class PanelMenuBox : PanelAbstractWindow {
     }
 
     public void slide_right () {
-        Allocation a;
-       
         about_to_show_content (); // hide all contents first
 
         if (content_widget != null) {
             show_content_widget ();
-            content_widget.get_allocation (out a);
         } else
             return;
 
-        adjustment.set_target (a.x);
+        adjustment.set_target (column_width);
         adjustment.start ();
         active_column = 1;
         sliding_right ();
@@ -91,44 +88,65 @@ public class PanelMenuBox : PanelAbstractWindow {
         });
 
         // Create the columns
-        columns = new HBox (true, 0);
+        columns = new Layout(null, null);
+        columns.set_size(column_width * 2, rect().height);
 
         // Create outer scrollable
         var panel_area = new PanelScrollableContent ();
         panel_area.set_hadjustment (adjustment);
-        panel_area.set_widget (columns);
+        panel_area.add (columns);
+        panel_area.show_all ();
+        panel_area.set_scrollbar_policy (PolicyType.NEVER, PolicyType.NEVER);
 
         // Add to window
         add (panel_area);
+        set_size_request (column_width, rect().height);
 
-        // Quick Launch (1st) column
-        var quick_launch_box = new VBox (false, 0);
-        columns.pack_start (quick_launch_box, false, false, 0);
+        // Create inner scrollables
+        var left_scrollable = new PanelScrollableContent ();
+        var right_scrollable  = new PanelScrollableContent ();
+        left_scrollable.set_min_content_height (rect().height);
+        right_scrollable.set_min_content_height (rect().height);
+        left_scrollable.set_min_content_width (column_width);
+        right_scrollable.set_min_content_width (column_width);
+
+        var left_column = new VBox (false, 0);
+        left_scrollable.set_widget (left_column);
+
+        var right_column = new VBox (false, 0);
+        right_scrollable.set_widget (right_column);
+
+        left_scrollable.set_scrollbar_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
+        right_scrollable.set_scrollbar_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
+        columns.put (left_scrollable, 0, 0);
+        columns.put (right_scrollable, column_width, 0);
+
 
         var favorites = new PanelMenuXdg("favorites.menu",  _("Favorites") );
-        quick_launch_box.pack_start (favorites, false, false, 0);
-        favorites.set_min_content_height (favorite_height);
+        left_column.pack_start (favorites, false, false, 0);
 
         favorites.menu_clicked.connect (() => {
             dismiss ();
         });
 
+        favorites.insert_separator ();
+
         var all_apps_opener = new PanelItem.with_label ( _("All applications") );
         all_apps_opener.set_image ("gnome-applications");
-        quick_launch_box.pack_start (all_apps_opener, false, false, 0);
+        left_column.pack_start (all_apps_opener, false, false, 0);
 
         var cc_opener = new PanelItem.with_label ( _("Settings") );
         cc_opener.set_image ("gnome-control-center");
-        quick_launch_box.pack_start (cc_opener, false, false, 0);
+        left_column.pack_start (cc_opener, false, false, 0);
 
         var places_opener = new PanelItem.with_label ( _("Places") );
         places_opener.set_image ("gtk-home");
-        quick_launch_box.pack_start (places_opener, false, false, 0);
+        left_column.pack_start (places_opener, false, false, 0);
 
         if (session != null) {
             var logout = new PanelItem.with_label ( _("Logout...") );
             logout.set_image ("gnome-logout");
-            quick_launch_box.pack_start (logout, false, false, 0);
+            left_column.pack_start (logout, false, false, 0);
             logout.activate.connect (() => {
                 try {
                     dismiss ();
@@ -142,7 +160,7 @@ public class PanelMenuBox : PanelAbstractWindow {
                 if (session.can_shutdown ()) {
                     var shutdown = new PanelItem.with_label ( _("Shutdown...") );
                     shutdown.set_image ("system-shutdown");
-                    quick_launch_box.pack_start (shutdown, false, false, 0);
+                    left_column.pack_start (shutdown, false, false, 0);
                     shutdown.activate.connect (() => {
                         try {
                             dismiss ();
@@ -159,13 +177,11 @@ public class PanelMenuBox : PanelAbstractWindow {
 
         //////////////////////////////////////////////////////
         // Second column
-        var content_box = new VBox (false, 0);
-        columns.pack_start (content_box);
 
         var back_button = new Button.from_stock (Stock.GO_BACK);
         back_button.set_focus_on_click (false);
         back_button.set_alignment (0, (float) 0.5);
-        content_box.pack_start (back_button, false, false, 0);
+        right_column.pack_start (back_button, false, false, 0);
 
         back_button.clicked.connect (() => {
             slide_left ();
@@ -173,7 +189,7 @@ public class PanelMenuBox : PanelAbstractWindow {
 
         // All application (2nd) column
         var all_apps = new PanelMenuXdg("applications.menu", _("Applications") );
-        content_box.pack_start (all_apps);
+        right_column.pack_start (all_apps);
 
         all_apps_opener.activate.connect (() => {
             content_widget = all_apps;
@@ -184,10 +200,9 @@ public class PanelMenuBox : PanelAbstractWindow {
             dismiss ();
         });
 
-        all_apps.set_min_content_height (rect ().height - content_top_margin);
 
         var control_center = new PanelMenuXdg("settings.menu",  _("Settings") );
-        content_box.pack_start (control_center);
+        right_column.pack_start (control_center);
 
         cc_opener.activate.connect (() => {
             content_widget = control_center;
@@ -198,11 +213,9 @@ public class PanelMenuBox : PanelAbstractWindow {
             dismiss ();
         });
 
-        control_center.set_min_content_height (rect ().height - content_top_margin); 
 
         var places = new PanelPlaces ();
-        content_box.pack_start (places);
-        places.set_min_content_height (rect ().height - content_top_margin);
+        right_column.pack_start (places);
 
         places.error.connect (() => {
             dismiss ();
@@ -218,19 +231,12 @@ public class PanelMenuBox : PanelAbstractWindow {
         });
 
         tray = new PanelTray ();
-        quick_launch_box.pack_end (tray, false, false, 3);
+        left_column.pack_end (tray, false, false, 3);
 
-        show_all ();
 
         move (rect ().x, rect ().y);
 
-        // Hide these otherwise the tray will be pushed
-        // way outside of the screen height because
-        // these guys have their content height defined 
-        // up there
-        all_apps.hide ();
-        control_center.hide ();
-        places.hide ();
+        show_all ();
 
         map_event.connect (() => {
             tray.update_size ();
@@ -298,9 +304,6 @@ public class PanelMenuBox : PanelAbstractWindow {
         });
 
         screen_size_changed.connect (() =>  {
-            all_apps.set_min_content_height (rect ().height - content_top_margin);
-            control_center.set_min_content_height (rect ().height - content_top_margin); 
-            places.set_min_content_height (rect ().height - content_top_margin);
             move (rect ().x, rect ().y);
             queue_resize ();
         });
@@ -315,7 +318,7 @@ public class PanelMenuBox : PanelAbstractWindow {
     }
 
     public override void get_preferred_width (out int min, out int max) {
-        min = max = get_column_width (); 
+        min = max = column_width;
     }
 
     public override void get_preferred_height (out int min, out int max) {

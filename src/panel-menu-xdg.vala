@@ -19,7 +19,7 @@ public class PanelMenuXdg : PanelMenuContent {
                 var i = (TreeDirectory) item;
 
                 var expander = new PanelExpanderItem (i.get_name (), i.get_icon ());
-                parent.pack_start (expander, false, false, 0); 
+                pack_start (expander, false, false, 0); 
                 var box = new VBox (false, 0);
                 expander.add (box);
                 update_tree (box, level + 1, i);
@@ -63,14 +63,14 @@ public class PanelMenuXdg : PanelMenuContent {
         var tree = GMenu.Tree.lookup (catalog, TreeFlags.NONE);
         var root = tree.get_root_directory ();
 
-        update_tree (bar, 0, root);
+        update_tree (this, 0, root);
     }
 
     public void repopulate () {
-        foreach (unowned Widget w in bar.get_children ()) {
+        foreach (unowned Widget w in get_children ()) {
             if (w is PanelExpanderItem ||
                 w is PanelItem)
-                bar.remove (w);
+                remove (w);
         }
         populate ();
     }

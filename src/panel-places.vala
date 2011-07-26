@@ -39,7 +39,7 @@ public class PanelPlaces : PanelMenuContent {
 
     public void reset () {
 
-        foreach (unowned Widget w in bar.get_children ()) {
+        foreach (unowned Widget w in get_children ()) {
             w.destroy ();
         }
 
@@ -57,7 +57,7 @@ public class PanelPlaces : PanelMenuContent {
     private void setup_home () {
         var home = new PanelItem.with_label ( _("Home") );
         home.set_image ("gtk-home");
-        bar.pack_start (home, false, false, 0);
+        pack_start (home, false, false, 0);
 
         home.activate.connect (() => {
             show_uri_from_path (Environment.get_home_dir ());
@@ -76,7 +76,7 @@ public class PanelPlaces : PanelMenuContent {
                 dir.set_image ("desktop");
             else
                 dir.set_image ("gtk-directory");
-            bar.pack_start (dir, false, false, 0);
+            pack_start (dir, false, false, 0);
 
             dir.activate.connect (() => {
                 show_uri_from_path (path);
@@ -93,7 +93,7 @@ public class PanelPlaces : PanelMenuContent {
                     if (fields.length == 2) {
                         var item = new PanelItem.with_label (fields [1]);
                         item.set_image ("gtk-directory");
-                        bar.pack_start (item, false, false, 0);
+                        pack_start (item, false, false, 0);
                         item.activate.connect (() => {
                             try {
                                 show_uri (Gdk.Screen.get_default (), fields [0], get_current_event_time());
@@ -122,7 +122,7 @@ public class PanelPlaces : PanelMenuContent {
 
             var item = new PanelItem.with_label (mount.get_name ());
             item.set_image_from_icon (mount.get_icon ());
-            bar.pack_start (item, false, false, 0);
+            pack_start (item, false, false, 0);
             item.activate.connect (() => {
                 try {
                     show_uri (Gdk.Screen.get_default (), mount.get_root().get_uri (), get_current_event_time());
@@ -139,7 +139,7 @@ public class PanelPlaces : PanelMenuContent {
         insert_separator ();
         var network = new PanelItem.with_label (_("Network"));
         network.set_image ("gtk-network");
-        bar.pack_start (network, false, false, 0);
+        pack_start (network, false, false, 0);
         network.activate.connect (() => {
             try {
                 show_uri (Gdk.Screen.get_default (), "network:///", get_current_event_time());
@@ -151,7 +151,7 @@ public class PanelPlaces : PanelMenuContent {
         });
         var item = new PanelItem.with_label (_("Connect to server..."));
         item.set_image ("gnome-fs-network");
-        bar.pack_start (item, false, false, 0);
+        pack_start (item, false, false, 0);
         item.activate.connect (() => {
             try {
                 var app = AppInfo.create_from_commandline ("nautilus-connect-server", "Nautilus", AppInfoCreateFlags.NONE);
