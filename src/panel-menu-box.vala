@@ -28,13 +28,6 @@ public class PanelMenuBox : PanelAbstractWindow {
         return active_column;
     }
 
-    private int get_column_width () {
-        foreach (unowned Widget w in columns.get_children ()) {
-            return w.get_allocated_width ();
-        }
-        return 0;
-    }
-
     private void reset () {
         adjustment.set_value (0);
         active_column = 0;
@@ -81,15 +74,17 @@ public class PanelMenuBox : PanelAbstractWindow {
         }
         set_type_hint (Gdk.WindowTypeHint.DIALOG);
 
-        adjustment = new PanelAnimatedAdjustment (0, 0, rect ().width, 5, 0, 0);
+        adjustment = new PanelAnimatedAdjustment (0, 0, 0, 5, 0, 0);
         adjustment.finished.connect (() => {
             if (active_column == 0 && content_widget != null)
                 hide_content_widget ();
         });
 
+        var height = PanelScreen.get_primary_monitor_geometry ().height;
+
         // Create the columns
         columns = new Layout(null, null);
-        columns.set_size(column_width * 2, rect().height);
+        columns.set_size(column_width * 2, height);
 
         // Create outer scrollable
         var panel_area = new PanelScrollableContent ();
@@ -100,13 +95,13 @@ public class PanelMenuBox : PanelAbstractWindow {
 
         // Add to window
         add (panel_area);
-        set_size_request (column_width, rect().height);
+        set_size_request (column_width, height);
 
         // Create inner scrollables
         var left_scrollable = new PanelScrollableContent ();
         var right_scrollable  = new PanelScrollableContent ();
-        left_scrollable.set_min_content_height (rect().height);
-        right_scrollable.set_min_content_height (rect().height);
+        left_scrollable.set_min_content_height (height);
+        right_scrollable.set_min_content_height (height);
         left_scrollable.set_min_content_width (column_width);
         right_scrollable.set_min_content_width (column_width);
 
@@ -233,10 +228,7 @@ public class PanelMenuBox : PanelAbstractWindow {
         tray = new PanelTray ();
         left_column.pack_end (tray, false, false, 3);
 
-
-        move (rect ().x, rect ().y);
-
-        show_all ();
+        PanelScreen.move_window (this, Gdk.Gravity.NORTH_WEST);
 
         map_event.connect (() => {
             tray.update_size ();
@@ -247,12 +239,14 @@ public class PanelMenuBox : PanelAbstractWindow {
         evbox.add_events (Gdk.EventMask.BUTTON_PRESS_MASK
             | Gdk.EventMask.BUTTON_RELEASE_MASK);
 
-        evbox.show ();
+        evbox.hide();
 
         evbox.button_press_event.connect(() => {
             dismiss ();
             return true;
         });
+
+        hide ();
 
         // Monitor changes to the directory
 
@@ -297,14 +291,15 @@ public class PanelMenuBox : PanelAbstractWindow {
 
         // Ignore any attempt to move this window
         configure_event.connect ((event) => {
-            if (event.x != rect ().x ||
-                event.y != rect ().y)
-                move (rect ().x, rect ().y);
+            var rect = PanelScreen.get_primary_monitor_geometry ();
+            if (event.x != rect.x ||
+                event.y != rect.y)
+                PanelScreen.move_window (this, Gdk.Gravity.NORTH_WEST);
             return false;
         });
 
         screen_size_changed.connect (() =>  {
-            move (rect ().x, rect ().y);
+            PanelScreen.move_window (this, Gdk.Gravity.NORTH_WEST);
             queue_resize ();
         });
         
@@ -315,6 +310,7 @@ public class PanelMenuBox : PanelAbstractWindow {
             places.hide ();
         });
 
+
     }
 
     public override void get_preferred_width (out int min, out int max) {
@@ -322,13 +318,14 @@ public class PanelMenuBox : PanelAbstractWindow {
     }
 
     public override void get_preferred_height (out int min, out int max) {
-        min = max = rect ().height; 
+        min = max = PanelScreen.get_primary_monitor_geometry ().height; 
     }
 
     public override bool map_event (Gdk.Event event) {
         var w = get_window ().get_width ();
+        var rect = PanelScreen.get_primary_monitor_geometry (); 
         evbox.show ();
-        evbox.get_window ().move_resize (rect ().x + w, rect ().y, rect ().width - w, rect ().height);
+        evbox.get_window ().move_resize (rect.x + w, rect.y, rect.width - w, rect.height);
         get_window ().raise ();
         tray.show_all();
         return true;

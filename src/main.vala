@@ -15,7 +15,7 @@ int main (string[] args) {
     try {
         css.load_from_path (Config.PKGDATADIR + "/blankon-panel.css");
     }    catch (Error e) {
-        stdout.printf ("Unable to load css file\n");
+        stdout.printf ("Unable to load css file: %s\n", e.message);
     }
 
     var m = new PanelButtonWindow();

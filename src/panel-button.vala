@@ -28,13 +28,11 @@ public class PanelButtonWindow : PanelAbstractWindow {
         add (image);
 
         show ();
-        move (rect ().x, rect ().y);
+        PanelScreen.move_window (this, Gdk.Gravity.NORTH_WEST);
 
         // Window 
         var w = new PanelWindowHost ();
         w.show();
-        if (w.no_windows_around ())
-            show_menu_box ();
 
         // Clock
         var clock = new ClockWindow ();
@@ -99,7 +97,7 @@ public class PanelButtonWindow : PanelAbstractWindow {
 
     private bool show_menu_box () {
         if (menu_box.visible == false) {
-            menu_box.show ();
+            menu_box.show_all ();
             get_window ().raise ();
             menu_box.get_window ().lower ();
             menu_shown ();

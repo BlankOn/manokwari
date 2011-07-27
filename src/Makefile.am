@@ -23,6 +23,7 @@ blankon_panel_SOURCES = panel-item.vala \
     panel-clock.vala \
     panel-places.vala \
     panel-menu-xdg.vala \
+    panel-screen.vala \
 	$(NULL)
 
 blankon_panel_VALAFLAGS = \

@@ -4,17 +4,11 @@ using Gdk;
 public class PanelAbstractWindow : Gtk.Window {
     public signal void screen_size_changed ();
 
-    protected Gdk.Rectangle rect () {
-        Gdk.Rectangle r;
-        var screen = get_screen();
-        screen.get_monitor_geometry (screen.get_primary_monitor(), out r);
-        return r;
-    }
-
     protected void set_struts () {
         ulong[] struts = new ulong[12];
 
-        var r = rect();
+        var r = PanelScreen.get_primary_monitor_geometry (); 
+
         var left = 0;
         var right = 0;
         var top = 0;

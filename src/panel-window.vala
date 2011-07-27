@@ -63,8 +63,7 @@ public class PanelWindowPager : PanelAbstractWindow {
         });
 
         map_event.connect (() => {
-            move (rect ().x + rect ().width - get_window ().get_width (), 
-                  rect ().y + rect ().height -  get_window ().get_height ());
+            PanelScreen.move_window (this, Gdk.Gravity.SOUTH_EAST);
             get_window ().raise ();
             return false;
         });
@@ -84,7 +83,6 @@ public class PanelWindowPager : PanelAbstractWindow {
 
 public class PanelWindowPagerEntry : DrawingArea {
     private PanelWindowPager pager;
-    private Gdk.Rectangle rect;
 
     public signal void pager_shown ();
 
@@ -101,8 +99,6 @@ public class PanelWindowPagerEntry : DrawingArea {
 
         pager = new PanelWindowPager ();
         show ();
-        var screen = get_screen();
-        screen.get_monitor_geometry (screen.get_primary_monitor(), out rect);
 
         button_press_event.connect ((event) => {
             pager.show_all ();
@@ -136,7 +132,6 @@ public class PanelWindowPagerEntry : DrawingArea {
 }
 
 public class PanelWindowEntry : DrawingArea {
-    private Gdk.Rectangle rect;
     private Wnck.Window window_info;
     private Wnck.WindowState last_state;
     private Gtk.StateFlags state;
@@ -174,9 +169,6 @@ public class PanelWindowEntry : DrawingArea {
         window_info = info;
         last_state = info.get_state ();
         sync_window_states ();
-
-        var screen = get_screen();
-        screen.get_monitor_geometry (screen.get_primary_monitor(), out rect);
 
         Gtk.drag_dest_set (
                 this,
@@ -233,18 +225,19 @@ public class PanelWindowEntry : DrawingArea {
 
     public override void get_preferred_height (out int min, out int max) {
         // TODO
-        min = max = Margin * 2; 
+        min = max = Margin * 2 + 100; 
     }
 
     public override void get_preferred_width (out int min, out int max) {
-        max = rect.width;
+        max = PanelScreen.get_primary_monitor_geometry ().width;
         min = Margin * 2;
     }
 
     public override bool draw (Context cr) {
         StyleContext style = get_style_context ();
         style.set_state (state);
-        Gtk.render_background (style, cr, 0, 0, get_window ().get_width (), get_window ().get_height ());
+
+        Gtk.render_background (style, cr, 0, 0, get_allocated_width (), get_allocated_height ()); 
         if (draw_info) {
             var dir = get_direction ();
             int icon_x = 0, icon_y = 0;
@@ -397,6 +390,7 @@ public class PanelWindowHost : PanelAbstractWindow {
         enter_notify_event.connect (() => {
             // Only resize if there are visible windows
             if (entry_map.size > 0) {
+
                 resize (Size.BIG);
             }
             return false;
@@ -427,20 +421,20 @@ public class PanelWindowHost : PanelAbstractWindow {
     private new void resize (Size size) {
         height = size;
         queue_resize ();
-        get_window ().move_resize (rect ().x, rect ().height - size, rect ().width, size);
+        set_size_request (PanelScreen.get_primary_monitor_geometry ().width, size);
         var draw_info = false;
         if (size == Size.BIG) {
             draw_info = true;
-            stdout.printf("%d %d\n", size, get_window().get_height());
         }
         foreach (PanelWindowEntry e in entry_map.values) {
             e.draw_info = draw_info;
         }
+        reposition();
     }
 
     public override void get_preferred_width (out int min, out int max) {
-        var r = rect();
-        min = max = r.width;
+        var r = PanelScreen.get_primary_monitor_geometry ().width;
+        min = max = r;
     }
 
     public override void get_preferred_height (out int min, out int max) {
@@ -488,8 +482,7 @@ public class PanelWindowHost : PanelAbstractWindow {
     }
 
     public new void reposition () {
-        move (rect ().x, rect ().y + rect ().height - get_window ().get_height ());
-        queue_resize ();
+        PanelScreen.move_window (this, Gdk.Gravity.SOUTH_WEST);
     }
 
     public void dismiss () {

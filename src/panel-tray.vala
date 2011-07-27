@@ -119,5 +119,14 @@ public class PanelTray : HBox {
         show ();
         setup_selection ();
     }
+
+    public override bool draw (Cairo.Context cr) {
+        StyleContext style = get_style_context ();
+        style.set_state (get_state_flags ());
+        Gtk.render_background (style, cr, 0, 0, get_window ().get_width (), get_window ().get_height ());
+        base.draw (cr);
+        return true;
+    }
+
 }
 
