@@ -91,6 +91,10 @@ public class PanelAbstractWindow : Gtk.Window {
         stick ();
      
         var screen = get_screen();
+        screen.monitors_changed.connect (() => {
+            screen_size_changed ();
+        });
+
         screen.size_changed.connect (() => {
             screen_size_changed ();
         });

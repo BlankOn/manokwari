@@ -67,6 +67,9 @@ public class PanelButtonWindow : PanelAbstractWindow {
            return true;
         });
 
+        screen_size_changed.connect (() =>  {
+            PanelScreen.move_window (this, Gdk.Gravity.NORTH_WEST);
+        });
 
         enter_notify_event.connect (() => {
             set_state(StateType.PRELIGHT);
