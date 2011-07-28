@@ -25,6 +25,7 @@ public class PanelItem : Box {
     private Label label;
     private Image image;
     private Gtk.Settings settings;
+    private int MARGIN = 6;
 
     public new signal void activate ();
 
@@ -56,14 +57,18 @@ public class PanelItem : Box {
         label = new Label ("");
         image = new Image.from_stock (Stock.MISSING_IMAGE, IconSize.LARGE_TOOLBAR); 
         label.show ();
+        label.set_justify(Justification.LEFT);
         image.show ();
         box.show ();
         box.pack_start (image, false, false, 10);
-        box.pack_start (label, false, false, 0);
+        box.pack_start (label, false, true, 0);
         show ();
+
+        // Set this for map-event
 
         event_box.add_events (Gdk.EventMask.BUTTON_PRESS_MASK
             | Gdk.EventMask.BUTTON_RELEASE_MASK
+            | Gdk.EventMask.STRUCTURE_MASK
             | Gdk.EventMask.ENTER_NOTIFY_MASK
             | Gdk.EventMask.LEAVE_NOTIFY_MASK
             | Gdk.EventMask.KEY_PRESS_MASK
@@ -85,6 +90,9 @@ public class PanelItem : Box {
             return true;
         });
 
+        event_box.realize.connect (() => {
+            event_box.set_size_request (get_toplevel().get_allocated_width () - MARGIN * 2, image.get_allocated_width ()+ MARGIN);
+        });
     }
 
     public void set_image (string image_name) {
@@ -113,7 +121,7 @@ public class PanelItem : Box {
     public override bool draw (Cairo.Context cr) {
         StyleContext style = get_style_context ();
         style.set_state (get_state_flags ());
-        Gtk.render_background (style, cr, 0, 0, get_window ().get_width (), get_window ().get_height ());
+        Gtk.render_background (style, cr, MARGIN, 0, event_box.get_allocated_width (), get_allocated_height ()); 
         base.draw (cr);
         return true;
     }
