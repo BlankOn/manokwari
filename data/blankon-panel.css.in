@@ -20,11 +20,12 @@ PanelWindowHost
 
 PanelMenuBox {
     color: @fg_color;
-    background-color: @bg_color;
+    background-color: #f01a1a; 
+    background-image: url("bg.png");
 }
 
 PanelTray {
-    background-color: #4d4d4d; 
+    background-color: #000000; 
 }
 
 GtkWindow {
@@ -32,13 +33,22 @@ GtkWindow {
     background-color: @bg_color;
 }
 
-PanelItem:hover {
-    background-color: #333333;
+
+PanelMenuContent > GtkSeparator {
+    background-color: #000000;
 }
 
 PanelItem {
-    background-color: @bg_color;
+    color: #aaaaaa;
+    font: Sans Bold;
+    background-image: url("entry-bg.png");
 }
+
+PanelItem:prelight {
+    color: #ffffff;
+    background-image: url("entry-hover-bg.png");
+}
+
 
 PanelWindowPager,
 PanelWindowEntry {
@@ -53,20 +63,12 @@ PanelWindowEntry:active {
 
 PanelWindowEntry:prelight {
     background-color: #666666; 
-    color: #1a1a1a; 
+    color: #eeee1a; 
 }
 
 PanelWindowEntry:insensitive {
     background-color: #333333; 
     color: #808080;
-}
-
-
-PanelItem:prelight {
-    color: #fefefe;
-}
-PanelItem GtkLabel:prelight {
-    color: #ffffff;
 }
 
 PanelClock {
