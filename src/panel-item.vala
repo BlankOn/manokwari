@@ -28,6 +28,7 @@ public class PanelItem : Box {
     private int MARGIN = 6;
 
     public new signal void activate ();
+    public new signal void right_clicked (Gdk.EventButton event);
 
     public PanelItem () {
         init ();
@@ -76,8 +77,12 @@ public class PanelItem : Box {
             | Gdk.EventMask.POINTER_MOTION_MASK);
 
         event_box.button_release_event.connect ((event) => {
-            activate ();
-            return false;
+            if (event.button == 1 && event.type == Gdk.EventType.BUTTON_RELEASE) { // left click
+                activate ();
+            } else if (event.button == 3 && event.type == Gdk.EventType.BUTTON_RELEASE) { // right click
+                right_clicked (event);
+            } 
+            return true;
         });
 
         event_box.enter_notify_event.connect ((event) => {

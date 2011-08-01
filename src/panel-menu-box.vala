@@ -117,14 +117,12 @@ public class PanelMenuBox : PanelAbstractWindow {
         columns.put (right_scrollable, column_width, 0);
 
 
-        var favorites = new PanelMenuXdg("favorites.menu",  _("Favorites") );
+        var favorites = new PanelMenuFavorites ();
         left_column.pack_start (favorites, false, false, 0);
 
         favorites.menu_clicked.connect (() => {
             dismiss ();
         });
-
-        favorites.insert_separator ();
 
         var all_apps_opener = new PanelItem.with_label ( _("All applications") );
         all_apps_opener.set_image ("gnome-applications");

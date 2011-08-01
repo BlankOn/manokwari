@@ -104,6 +104,7 @@ public class PanelPlaces : PanelMenuContent {
                         });
                     }
                 }
+                input.close ();
             } catch (Error e) {
                 stdout.printf ("Unable to read the bookmarks\n");
             }

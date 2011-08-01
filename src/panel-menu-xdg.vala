@@ -1,10 +1,14 @@
 using GMenu;
+using Gee;
 using Gtk;
+using GLib;
+
 
 // This class opens an xdg menu and populates it
 public class PanelMenuXdg : PanelMenuContent {
 
     private string catalog;
+    public signal void deactivate ();
 
     public PanelMenuXdg (string catalog, string? label) {
         base (label);
@@ -37,6 +41,10 @@ public class PanelMenuXdg : PanelMenuContent {
                 var entry = new PanelItem.with_label (i.get_display_name ());
                 entry.set_image (i.get_icon ());
                 entry.show ();
+
+                entry.right_clicked.connect ((e) => {
+                    show_popup (e, i);
+                });
 
                 entry.activate.connect (() => {
                     var info = new DesktopAppInfo.from_filename (i.get_desktop_file_path ());
@@ -74,4 +82,27 @@ public class PanelMenuXdg : PanelMenuContent {
         }
         populate ();
     }
+
+    public void show_popup (Gdk.EventButton event, TreeEntry item) {
+        var menu = new Menu ();
+
+        var entry = new MenuItem.with_label (_("Add to Favorites"));
+        entry.show ();
+        menu.add (entry);
+
+        entry.activate.connect (() => {
+            Favorites.add (item.get_desktop_file_path ());
+        });
+
+        var button = event.button;
+        var event_time = event.time;
+
+        menu.deactivate.connect (() => {
+            deactivate ();
+        });
+        menu.attach_to_widget (this, null);
+
+        menu.popup (null, null, null, button, event_time);
+    }
+
 }
