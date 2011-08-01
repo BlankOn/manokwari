@@ -20,8 +20,7 @@ PanelWindowHost
 
 PanelMenuBox {
     color: @fg_color;
-    background-color: #f01a1a; 
-    background-image: url("bg.png");
+    background-color: #1a1a1a; 
 }
 
 PanelTray {
@@ -41,12 +40,11 @@ PanelMenuContent > GtkSeparator {
 PanelItem {
     color: #aaaaaa;
     font: Sans Bold;
-    background-image: url("entry-bg.png");
 }
 
 PanelItem:prelight {
     color: #ffffff;
-    background-image: url("entry-hover-bg.png");
+    background-color: #303030; 
 }
 
 
