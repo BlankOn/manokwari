@@ -9,7 +9,7 @@ interface SessionManager : Object {
 
 public class PanelMenuBox : PanelAbstractWindow {
     private int active_column = 0;
-    private int column_width = 300;
+    private int column_width = 320;
 
     private Invisible evbox;
     private Layout columns;
@@ -115,7 +115,6 @@ public class PanelMenuBox : PanelAbstractWindow {
         right_scrollable.set_scrollbar_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
         columns.put (left_scrollable, 0, 0);
         columns.put (right_scrollable, column_width, 0);
-
 
         var favorites = new PanelMenuFavorites ();
         left_column.pack_start (favorites, false, false, 0);
