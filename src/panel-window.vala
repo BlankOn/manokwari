@@ -151,6 +151,8 @@ public class PanelWindowEntry : DrawingArea {
             state = StateFlags.INSENSITIVE;
         } else if (window_info.is_active()) {
             state = StateFlags.ACTIVE;
+        } else if (window_info.needs_attention ()) {
+            state = StateFlags.SELECTED;
         } else {
             state = StateFlags.NORMAL;
         }
@@ -182,6 +184,10 @@ public class PanelWindowEntry : DrawingArea {
                 return;
 
             sync_window_states ();
+        });
+
+        window_info.name_changed.connect(() => {
+            queue_draw ();
         });
 
         leave_notify_event.connect ((event) => {

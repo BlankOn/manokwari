@@ -54,6 +54,11 @@ PanelWindowEntry {
     color: #cccccc; 
 }
 
+PanelWindowEntry:selected {
+    background-color: #FF8080; 
+    color: #1a1a1a; 
+}
+
 PanelWindowEntry:active {
     background-color: #808080; 
     color: #1a1a1a; 
