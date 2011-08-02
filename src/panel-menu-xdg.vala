@@ -39,7 +39,7 @@ public class PanelMenuXdg : PanelMenuContent {
             case TreeItemType.ENTRY:
                 var i = (TreeEntry) item;
                 var entry = new PanelItem.with_label (i.get_display_name ());
-                entry.set_image (i.get_icon ());
+                entry.set_image (Filename.display_basename (i.get_icon ().replace(".svg", "").replace(".png", "").replace(".xpm","")));
                 entry.show ();
 
                 entry.right_clicked.connect ((e) => {
