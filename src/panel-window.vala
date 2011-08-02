@@ -345,8 +345,8 @@ public class PanelWindowHost : PanelAbstractWindow {
         pager_entry.show ();
         outer_box.pack_end (pager_entry, false, false, 1);
 
-        outer_box.pack_start (tray, false, false, 1);
-        outer_box.pack_start (box, true, true, 1);
+        outer_box.pack_start (tray, false, false, 0);
+        outer_box.pack_start (box, true, true, 0);
         outer_box.show ();
         box.show();
 

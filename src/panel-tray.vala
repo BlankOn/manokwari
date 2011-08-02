@@ -4,8 +4,6 @@ using X;
 
 public class PanelTray : HBox {
     private Invisible invisible;
-    private uint size;
-    private uint default_size = 24;
 
     public signal void new_item_added ();
 
@@ -13,17 +11,6 @@ public class PanelTray : HBox {
         REQUEST_DOCK,
         BEGIN,
         CANCEL
-    }
-
-    public void update_size () { 
-        foreach (unowned Widget w in get_children ()) {
-            if (w is Gtk.Socket) {
-                var window = ((Gtk.Socket)w).get_plug_window ();
-                if (window != null && window is Gdk.Window)
-                    window.resize ((int) default_size, (int) default_size);
-            }
-            w.set_size_request ((int) default_size, (int) default_size);
-        }
     }
 
     private void add_client (long xid) {
@@ -46,7 +33,7 @@ public class PanelTray : HBox {
         show_all ();
         w.plug_removed.connect (() => {
             w.destroy ();
-        show_all ();
+            show_all ();
             return true;
         });
 
@@ -110,14 +97,16 @@ public class PanelTray : HBox {
     }
 
     public PanelTray () {
-        size = 0;
-
         invisible = new Invisible ();
         invisible.add_events (Gdk.EventMask.PROPERTY_CHANGE_MASK |
                               Gdk.EventMask.STRUCTURE_MASK);
         invisible.realize();
         show ();
         setup_selection ();
+        var empty = new DrawingArea ();
+        empty.show ();
+        empty.set_size_request (10, 1);
+        pack_end (empty, false, false, 0);
     }
 
     public override bool draw (Cairo.Context cr) {
@@ -128,8 +117,5 @@ public class PanelTray : HBox {
         return true;
     }
 
-    public override void get_preferred_width (out int min, out int max) {
-        min = max = 300;
-    }
 }
 
