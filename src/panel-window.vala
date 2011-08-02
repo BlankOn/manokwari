@@ -306,6 +306,7 @@ public class PanelWindowEntry : DrawingArea {
 public class PanelWindowHost : PanelAbstractWindow {
     private bool active;
     private HBox box;
+    private PanelTray tray;
     private new Wnck.Screen screen;
     private int num_visible_windows = 0;
     private HashMap <Wnck.Window, PanelWindowEntry> entry_map ;
@@ -316,7 +317,7 @@ public class PanelWindowHost : PanelAbstractWindow {
     public signal void all_windows_visible (); // Emitted when all normal windows visible
 
     enum Size {
-        SMALL = 8,
+        SMALL = 12,
         BIG = 34
     }
 
@@ -327,6 +328,9 @@ public class PanelWindowHost : PanelAbstractWindow {
 
     public PanelWindowHost () {
         entry_map = new HashMap <Wnck.Window, PanelWindowEntry> (); 
+
+        tray = new PanelTray ();
+        tray.show ();
 
         num_visible_windows = 0;
         set_type_hint (Gdk.WindowTypeHint.DOCK);
@@ -341,6 +345,7 @@ public class PanelWindowHost : PanelAbstractWindow {
         pager_entry.show ();
         outer_box.pack_end (pager_entry, false, false, 1);
 
+        outer_box.pack_start (tray, false, false, 1);
         outer_box.pack_start (box, true, true, 1);
         outer_box.show ();
         box.show();

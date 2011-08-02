@@ -128,5 +128,8 @@ public class PanelTray : HBox {
         return true;
     }
 
+    public override void get_preferred_width (out int min, out int max) {
+        min = max = 300;
+    }
 }
 

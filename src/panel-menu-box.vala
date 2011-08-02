@@ -12,7 +12,6 @@ public class PanelMenuBox : PanelAbstractWindow {
     private int column_width = 320;
 
     private Layout columns;
-    private PanelTray tray;
 
     public signal void dismissed ();
     public signal void sliding_right ();
@@ -230,13 +229,9 @@ public class PanelMenuBox : PanelAbstractWindow {
             slide_right (); 
         });
 
-        tray = new PanelTray ();
-        left_column.pack_end (tray, false, false, 3);
-
         PanelScreen.move_window (this, Gdk.Gravity.NORTH_WEST);
 
         map_event.connect (() => {
-            tray.update_size ();
             return false;
         });
 
@@ -319,7 +314,6 @@ public class PanelMenuBox : PanelAbstractWindow {
         var w = get_window ().get_width ();
         var rect = PanelScreen.get_primary_monitor_geometry (); 
         get_window ().raise ();
-        tray.show_all();
         grab ();
         return true;
     }
