@@ -9,7 +9,8 @@ interface SessionManager : Object {
 
 public class PanelMenuBox : PanelAbstractWindow {
     private int active_column = 0;
-    private int column_width = 320;
+    private const int COLUMN_WIDTH = 320;
+    private const int START_POS = 100;
 
     private Layout columns;
 
@@ -33,7 +34,7 @@ public class PanelMenuBox : PanelAbstractWindow {
     }
 
     public void slide_left () {
-        adjustment.set_target (0);
+        adjustment.set_target (START_POS);
         adjustment.start ();
         active_column = 0;
     }
@@ -46,7 +47,7 @@ public class PanelMenuBox : PanelAbstractWindow {
         } else
             return;
 
-        adjustment.set_target (column_width);
+        adjustment.set_target (COLUMN_WIDTH + START_POS);
         adjustment.start ();
         active_column = 1;
         sliding_right ();
@@ -78,11 +79,12 @@ public class PanelMenuBox : PanelAbstractWindow {
                 hide_content_widget ();
         });
 
+
         var height = PanelScreen.get_primary_monitor_geometry ().height;
 
         // Create the columns
         columns = new Layout(null, null);
-        columns.set_size(column_width * 2, height);
+        columns.set_size(COLUMN_WIDTH * 2 + START_POS, height);
 
         // Create outer scrollable
         var panel_area = new PanelScrollableContent ();
@@ -93,15 +95,15 @@ public class PanelMenuBox : PanelAbstractWindow {
 
         // Add to window
         add (panel_area);
-        set_size_request (column_width, height);
+        set_size_request (COLUMN_WIDTH, height);
 
         // Create inner scrollables
         var left_scrollable = new PanelScrollableContent ();
         var right_scrollable  = new PanelScrollableContent ();
         left_scrollable.set_min_content_height (height);
         right_scrollable.set_min_content_height (height);
-        left_scrollable.set_min_content_width (column_width);
-        right_scrollable.set_min_content_width (column_width);
+        left_scrollable.set_min_content_width (COLUMN_WIDTH);
+        right_scrollable.set_min_content_width (COLUMN_WIDTH);
 
         var left_column = new VBox (false, 0);
         left_scrollable.set_widget (left_column);
@@ -111,8 +113,9 @@ public class PanelMenuBox : PanelAbstractWindow {
 
         left_scrollable.set_scrollbar_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
         right_scrollable.set_scrollbar_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
-        columns.put (left_scrollable, 0, 0);
-        columns.put (right_scrollable, column_width, 0);
+
+        columns.put (left_scrollable, START_POS, 0);
+        columns.put (right_scrollable, COLUMN_WIDTH + START_POS, 0);
 
         var favorites = new PanelMenuFavorites ();
         left_column.pack_start (favorites, false, false, 0);
@@ -303,7 +306,7 @@ public class PanelMenuBox : PanelAbstractWindow {
     }
 
     public override void get_preferred_width (out int min, out int max) {
-        min = max = column_width;
+        min = max = COLUMN_WIDTH;
     }
 
     public override void get_preferred_height (out int min, out int max) {
@@ -315,6 +318,7 @@ public class PanelMenuBox : PanelAbstractWindow {
         var rect = PanelScreen.get_primary_monitor_geometry (); 
         get_window ().raise ();
         grab ();
+        slide_left ();
         return true;
     }
 
