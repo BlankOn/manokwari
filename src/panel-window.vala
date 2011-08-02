@@ -32,6 +32,7 @@ public class PanelWindowPager : PanelAbstractWindow {
     }
 
     public PanelWindowPager () {
+        set_type_hint (Gdk.WindowTypeHint.DOCK);
         var box = new VBox (false, 0);
         var pager = new Wnck.Pager ();
         pager.set_orientation (Orientation.VERTICAL);
@@ -48,7 +49,6 @@ public class PanelWindowPager : PanelAbstractWindow {
 
         box.show ();
 
-        set_type_hint (Gdk.WindowTypeHint.DOCK);
         hide();
 
         desktop.toggled.connect (() => {
@@ -69,11 +69,6 @@ public class PanelWindowPager : PanelAbstractWindow {
         });
     }
 
-
-    public override void get_preferred_height (out int min, out int max) {
-        // TODO
-        min = max = 150;
-    }
 
     public override void get_preferred_width (out int min, out int max) {
         min = max = 80;
