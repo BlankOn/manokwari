@@ -161,6 +161,7 @@ public class PanelMenuXdg : PanelMenuContent {
     }
 
     private void show_dialog (string message) {
+        deactivate ();
         var dialog = new MessageDialog (null, DialogFlags.DESTROY_WITH_PARENT, MessageType.ERROR, ButtonsType.CLOSE, message);
         dialog.response.connect (() => {
             dialog.destroy ();

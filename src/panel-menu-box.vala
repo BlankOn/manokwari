@@ -11,7 +11,6 @@ public class PanelMenuBox : PanelAbstractWindow {
     private int active_column = 0;
     private int column_width = 320;
 
-    private Invisible evbox;
     private Layout columns;
     private PanelTray tray;
 
@@ -123,6 +122,10 @@ public class PanelMenuBox : PanelAbstractWindow {
             dismiss ();
         });
 
+        favorites.deactivate.connect (() => {
+            dismiss ();
+        });
+
         var all_apps_opener = new PanelItem.with_label ( _("All applications") );
         all_apps_opener.set_image ("gnome-applications");
         left_column.pack_start (all_apps_opener, false, false, 0);
@@ -192,6 +195,9 @@ public class PanelMenuBox : PanelAbstractWindow {
             dismiss ();
         });
 
+        all_apps.deactivate.connect (() => {
+            dismiss ();
+        });
 
         var control_center = new PanelMenuXdg("settings.menu",  _("Settings") );
         right_column.pack_start (control_center);
@@ -205,6 +211,9 @@ public class PanelMenuBox : PanelAbstractWindow {
             dismiss ();
         });
 
+        control_center.deactivate.connect (() => {
+            dismiss ();
+        });
 
         var places = new PanelPlaces ();
         right_column.pack_start (places);
@@ -215,7 +224,6 @@ public class PanelMenuBox : PanelAbstractWindow {
         places.launching.connect (() => {
             dismiss ();
         });
-
 
         places_opener.activate.connect (() => {
             content_widget = places;
@@ -230,17 +238,6 @@ public class PanelMenuBox : PanelAbstractWindow {
         map_event.connect (() => {
             tray.update_size ();
             return false;
-        });
-
-        evbox = new Invisible ();
-        evbox.add_events (Gdk.EventMask.BUTTON_PRESS_MASK
-            | Gdk.EventMask.BUTTON_RELEASE_MASK);
-
-        evbox.hide();
-
-        evbox.button_press_event.connect(() => {
-            dismiss ();
-            return true;
         });
 
         hide ();
@@ -321,16 +318,15 @@ public class PanelMenuBox : PanelAbstractWindow {
     public override bool map_event (Gdk.Event event) {
         var w = get_window ().get_width ();
         var rect = PanelScreen.get_primary_monitor_geometry (); 
-        evbox.show ();
-        evbox.get_window ().move_resize (rect.x + w, rect.y, rect.width - w, rect.height);
         get_window ().raise ();
         tray.show_all();
+        grab ();
         return true;
     }
 
     private void dismiss () {
         stdout.printf("Menu box dismissed \n");
-        evbox.hide ();
+        ungrab ();
         reset ();
         dismissed ();
     }
@@ -344,4 +340,32 @@ public class PanelMenuBox : PanelAbstractWindow {
         dialog.show ();
     }
 
+    private void grab () {
+        var device = get_current_event_device();
+
+        if (device == null) {
+            var display = get_display ();
+            var manager = display.get_device_manager ();
+            var devices = manager.list_devices (Gdk.DeviceType.MASTER).copy();
+            device = devices.data;
+        }
+        var keyboard = device;
+        var pointer = device;
+
+        if (device.get_source() == Gdk.InputSource.KEYBOARD) {
+            pointer = device.get_associated_device ();
+        } else {
+            keyboard = device.get_associated_device ();
+        }
+
+        var status = keyboard.grab(get_window(), Gdk.GrabOwnership.WINDOW, true, Gdk.EventMask.KEY_PRESS_MASK | Gdk.EventMask.KEY_RELEASE_MASK, null, Gdk.CURRENT_TIME);
+        status = pointer.grab(get_window(), Gdk.GrabOwnership.WINDOW, true, Gdk.EventMask.BUTTON_PRESS_MASK, null, Gdk.CURRENT_TIME);
+    }
+
+    private void ungrab () {
+        var device = get_current_event_device();
+        var secondary = device.get_associated_device();
+        device.ungrab(Gdk.CURRENT_TIME);
+        secondary.ungrab(Gdk.CURRENT_TIME);
+    }
 }
