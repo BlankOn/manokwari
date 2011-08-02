@@ -316,8 +316,8 @@ public class PanelWindowHost : PanelAbstractWindow {
     public signal void all_windows_visible (); // Emitted when all normal windows visible
 
     enum Size {
-        SMALL = 12,
-        BIG = 50
+        SMALL = 8,
+        BIG = 34
     }
 
     public bool no_windows_around () {
