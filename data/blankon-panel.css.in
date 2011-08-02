@@ -1,4 +1,4 @@
-@define-color bg_color #1a1a1a;
+@define-color bg_color #00112B;
 @define-color fg_color #f2f2f2;
 @define-color window_desc_bg_color #4e70b0;
 @define-color window_desc_fg_color #00001e;
@@ -10,26 +10,34 @@
 @define-color clock_fg_color #000000; 
 
 
-PanelWindowPager,
-PanelWindowList,
 PanelWindowHost
 {
     color: @fg_color;
-    background-color: #090909; 
+    background-color: @bg_color; 
 }
 
 PanelMenuBox {
     color: @fg_color;
-    background-color: #1a1a1a; 
+    background-color: @bg_color; 
 }
 
 PanelTray {
-    background-color: #000000; 
+    background-color: @bg_color; 
 }
 
 GtkWindow {
     color: @fg_color;
     background-color: @bg_color;
+}
+
+GtkMenu {
+    color: @fg_color;
+    background-color: @bg_color;
+}
+
+GtkMenuItem:hover {
+    color: #ffffff;
+    background-color: #0044AA; 
 }
 
 
@@ -44,29 +52,28 @@ PanelItem {
 
 PanelItem:prelight {
     color: #ffffff;
-    background-color: #303030; 
+    background-color: #0044AA; 
 }
-
 
 PanelWindowPager,
 PanelWindowEntry {
-    background-color: @bg_color;
+    background-color: #003380;
     color: #cccccc; 
 }
 
 PanelWindowEntry:selected {
-    background-color: #FF8080; 
-    color: #1a1a1a; 
+    background-color: #AA0000; 
+    color: #ffffff;
 }
 
 PanelWindowEntry:active {
-    background-color: #808080; 
-    color: #1a1a1a; 
+    background-color: #0044AA; 
+    color: #ffffff; 
 }
 
 PanelWindowEntry:prelight {
-    background-color: #666666; 
-    color: #eeee1a; 
+    background-color: #0044AA; 
+    color: #ffffff; 
 }
 
 PanelWindowEntry:insensitive {
