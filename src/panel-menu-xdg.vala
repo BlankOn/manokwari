@@ -94,6 +94,15 @@ public class PanelMenuXdg : PanelMenuContent {
             Favorites.add (item.get_desktop_file_path ());
         });
 
+        var add_to_desktop = new MenuItem.with_label (_("Add to %s").printf (Filename.display_basename (Environment.get_user_special_dir (UserDirectory.DESKTOP))));
+        add_to_desktop.show ();
+        menu.add (add_to_desktop);
+
+        add_to_desktop.activate.connect (() => {
+            put_to_desktop (item.get_desktop_file_path ());
+        });
+
+
         var button = event.button;
         var event_time = event.time;
 
@@ -103,6 +112,60 @@ public class PanelMenuXdg : PanelMenuContent {
         menu.attach_to_widget (this, null);
 
         menu.popup (null, null, null, button, event_time);
+    }
+
+    private void put_to_desktop (string filename) {
+        var input_file = File.new_for_path (filename);
+        var path = Environment.get_user_special_dir (UserDirectory.DESKTOP) + "/" + input_file.get_basename ();
+        var file = File.new_for_path (path);
+        if (file.query_exists ()) {
+            show_dialog (_("Shortcut %s already exists in %s").printf (input_file.get_basename (), path));
+            return;
+        }
+
+        DataInputStream input;
+        DataOutputStream output;
+        
+        try {
+            input = new DataInputStream (input_file.read ());
+        } catch (Error e) {
+            show_dialog (_("Unable to read %s: %s").printf (filename, e.message));
+            return;
+        }
+
+        try {
+            output = new DataOutputStream (file.create (FileCreateFlags.PRIVATE, null)); 
+            var value = true;
+        } catch (Error e) {
+            show_dialog (_("Unable to create %s shortcut in %s: %s").printf (input_file.get_basename (), path, e.message));
+            input.close ();
+            return;
+        }
+
+        try {
+            output.put_string ("#!/usr/bin/env xdg-open\n\n");
+            string line;
+            while ((line = input.read_line (null)) != null) {
+                output.put_string (line + "\n");
+            }
+            output.close ();
+            input.close ();
+            GLib.FileUtils.chmod (path, 0700);
+        } catch (Error e) {
+            show_dialog (_("Unable to write %s shortcut in %s: %s").printf (input_file.get_basename (), path, e.message));
+            input.close ();
+            output.close ();
+            return;
+        }
+
+    }
+
+    private void show_dialog (string message) {
+        var dialog = new MessageDialog (null, DialogFlags.DESTROY_WITH_PARENT, MessageType.ERROR, ButtonsType.CLOSE, message);
+        dialog.response.connect (() => {
+            dialog.destroy ();
+        });
+        dialog.show ();
     }
 
 }
