@@ -18,6 +18,14 @@ public class PanelClock : Label {
 		return true;
 	}
 	
+	public override bool draw (Cairo.Context cr) {
+        StyleContext style = get_style_context ();
+        style.set_state (get_state_flags ());
+        Gtk.render_background (style, cr, MARGIN, 0, event_box.get_allocated_width (), get_allocated_height ()); 
+        base.draw (cr);
+        return true;
+    }
+	
 }
 
 public class ClockWindow : PanelAbstractWindow {
