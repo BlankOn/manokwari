@@ -81,15 +81,6 @@ public class PanelButtonWindow : PanelAbstractWindow {
             return false;
         });
 
-        menu_box.dismissed.connect (() => {
-            menu_box.hide ();
-        });
-
-        menu_box.map_event.connect (() => {
-            w.dismiss ();
-            return false;
-        });
-
         w.windows_visible.connect (() => {
             if (menu_box.visible) 
                 menu_box.hide ();
@@ -101,8 +92,6 @@ public class PanelButtonWindow : PanelAbstractWindow {
     private bool show_menu_box () {
         if (menu_box.visible == false) {
             menu_box.show ();
-            get_window ().raise ();
-            menu_box.get_window ().lower ();
             menu_shown ();
         }
         return false;
