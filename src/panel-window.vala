@@ -467,6 +467,9 @@ public class PanelWindowHost : PanelAbstractWindow {
                     entry_map.set (w, e);
                 }
 
+                if (height == Size.BIG) {
+                    e.draw_info = true;
+                }
                 e.show ();
                 box.pack_start (e, true, true, 1);
                 if (!w.is_minimized ())
