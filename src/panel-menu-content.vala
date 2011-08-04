@@ -14,6 +14,7 @@ public class PanelMenuContent : VBox {
             l.set_markup ("<big>\n" + label + "</big>");
             pack_start (l, false, false, 5);
         }
+        show_all ();
     }
 
     public override void get_preferred_width (out int min, out int max) {
@@ -21,6 +22,8 @@ public class PanelMenuContent : VBox {
     }
 
     public void insert_separator () {
-        pack_start (new Separator (Orientation.HORIZONTAL), false, false, 10);
+        var separator = new Separator (Orientation.HORIZONTAL);
+        separator.show ();
+        pack_start (separator, false, false, 10);
     }
 }

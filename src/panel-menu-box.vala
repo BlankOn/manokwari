@@ -30,7 +30,6 @@ public class PanelMenuBox : PanelAbstractWindow {
     private void reset () {
         adjustment.set_value (100);
         active_column = 0;
-        hide_content_widget ();
         about_to_show_content ();
     }
 
@@ -41,9 +40,8 @@ public class PanelMenuBox : PanelAbstractWindow {
     }
 
     public void slide_right () {
-        about_to_show_content (); // hide all contents first
-
         if (content_widget != null) {
+            about_to_show_content (); // hide all contents first
             show_content_widget ();
         } else
             return;
@@ -77,17 +75,13 @@ public class PanelMenuBox : PanelAbstractWindow {
         set_type_hint (Gdk.WindowTypeHint.DOCK);
 
         adjustment = new PanelAnimatedAdjustment (0, 0, 0, 5, 0, 0);
-        adjustment.finished.connect (() => {
-            if (active_column == 0 && content_widget != null)
-                hide_content_widget ();
-        });
-
 
         var height = PanelScreen.get_primary_monitor_geometry ().height;
 
         // Create the columns
         columns = new Layout(null, null);
         columns.set_size(COLUMN_WIDTH * 2, height);
+        columns.show ();
 
         // Create outer scrollable
         var panel_area = new PanelScrollableContent ();
@@ -107,6 +101,7 @@ public class PanelMenuBox : PanelAbstractWindow {
         right_scrollable.set_min_content_height (height);
         left_scrollable.set_min_content_width (COLUMN_WIDTH);
         right_scrollable.set_min_content_width (COLUMN_WIDTH);
+        right_scrollable.set_size_request (COLUMN_WIDTH, height);
 
         var left_column = new VBox (false, 0);
         left_scrollable.set_widget (left_column);
@@ -116,12 +111,19 @@ public class PanelMenuBox : PanelAbstractWindow {
 
         left_scrollable.set_scrollbar_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
         right_scrollable.set_scrollbar_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
+        left_scrollable.show_all ();
+        right_scrollable.show_all ();
+        left_column.show_all ();
+        right_column.show_all ();
 
         columns.put (left_scrollable, 0, 0);
-        columns.put (right_scrollable, COLUMN_WIDTH, 0);
+        columns.put (right_scrollable, COLUMN_WIDTH * 2, 0); // Initially hide the second column 
+                                                             // so incoming transition of menu box 
+                                                             // would be nice
 
         var favorites = new PanelMenuFavorites ();
         left_column.pack_start (favorites, false, false, 0);
+        favorites.show ();
 
         favorites.menu_clicked.connect (() => {
             dismiss ();
@@ -133,17 +135,21 @@ public class PanelMenuBox : PanelAbstractWindow {
 
         var all_apps_opener = new PanelItem.with_label ( _("All applications") );
         all_apps_opener.set_image ("gnome-applications");
+        all_apps_opener.show ();
         left_column.pack_start (all_apps_opener, false, false, 0);
 
         var cc_opener = new PanelItem.with_label ( _("Settings") );
+        cc_opener.show ();
         cc_opener.set_image ("gnome-control-center");
         left_column.pack_start (cc_opener, false, false, 0);
 
         var places_opener = new PanelItem.with_label ( _("Places") );
+        places_opener.show ();
         places_opener.set_image ("gtk-home");
         left_column.pack_start (places_opener, false, false, 0);
 
         var lock_screen = new PanelItem.with_label ( _("Lock Screen"));
+        lock_screen.show ();
         lock_screen.set_image ("gnome-lockscreen");
         left_column.pack_start (lock_screen, false, false, 0);
         lock_screen.activate.connect (() => {
@@ -155,6 +161,7 @@ public class PanelMenuBox : PanelAbstractWindow {
 
         if (session != null) {
             var logout = new PanelItem.with_label ( _("Logout...") );
+            logout.show ();
             logout.set_image ("gnome-logout");
             left_column.pack_start (logout, false, false, 0);
             logout.activate.connect (() => {
@@ -169,6 +176,7 @@ public class PanelMenuBox : PanelAbstractWindow {
             try {
                 if (session.can_shutdown ()) {
                     var shutdown = new PanelItem.with_label ( _("Shutdown...") );
+                    shutdown.show ();
                     shutdown.set_image ("system-shutdown");
                     left_column.pack_start (shutdown, false, false, 0);
                     shutdown.activate.connect (() => {
@@ -192,6 +200,7 @@ public class PanelMenuBox : PanelAbstractWindow {
         back_button.set_focus_on_click (false);
         back_button.set_alignment (0, (float) 0.5);
         right_column.pack_start (back_button, false, false, 0);
+        back_button.show ();
 
         back_button.clicked.connect (() => {
             slide_left ();
@@ -199,7 +208,8 @@ public class PanelMenuBox : PanelAbstractWindow {
 
         // All application (2nd) column
         var all_apps = new PanelMenuXdg("applications.menu", _("Applications") );
-        right_column.pack_start (all_apps);
+        all_apps.hide ();
+        right_column.pack_start (all_apps, false, false, 0);
 
         all_apps_opener.activate.connect (() => {
             content_widget = all_apps;
@@ -215,7 +225,8 @@ public class PanelMenuBox : PanelAbstractWindow {
         });
 
         var control_center = new PanelMenuXdg("settings.menu",  _("Settings") );
-        right_column.pack_start (control_center);
+        control_center.hide ();
+        right_column.pack_start (control_center, false, false, 0);
 
         cc_opener.activate.connect (() => {
             content_widget = control_center;
@@ -231,7 +242,8 @@ public class PanelMenuBox : PanelAbstractWindow {
         });
 
         var places = new PanelPlaces ();
-        right_column.pack_start (places);
+        places.hide ();
+        right_column.pack_start (places, false, false, 0);
 
         places.error.connect (() => {
             dismiss ();
@@ -248,8 +260,7 @@ public class PanelMenuBox : PanelAbstractWindow {
         PanelScreen.move_window (this, Gdk.Gravity.NORTH_WEST);
 
         adjustment.set_value (100);
-	show_all ();
-	hide ();
+        hide ();
 
         // Monitor changes to the directory
 
@@ -282,6 +293,15 @@ public class PanelMenuBox : PanelAbstractWindow {
         }
 
         // Signal connections
+        adjustment.finished.connect (() => {
+            if (active_column == 0) {
+                if (content_widget != null)
+                    hide_content_widget ();
+                columns.move (right_scrollable, COLUMN_WIDTH, 0); // Moe the right column to it's place
+            }
+        });
+
+
         button_press_event.connect((event) => {
             // Only dismiss if within the area
             // TODO: multihead
@@ -305,6 +325,21 @@ public class PanelMenuBox : PanelAbstractWindow {
             back_button.hide ();
         });
 
+        dismissed.connect (() => {
+            columns.move (right_scrollable, COLUMN_WIDTH * 2, 0); // When dismissed the right column
+                                                                  // is shifted back to the right so
+                                                                  // it won't be visible when the
+                                                                  // show transition kicks in
+        });
+
+        map_event.connect (() => {
+            PanelScreen.move_window (this, Gdk.Gravity.NORTH_WEST);
+            get_window ().raise ();
+            grab ();
+            slide_left ();
+            return true;
+        });
+
 
     }
 
@@ -316,18 +351,11 @@ public class PanelMenuBox : PanelAbstractWindow {
         min = max = PanelScreen.get_primary_monitor_geometry ().height; 
     }
 
-    public override bool map_event (Gdk.Event event) {
-        PanelScreen.move_window (this, Gdk.Gravity.NORTH_WEST);
-        get_window ().raise ();
-        grab ();
-        slide_left ();
-        return true;
-    }
-
     private void dismiss () {
         stdout.printf("Menu box dismissed \n");
         ungrab ();
         reset ();
+        hide ();
         dismissed ();
     }
 

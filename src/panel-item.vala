@@ -13,6 +13,7 @@ public class PanelExpanderItem : Expander {
             | Gdk.EventMask.POINTER_MOTION_MASK);
 
         item = new PanelItem.with_label (title);
+        item.show ();
         item.set_image (icon);
         set_label_widget (item);
     }
@@ -50,6 +51,7 @@ public class PanelItem : Box {
         settings = Gtk.Settings.get_default ();
         box = new HBox (false, 0);
         event_box = new EventBox ();
+        event_box.show ();
         add (event_box);
         event_box.add (box);
         event_box.set_above_child (true);
@@ -119,6 +121,7 @@ public class PanelItem : Box {
     public void append_filler (int width) { 
         var filler = new DrawingArea ();
 
+        filler.show ();
         box.pack_start (filler, false, false, width);
         box.reorder_child (filler, 0);
     }

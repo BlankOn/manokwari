@@ -140,6 +140,7 @@ public class PanelMenuFavorites: PanelMenuContent {
         populate ();
         content = new Favorites ();
         content.monitor ();
+        show ();
 
         content.changed.connect (() => {
             repopulate ();
