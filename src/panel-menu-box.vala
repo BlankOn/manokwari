@@ -239,10 +239,6 @@ public class PanelMenuBox : PanelAbstractWindow {
 
         adjustment.set_value (100);
 	show_all ();
-	all_apps.hide ();
-	control_center.hide ();
-	places.hide ();
-	back_button.hide ();
 	hide ();
 
         // Monitor changes to the directory

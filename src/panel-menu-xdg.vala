@@ -26,6 +26,7 @@ public class PanelMenuXdg : PanelMenuContent {
                 pack_start (expander, false, false, 0); 
                 var box = new VBox (false, 0);
                 expander.add (box);
+                expander.show ();
                 update_tree (box, level + 1, i);
                 expander.activate.connect(() => {
                     foreach (unowned Widget w in parent.get_children ()) {
