@@ -105,7 +105,7 @@ public class ClockWindow : PanelAbstractWindow {
 
         var rect = PanelScreen.get_primary_monitor_geometry ();
 
-        move (rect.width - w - (w / 2), rect.y + h / 2);
+        move (rect.x + rect.width - w - (w / 2), rect.y + h / 2);
         queue_resize ();
     }
 

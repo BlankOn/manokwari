@@ -357,6 +357,7 @@ public class PanelWindowHost : PanelAbstractWindow {
         set_struts(); 
 
         screen_size_changed.connect (() => {
+            queue_resize ();
             reposition ();
         });
 
