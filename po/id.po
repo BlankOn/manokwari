@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: blankon-panel VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-07-19 19:34+0000\n"
-"PO-Revision-Date: 2011-08-02 22:09+0700\n"
+"PO-Revision-Date: 2011-08-04 23:09+0700\n"
 "Last-Translator: Aji Kisworo Mukti <adzy@di.blankon.in>\n"
 "Language-Team: Indonesian <blankon-dev@googlegroups.com>\n"
 "Language: id\n"
@@ -21,29 +21,34 @@ msgid "Favorites"
 msgstr "Favorit"
 
 #: ../src/panel-menu-box.vala:113 ../src/panel-menu-box.vala:126
+#: ../src/panel-menu-box.vala:134
 msgid "All applications"
 msgstr "Aplikasi"
 
 #: ../src/panel-menu-box.vala:117 ../src/panel-menu-box.vala:175
 #: ../src/panel-menu-box.vala:130 ../src/panel-menu-box.vala:196
+#: ../src/panel-menu-box.vala:138 ../src/panel-menu-box.vala:217
 msgid "Settings"
 msgstr "Pengaturan"
 
 #: ../src/panel-menu-box.vala:121 ../src/panel-menu-box.vala:134
-#: ../src/panel-places.vala:13
+#: ../src/panel-places.vala:13 ../src/panel-menu-box.vala:142
 msgid "Places"
 msgstr "Lokasi"
 
 #: ../src/panel-menu-box.vala:126 ../src/panel-menu-box.vala:139
+#: ../src/panel-menu-box.vala:157
 msgid "Logout..."
 msgstr "Keluar..."
 
 #: ../src/panel-menu-box.vala:134 ../src/panel-menu-box.vala:153
+#: ../src/panel-menu-box.vala:171
 msgid "Shutdown..."
 msgstr "Matikan..."
 
 #. All application (2nd) column
 #: ../src/panel-menu-box.vala:160 ../src/panel-menu-box.vala:183
+#: ../src/panel-menu-box.vala:201
 msgid "Applications"
 msgstr "Aplikasi"
 
@@ -53,26 +58,31 @@ msgstr "Beranda"
 
 #: ../src/panel-places.vala:98 ../src/panel-places.vala:171
 #: ../src/panel-places.vala:102 ../src/panel-places.vala:176
+#: ../src/panel-places.vala:180
 #, c-format
 msgid "Error opening '%s': %s"
 msgstr "Ada kesalahan teknis saat membuka '%s': %s"
 
 #: ../src/panel-places.vala:128 ../src/panel-places.vala:133
+#: ../src/panel-places.vala:137
 #, c-format
 msgid "Error opening mount point '%s': %s"
 msgstr "Ada kesalahan teknis saat membuka kaitan '%s': %s"
 
 #: ../src/panel-places.vala:136 ../src/panel-places.vala:141
+#: ../src/panel-places.vala:145
 msgid "Network"
 msgstr "Jaringan"
 
 #: ../src/panel-places.vala:145 ../src/panel-places.vala:158
 #: ../src/panel-places.vala:150 ../src/panel-places.vala:163
+#: ../src/panel-places.vala:154 ../src/panel-places.vala:167
 #, c-format
 msgid "Error opening Network: %s"
 msgstr "Ada kesalahan teknis saat membuka jaringan: %s"
 
 #: ../src/panel-places.vala:148 ../src/panel-places.vala:153
+#: ../src/panel-places.vala:157
 msgid "Connect to server..."
 msgstr "Hubungkan ke server/peladen..."
 
@@ -84,17 +94,18 @@ msgstr "%I:%M"
 msgid "%a, %e %b %Y"
 msgstr "%a, %e %b %Y"
 
-#: ../src/panel-menu-box.vala:147
+#: ../src/panel-menu-box.vala:147 ../src/panel-menu-box.vala:165
 #, c-format
 msgid "Unable to logout: %s"
 msgstr "Tidak dapat keluar: %s"
 
-#: ../src/panel-menu-box.vala:161
+#: ../src/panel-menu-box.vala:161 ../src/panel-menu-box.vala:179
 #, c-format
 msgid "Unable to shutdown: %s"
 msgstr "Tidak dapat mematikan: %s"
 
 #: ../src/panel-menu-favorites.vala:170 ../src/panel-menu-xdg.vala:54
+#: ../src/panel-menu-xdg.vala:55
 #, c-format
 msgid "Error opening menu item %s: %s"
 msgstr "Kesalahan membuka item menu %s: %s"
@@ -103,35 +114,43 @@ msgstr "Kesalahan membuka item menu %s: %s"
 msgid "Remove from Favorites"
 msgstr "Hapus dari Favorit"
 
-#: ../src/panel-menu-xdg.vala:89
+#: ../src/panel-menu-xdg.vala:89 ../src/panel-menu-xdg.vala:90
 msgid "Add to Favorites"
 msgstr "Tambahkan ke Favorit"
 
-#: ../src/panel-menu-xdg.vala:97
+#: ../src/panel-menu-xdg.vala:97 ../src/panel-menu-xdg.vala:98
 #, c-format
 msgid "Add to %s"
 msgstr "Tambahkan ke %s"
 
-#: ../src/panel-menu-xdg.vala:122
+#: ../src/panel-menu-xdg.vala:122 ../src/panel-menu-xdg.vala:123
 #, c-format
 msgid "Shortcut %s already exists in %s"
 msgstr "Tombol pintas %s sudah ada di %s"
 
-#: ../src/panel-menu-xdg.vala:132
+#: ../src/panel-menu-xdg.vala:132 ../src/panel-menu-xdg.vala:133
 #, c-format
 msgid "Unable to read %s: %s"
 msgstr "Tidak dapat membaca %s: %s"
 
-#: ../src/panel-menu-xdg.vala:140
+#: ../src/panel-menu-xdg.vala:140 ../src/panel-menu-xdg.vala:141
 #, c-format
 msgid "Unable to create %s shortcut in %s: %s"
 msgstr "Tidak dapat membuat tombol pintas %s di %s: %s"
 
-#: ../src/panel-menu-xdg.vala:155
+#: ../src/panel-menu-xdg.vala:155 ../src/panel-menu-xdg.vala:156
 #, c-format
 msgid "Unable to write %s shortcut in %s: %s"
 msgstr "Tidak dapat menulis tombol pintas %s di %s: %s"
 
-#: ../src/panel-window.vala:44
+#: ../src/panel-window.vala:44 ../src/panel-window.vala:45
 msgid "Click here to hide all windows and show desktop"
 msgstr "Klik di sini untuk menyembunyikan semua jendela dan menampilkan desktop"
+
+#: ../src/panel-menu-box.vala:146
+msgid "Lock Screen"
+msgstr "Kunci Layar"
+
+#: ../src/panel-menu-box.vala:152
+msgid "Unable to lock screen"
+msgstr "Tidak dapat mengunci layar"
