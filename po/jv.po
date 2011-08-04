@@ -7,42 +7,47 @@ msgstr ""
 "Project-Id-Version: blankon-panel VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-07-19 19:34+0000\n"
-"PO-Revision-Date: 2011-08-02 22:16+0700\n"
+"PO-Revision-Date: 2011-08-04 23:13+0700\n"
 "Last-Translator: Aji Kisworo Mukti <adzy@di.blankon.in>\n" 
 "Language-Team: Javanese <blankon-dev@googlegroups.com>\n"
 "Language: jv\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: ../src/panel-menu-box.vala:104 ../src/panel-menu-favorites.vala:139
 msgid "Favorites"
-msgstr "Kesenengan"
+msgstr "Kesénéngan"
 
 #: ../src/panel-menu-box.vala:113 ../src/panel-menu-box.vala:126
+#: ../src/panel-menu-box.vala:134
 msgid "All applications"
 msgstr "Aplikasi"
 
 #: ../src/panel-menu-box.vala:117 ../src/panel-menu-box.vala:175
 #: ../src/panel-menu-box.vala:130 ../src/panel-menu-box.vala:196
+#: ../src/panel-menu-box.vala:138 ../src/panel-menu-box.vala:217
 msgid "Settings"
 msgstr "Tatanan"
 
 #: ../src/panel-menu-box.vala:121 ../src/panel-menu-box.vala:134
-#: ../src/panel-places.vala:13
+#: ../src/panel-places.vala:13 ../src/panel-menu-box.vala:142
 msgid "Places"
 msgstr "Panggonan"
 
 #: ../src/panel-menu-box.vala:126 ../src/panel-menu-box.vala:139
+#: ../src/panel-menu-box.vala:157
 msgid "Logout..."
-msgstr "Medal..."
+msgstr "Médal..."
 
 #: ../src/panel-menu-box.vala:134 ../src/panel-menu-box.vala:153
+#: ../src/panel-menu-box.vala:171
 msgid "Shutdown..."
 msgstr "Pateni..."
 
 #. All application (2nd) column
 #: ../src/panel-menu-box.vala:160 ../src/panel-menu-box.vala:183
+#: ../src/panel-menu-box.vala:201
 msgid "Applications"
 msgstr "Aplikasi"
 
@@ -52,85 +57,99 @@ msgstr "Omah"
 
 #: ../src/panel-places.vala:98 ../src/panel-places.vala:171
 #: ../src/panel-places.vala:102 ../src/panel-places.vala:176
+#: ../src/panel-places.vala:180
 #, c-format
 msgid "Error opening '%s': %s"
-msgstr "Wonten ingkang salah anggone mbuka '%s': %s"
+msgstr "Wontén ingkang salah anggoné mbuka '%s': %s"
 
 #: ../src/panel-places.vala:128 ../src/panel-places.vala:133
+#: ../src/panel-places.vala:137
 #, c-format
 msgid "Error opening mount point '%s': %s"
-msgstr "Wonten ingkang salah anggone mbuka cantelan '%s': %s"
+msgstr "Wontén ingkang salah anggoné mbuka cantelan '%s': %s"
 
 #: ../src/panel-places.vala:136 ../src/panel-places.vala:141
+#: ../src/panel-places.vala:145
 msgid "Network"
 msgstr "Jaringan"
 
 #: ../src/panel-places.vala:145 ../src/panel-places.vala:158
 #: ../src/panel-places.vala:150 ../src/panel-places.vala:163
+#: ../src/panel-places.vala:154 ../src/panel-places.vala:167
 #, c-format
 msgid "Error opening Network: %s"
-msgstr "Wonten ingkang salah anggone mbuka jaringan: %s"
+msgstr "Wontén ingkang salah anggoné mbuka jaringan: %s"
 
 #: ../src/panel-places.vala:148 ../src/panel-places.vala:153
+#: ../src/panel-places.vala:157
 msgid "Connect to server..."
-msgstr "Nyambung maring server/tukang laden..."
+msgstr "Nyambung maring server/tukang ladén..."
 
 #: ../src/panel-clock.vala:15
 msgid "%I:%M"
-msgstr "%I:%M"
+msgstr "%H:%M"
 
 #: ../src/panel-clock.vala:16
 msgid "%a, %e %b %Y"
 msgstr "%a, %e %b %Y"
 
-#: ../src/panel-menu-box.vala:147
+#: ../src/panel-menu-box.vala:147 ../src/panel-menu-box.vala:165
 #, c-format
 msgid "Unable to logout: %s"
-msgstr "Mboten saget medal: %s"
+msgstr "Mbotén saget medal: %s"
 
-#: ../src/panel-menu-box.vala:161
+#: ../src/panel-menu-box.vala:161 ../src/panel-menu-box.vala:179
 #, c-format
 msgid "Unable to shutdown: %s"
-msgstr "Mboten saget mateni: %s"
+msgstr "Mbotén sagét mateni: %s"
 
 #: ../src/panel-menu-favorites.vala:170 ../src/panel-menu-xdg.vala:54
+#: ../src/panel-menu-xdg.vala:55
 #, c-format
 msgid "Error opening menu item %s: %s"
-msgstr "Wonten ingkang salah anggone mbuka menu %s: %s"
+msgstr "Wontén ingkang salah anggoné mbuka menu %s: %s"
 
 #: ../src/panel-menu-favorites.vala:196
 msgid "Remove from Favorites"
-msgstr "Ilangaken saking Favorit"
+msgstr "Ilangakén saking Favorit"
 
-#: ../src/panel-menu-xdg.vala:89
+#: ../src/panel-menu-xdg.vala:89 ../src/panel-menu-xdg.vala:90
 msgid "Add to Favorites"
-msgstr "Bubuhke wonten Favorit"
+msgstr "Bubuhké wontén Favorit"
 
-#: ../src/panel-menu-xdg.vala:97
+#: ../src/panel-menu-xdg.vala:97 ../src/panel-menu-xdg.vala:98
 #, c-format
 msgid "Add to %s"
-msgstr "Bubuhke wonten %s"
+msgstr "Bubuhké wontén %s"
 
-#: ../src/panel-menu-xdg.vala:122
+#: ../src/panel-menu-xdg.vala:122 ../src/panel-menu-xdg.vala:123
 #, c-format
 msgid "Shortcut %s already exists in %s"
-msgstr "Tembusan %s sampun wonten ing %s"
+msgstr "Témbusan %s sampun wontén ing %s"
 
-#: ../src/panel-menu-xdg.vala:132
+#: ../src/panel-menu-xdg.vala:132 ../src/panel-menu-xdg.vala:133
 #, c-format
 msgid "Unable to read %s: %s"
-msgstr "Mboten saget maos %s: %s"
+msgstr "Mbotén sagét maos %s: %s"
 
-#: ../src/panel-menu-xdg.vala:140
+#: ../src/panel-menu-xdg.vala:140 ../src/panel-menu-xdg.vala:141
 #, c-format
 msgid "Unable to create %s shortcut in %s: %s"
-msgstr "Mboten saget ndamel tembusan %s ing %s: %s"
+msgstr "Mbotén sagét ndamél témbusan %s ing %s: %s"
 
-#: ../src/panel-menu-xdg.vala:155
+#: ../src/panel-menu-xdg.vala:155 ../src/panel-menu-xdg.vala:156
 #, c-format
 msgid "Unable to write %s shortcut in %s: %s"
-msgstr "Mboten saget nyerat tembusan %s ing %s: %s"
+msgstr "Mbotén sagét nyérat témbusan %s ing %s: %s"
 
-#: ../src/panel-window.vala:44
+#: ../src/panel-window.vala:44 ../src/panel-window.vala:45
 msgid "Click here to hide all windows and show desktop"
-msgstr "Klik wonten mriki kangge ndelikaken sedoyo jendelo lan nampilaken desktop"
+msgstr "Klik wontén mriki kangge ndélikakén sédoyo jendelo lan nampilakén desktop"
+
+#: ../src/panel-menu-box.vala:146
+msgid "Lock Screen"
+msgstr "Kunci Kélir"
+
+#: ../src/panel-menu-box.vala:152
+msgid "Unable to lock screen"
+msgstr "Mbotén sagét ngunci layar"
