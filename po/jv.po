@@ -96,7 +96,7 @@ msgstr "%a, %e %b %Y"
 #: ../src/panel-menu-box.vala:147 ../src/panel-menu-box.vala:165
 #, c-format
 msgid "Unable to logout: %s"
-msgstr "Mboten saget medal: %s"
+msgstr "Mbotén saget medal: %s"
 
 #: ../src/panel-menu-box.vala:161 ../src/panel-menu-box.vala:179
 #, c-format
@@ -107,7 +107,7 @@ msgstr "Mbotén sagét mateni: %s"
 #: ../src/panel-menu-xdg.vala:55
 #, c-format
 msgid "Error opening menu item %s: %s"
-msgstr "Wonten ingkang salah anggone mbuka menu %s: %s"
+msgstr "Wontén ingkang salah anggoné mbuka menu %s: %s"
 
 #: ../src/panel-menu-favorites.vala:196
 msgid "Remove from Favorites"
