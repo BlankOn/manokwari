@@ -113,7 +113,7 @@ public class PanelPlaces : PanelMenuContent {
     }
 
     private void setup_mounts () {
-        insert_separator ();
+        bool first_entry = false;
         var mounts = vol_monitor.get_mounts ();
         // This apparently can't be iterated using "foreach"
         for (int i = 0; i < mounts.length(); i ++) {
@@ -121,6 +121,10 @@ public class PanelPlaces : PanelMenuContent {
             if (mount == null)
                 continue;
 
+            if (first_entry == false) {
+                insert_separator ();
+                first_entry = true;
+            }
             var item = new PanelItem.with_label (mount.get_name ());
             item.set_image_from_icon (mount.get_icon ());
             pack_start (item, false, false, 0);
