@@ -286,19 +286,6 @@ public class PanelMenuBox : PanelAbstractWindow {
             return false;
         });
 
-        // Ignore any attempt to move this window
-/*
-        configure_event.connect ((event) => {
-            var rect = PanelScreen.get_primary_monitor_geometry ();
-            if (event.x != rect.x ||
-                event.y != rect.y) {
-                stdout.printf ("ii\n");
-                PanelScreen.move_window (this, Gdk.Gravity.NORTH_WEST);
-            }
-            return false;
-        });
-*/
-
         screen_size_changed.connect (() =>  {
             PanelScreen.move_window (this, Gdk.Gravity.NORTH_WEST);
             queue_resize ();
