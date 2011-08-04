@@ -71,7 +71,7 @@ public class PanelMenuBox : PanelAbstractWindow {
         } catch (Error e) {
             stdout.printf ("Unable to connect to session manager\n");
         }
-        set_type_hint (Gdk.WindowTypeHint.DIALOG);
+        set_type_hint (Gdk.WindowTypeHint.DOCK);
 
         adjustment = new PanelAnimatedAdjustment (0, 0, 0, 5, 0, 0);
         adjustment.finished.connect (() => {
@@ -234,10 +234,6 @@ public class PanelMenuBox : PanelAbstractWindow {
 
         PanelScreen.move_window (this, Gdk.Gravity.NORTH_WEST);
 
-        map_event.connect (() => {
-            return false;
-        });
-
         hide ();
 
         // Monitor changes to the directory
@@ -282,13 +278,17 @@ public class PanelMenuBox : PanelAbstractWindow {
         });
 
         // Ignore any attempt to move this window
+/*
         configure_event.connect ((event) => {
             var rect = PanelScreen.get_primary_monitor_geometry ();
             if (event.x != rect.x ||
-                event.y != rect.y)
+                event.y != rect.y) {
+                stdout.printf ("ii\n");
                 PanelScreen.move_window (this, Gdk.Gravity.NORTH_WEST);
+            }
             return false;
         });
+*/
 
         screen_size_changed.connect (() =>  {
             PanelScreen.move_window (this, Gdk.Gravity.NORTH_WEST);
@@ -314,8 +314,7 @@ public class PanelMenuBox : PanelAbstractWindow {
     }
 
     public override bool map_event (Gdk.Event event) {
-        var w = get_window ().get_width ();
-        var rect = PanelScreen.get_primary_monitor_geometry (); 
+        PanelScreen.move_window (this, Gdk.Gravity.NORTH_WEST);
         get_window ().raise ();
         grab ();
         slide_left ();
