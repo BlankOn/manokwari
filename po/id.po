@@ -88,7 +88,7 @@ msgstr "Hubungkan ke server/peladen..."
 
 #: ../src/panel-clock.vala:15
 msgid "%I:%M"
-msgstr "%I:%M"
+msgstr "%H:%M"
 
 #: ../src/panel-clock.vala:16
 msgid "%a, %e %b %Y"
