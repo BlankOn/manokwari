@@ -12,11 +12,19 @@ public class PanelClock : Label {
 		char bufferClock[20];
 		char bufferDate[50];
 		Time t = Time.local (time_t ());
-		t.strftime (bufferClock, _("%I:%M"));
+		t.strftime (bufferClock, _("%H:%M"));
 		t.strftime (bufferDate, _("%a, %e %b %Y"));
-		set_markup ("<u><span font='24' weight='bold'>" + (string) bufferClock + "</span></u>" + "\n" + "<span font='10'>" + (string) bufferDate + "</span>");
+		set_markup ("\n\r<span font='24' weight='bold'>     <u>" + (string) bufferClock + "</u>     </span>" + "\n" + "<span font='10'>" + (string) bufferDate + "</span>\n\r");
 		return true;
 	}
+	
+	public override bool draw (Cairo.Context cr) {
+        StyleContext style = get_style_context ();
+        style.set_state (get_state_flags ());
+        Gtk.render_background (style, cr, 0, 0, get_allocated_width (), get_allocated_height ());
+        base.draw (cr);
+        return true;
+    }
 	
 }
 

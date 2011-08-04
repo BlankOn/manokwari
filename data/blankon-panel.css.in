@@ -84,4 +84,9 @@ PanelWindowEntry:insensitive {
 PanelClock {
     font: Sans Bold;
     color: @clock_fg_color;
+    background-color: rgba(0.5, 0.5, 0.5, 0.5);
+    border-color: #000000;
+    border-style: solid;
+    border-width: 25;
+    border-radius: 10;
 }
