@@ -10,7 +10,6 @@ interface SessionManager : Object {
 public class PanelMenuBox : PanelAbstractWindow {
     private int active_column = 0;
     private const int COLUMN_WIDTH = 320;
-    private const int START_POS = 100;
 
     private Layout columns;
 
@@ -20,6 +19,7 @@ public class PanelMenuBox : PanelAbstractWindow {
 
     private PanelAnimatedAdjustment adjustment;
     private unowned Widget? content_widget = null;
+    private Button back_button;
 
     private SessionManager session = null;
 
@@ -28,13 +28,14 @@ public class PanelMenuBox : PanelAbstractWindow {
     }
 
     private void reset () {
-        adjustment.set_value (0);
+        adjustment.set_value (100);
         active_column = 0;
         hide_content_widget ();
+        about_to_show_content ();
     }
 
     public void slide_left () {
-        adjustment.set_target (START_POS);
+        adjustment.set_target (0);
         adjustment.start ();
         active_column = 0;
     }
@@ -47,7 +48,7 @@ public class PanelMenuBox : PanelAbstractWindow {
         } else
             return;
 
-        adjustment.set_target (COLUMN_WIDTH + START_POS);
+        adjustment.set_target (COLUMN_WIDTH);
         adjustment.start ();
         active_column = 1;
         sliding_right ();
@@ -56,12 +57,14 @@ public class PanelMenuBox : PanelAbstractWindow {
     private void show_content_widget () {
         if (content_widget != null)
             content_widget.show_all ();
+        back_button.show ();
     }
 
     private void hide_content_widget () {
         if (content_widget == null)
             return;
         content_widget.hide ();
+        back_button.hide ();
     }
 
     public PanelMenuBox () {
@@ -84,7 +87,7 @@ public class PanelMenuBox : PanelAbstractWindow {
 
         // Create the columns
         columns = new Layout(null, null);
-        columns.set_size(COLUMN_WIDTH * 2 + START_POS, height);
+        columns.set_size(COLUMN_WIDTH * 2, height);
 
         // Create outer scrollable
         var panel_area = new PanelScrollableContent ();
@@ -114,8 +117,8 @@ public class PanelMenuBox : PanelAbstractWindow {
         left_scrollable.set_scrollbar_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
         right_scrollable.set_scrollbar_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
 
-        columns.put (left_scrollable, START_POS, 0);
-        columns.put (right_scrollable, COLUMN_WIDTH + START_POS, 0);
+        columns.put (left_scrollable, 0, 0);
+        columns.put (right_scrollable, COLUMN_WIDTH, 0);
 
         var favorites = new PanelMenuFavorites ();
         left_column.pack_start (favorites, false, false, 0);
@@ -175,7 +178,7 @@ public class PanelMenuBox : PanelAbstractWindow {
         //////////////////////////////////////////////////////
         // Second column
 
-        var back_button = new Button.from_stock (Stock.GO_BACK);
+        back_button = new Button.from_stock (Stock.GO_BACK);
         back_button.set_focus_on_click (false);
         back_button.set_alignment (0, (float) 0.5);
         right_column.pack_start (back_button, false, false, 0);
@@ -234,7 +237,13 @@ public class PanelMenuBox : PanelAbstractWindow {
 
         PanelScreen.move_window (this, Gdk.Gravity.NORTH_WEST);
 
-        hide ();
+        adjustment.set_value (100);
+	show_all ();
+	all_apps.hide ();
+	control_center.hide ();
+	places.hide ();
+	back_button.hide ();
+	hide ();
 
         // Monitor changes to the directory
 
@@ -300,6 +309,7 @@ public class PanelMenuBox : PanelAbstractWindow {
             all_apps.hide ();
             control_center.hide ();
             places.hide ();
+            back_button.hide ();
         });
 
 
