@@ -143,6 +143,16 @@ public class PanelMenuBox : PanelAbstractWindow {
         places_opener.set_image ("gtk-home");
         left_column.pack_start (places_opener, false, false, 0);
 
+        var lock_screen = new PanelItem.with_label ( _("Lock Screen"));
+        lock_screen.set_image ("gnome-lockscreen");
+        left_column.pack_start (lock_screen, false, false, 0);
+        lock_screen.activate.connect (() => {
+            dismiss ();
+            if (Utils.lock_screen () == false) {
+                show_dialog (_("Unable to lock screen"));
+            }
+        });
+
         if (session != null) {
             var logout = new PanelItem.with_label ( _("Logout...") );
             logout.set_image ("gnome-logout");

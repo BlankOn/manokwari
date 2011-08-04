@@ -25,6 +25,7 @@ blankon_panel_SOURCES = panel-item.vala \
     panel-menu-xdg.vala \
     panel-screen.vala \
     panel-menu-favorites.vala \
+    panel-utils.vala \
 	$(NULL)
 
 blankon_panel_VALAFLAGS = \
