@@ -14,7 +14,7 @@ public class PanelClock : Label {
 		Time t = Time.local (time_t ());
 		t.strftime (bufferClock, _("%I:%M"));
 		t.strftime (bufferDate, _("%a, %e %b %Y"));
-		set_markup ("<u><span font='24' weight='bold'>" + (string) bufferClock + "</span></u>" + "\n" + "<span font='10'>" + (string) bufferDate + "</span>");
+		set_markup ("\n<span font='24' weight='bold'>  <u>" + (string) bufferClock + "</u>  </span>" + "\n" + "<span font='10'>" + (string) bufferDate + "</span>\n");
 		return true;
 	}
 	
