@@ -341,6 +341,16 @@ public class PanelMenuBox : PanelAbstractWindow {
         });
 
 
+        key_press_event.connect ((e) => {
+            if (Gdk.keyval_name(e.keyval) == "Escape") {
+                if (active_column == 0)
+                    dismiss ();
+                else
+                    slide_left ();
+                return true;
+            }
+            return false;
+        });
     }
 
     public override void get_preferred_width (out int min, out int max) {

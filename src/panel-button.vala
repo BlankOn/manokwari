@@ -36,6 +36,7 @@ public class PanelButtonWindow : PanelAbstractWindow {
         hotkey.triggered.connect ((s) => {
             if (s == "<Alt>F1") {
                 show_menu_box ();
+                menu_box.grab_focus ();
             } else if (s == "<Ctrl><Alt>l") {
                 Utils.lock_screen ();
             }
