@@ -130,7 +130,7 @@ public class PanelMenuBox : PanelAbstractWindow {
         });
 
         favorites.deactivate.connect (() => {
-            dismiss ();
+            grab ();
         });
 
         var all_apps_opener = new PanelItem.with_label ( _("All applications") );
@@ -221,7 +221,7 @@ public class PanelMenuBox : PanelAbstractWindow {
         });
 
         all_apps.deactivate.connect (() => {
-            dismiss ();
+            grab ();
         });
 
         var control_center = new PanelMenuXdg("settings.menu",  _("Settings") );
@@ -238,7 +238,7 @@ public class PanelMenuBox : PanelAbstractWindow {
         });
 
         control_center.deactivate.connect (() => {
-            dismiss ();
+            grab ();
         });
 
         var places = new PanelPlaces ();
