@@ -30,6 +30,17 @@ public class PanelButtonWindow : PanelAbstractWindow {
         show ();
         PanelScreen.move_window (this, Gdk.Gravity.NORTH_WEST);
 
+        var hotkey = new PanelHotkey ();
+        hotkey.bind ("<Alt>F1");
+        hotkey.bind ("<Ctrl><Alt>l");
+        hotkey.triggered.connect ((s) => {
+            if (s == "<Alt>F1") {
+                show_menu_box ();
+            } else if (s == "<Ctrl><Alt>l") {
+                Utils.lock_screen ();
+            }
+        });
+
         // Window 
         var w = new PanelWindowHost ();
         w.show();
