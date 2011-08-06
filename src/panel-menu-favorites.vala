@@ -27,13 +27,55 @@ public class Favorites {
     }
 
     public static void remove (string file) {
-        add ("-" + file);
+        var list = get_list ();
+
+        int i = 0;
+        bool duplicate = false;
+        int remove_index = -1;
+        foreach (var entry in list) {
+            if (entry == "-" + file)
+                duplicate = true;
+            if ("-" + entry == file) {
+                remove_index = i;
+            }
+            if (entry == file) {
+                remove_index = i;
+            }
+
+            i ++;
+        }
+        if (remove_index != -1)
+            list.remove_at (remove_index);
+        if (! duplicate)
+            list.add ("-" + file);
+        write (list);
+
     }
 
     public static void add (string file) {
-        bool ok = false;
         var list = get_list ();
+
+        int i = 0;
+        bool duplicate = false;
+        int remove_index = -1;
+        foreach (var entry in list) {
+            if (entry == file)
+                duplicate = true;
+            if (entry == "-" + file) {
+                remove_index = i;
+            }
+            i ++;
+        }
+        if (remove_index != -1)
+            list.remove_at (remove_index);
+        if (! duplicate)
+            list.add (file);
+        write (list);
+    }
+
+    public static void write (Gee.ArrayList<string> list) {
         var custom_file = get_custom_favorites_file ();
+        bool ok = false;
         DataOutputStream output = null;
         if (!custom_file.query_exists ()) {
             var dir_name = custom_file.get_path ().substring (0, custom_file.get_path ().last_index_of("/"));
@@ -64,17 +106,9 @@ public class Favorites {
         }
         if (ok && output != null) {
             try {
-                var duplicate = false;
                 foreach (string entry in list) {
-                    if (entry == file)
-                        duplicate = true;
-                    if (entry == "-" + file)
-                        duplicate = true;
-                    if ("-" + entry != file) // Write out entry if not deleted
-                        output.put_string (entry + "\n");
+                    output.put_string (entry + "\n");
                 }
-                if (! duplicate)
-                    output.put_string (file + "\n");
                 output.close ();
             } catch (Error e) {
                 stdout.printf ("Unable to write to favorites file: %s\n", e.message);
