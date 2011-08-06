@@ -47,7 +47,6 @@ AC_PREFIX_DEFAULT("/usr")
 AC_CONFIG_FILES([Makefile
 	data/Makefile
 	data/blankon-panel.desktop
-	data/blankon-panel.css
 	src/Makefile
 	po/Makefile.in])
 
