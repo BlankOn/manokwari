@@ -115,7 +115,7 @@ public class PanelMenuBox : PanelAbstractWindow {
         });
 
         favorites.deactivate.connect (() => {
-            grab ();
+            Utils.grab (this);
         });
 
         var all_apps_opener = new PanelItem.with_label ( _("All applications") );
@@ -207,7 +207,7 @@ public class PanelMenuBox : PanelAbstractWindow {
         });
 
         all_apps.deactivate.connect (() => {
-            grab ();
+            Utils.grab (this);
         });
 
         var control_center = new PanelMenuXdg("settings.menu",  _("Settings") );
@@ -224,7 +224,7 @@ public class PanelMenuBox : PanelAbstractWindow {
         });
 
         control_center.deactivate.connect (() => {
-            grab ();
+            Utils.grab (this);
         });
 
         var places = new PanelPlaces ();
@@ -321,7 +321,7 @@ public class PanelMenuBox : PanelAbstractWindow {
         map_event.connect (() => {
             PanelScreen.move_window (this, Gdk.Gravity.NORTH_WEST);
             get_window ().raise ();
-            grab ();
+            Utils.grab (this);
             slide_left ();
             return true;
         });
@@ -353,7 +353,7 @@ public class PanelMenuBox : PanelAbstractWindow {
 
     private void dismiss () {
         stdout.printf("Menu box dismissed \n");
-        ungrab ();
+        Utils.ungrab (this);
         reset ();
         hide ();
         dismissed ();
@@ -368,32 +368,4 @@ public class PanelMenuBox : PanelAbstractWindow {
         dialog.show ();
     }
 
-    private void grab () {
-        var device = get_current_event_device();
-
-        if (device == null) {
-            var display = get_display ();
-            var manager = display.get_device_manager ();
-            var devices = manager.list_devices (Gdk.DeviceType.MASTER).copy();
-            device = devices.data;
-        }
-        var keyboard = device;
-        var pointer = device;
-
-        if (device.get_source() == Gdk.InputSource.KEYBOARD) {
-            pointer = device.get_associated_device ();
-        } else {
-            keyboard = device.get_associated_device ();
-        }
-
-        var status = keyboard.grab(get_window(), Gdk.GrabOwnership.WINDOW, true, Gdk.EventMask.KEY_PRESS_MASK | Gdk.EventMask.KEY_RELEASE_MASK, null, Gdk.CURRENT_TIME);
-        status = pointer.grab(get_window(), Gdk.GrabOwnership.WINDOW, true, Gdk.EventMask.BUTTON_PRESS_MASK, null, Gdk.CURRENT_TIME);
-    }
-
-    private void ungrab () {
-        var device = get_current_event_device();
-        var secondary = device.get_associated_device();
-        device.ungrab(Gdk.CURRENT_TIME);
-        secondary.ungrab(Gdk.CURRENT_TIME);
-    }
 }

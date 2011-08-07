@@ -8,25 +8,6 @@ public class PanelWindowPager : PanelAbstractWindow {
     private bool _cancel_hiding;
     private ToggleButton desktop;
 
-    bool allow_hiding () {
-        _cancel_hiding = false;
-        return false;
-    }
-
-    public void cancel_hiding() {
-        _cancel_hiding = true;
-        GLib.Timeout.add (250, allow_hiding); 
-    }
-
-    bool hide_pager () {
-        if (_cancel_hiding)
-            return false;
-
-        hide ();
-        hidden ();
-        return false;
-    }
-
     public void reset_show_desktop () {
         desktop.set_active (false);
     }
@@ -57,15 +38,16 @@ public class PanelWindowPager : PanelAbstractWindow {
         });
 
         leave_notify_event.connect (() => {
-            hide_pager (); 
 
+            dismiss ();
             return true; 
         });
 
         map_event.connect (() => {
             PanelScreen.move_window (this, Gdk.Gravity.SOUTH_EAST);
             get_window ().raise ();
-            return false;
+            Utils.grab (this);
+            return true;
         });
     }
 
@@ -74,6 +56,10 @@ public class PanelWindowPager : PanelAbstractWindow {
         min = max = 80;
     }
 
+    private void dismiss () {
+        hide ();
+        Utils.ungrab (this);
+    }
 }
 
 public class PanelWindowPagerEntry : DrawingArea {
@@ -98,7 +84,6 @@ public class PanelWindowPagerEntry : DrawingArea {
         button_press_event.connect ((event) => {
             pager.show_all ();
             pager_shown ();
-            pager.cancel_hiding ();
             return false; 
         });
 
