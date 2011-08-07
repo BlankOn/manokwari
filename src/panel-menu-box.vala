@@ -58,6 +58,7 @@ public class PanelMenuBox : PanelAbstractWindow {
 
     public PanelMenuBox () {
         set_type_hint (Gdk.WindowTypeHint.DOCK);
+        set_title ("_blankon_panel_menu_");
 
         adjustment = new PanelAnimatedAdjustment (0, 0, 0, 5, 0, 0);
 
