@@ -1,11 +1,4 @@
 using Gtk;
-[DBus (name = "org.gnome.SessionManager")]
-interface SessionManager : Object {
-    public abstract void shutdown () throws IOError;
-    public abstract void logout (uint32 mode) throws IOError;
-    public abstract bool can_shutdown () throws IOError;
-}
-
 
 public class PanelMenuBox : PanelAbstractWindow {
     private int active_column = 0;
@@ -20,8 +13,6 @@ public class PanelMenuBox : PanelAbstractWindow {
     private PanelAnimatedAdjustment adjustment;
     private unowned Widget? content_widget = null;
     private Button back_button;
-
-    private SessionManager session = null;
 
     public int get_active_column () {
         return active_column;
@@ -66,12 +57,6 @@ public class PanelMenuBox : PanelAbstractWindow {
     }
 
     public PanelMenuBox () {
-        try {
-            session =  Bus.get_proxy_sync (BusType.SESSION,
-                                                  "org.gnome.SessionManager", "/org/gnome/SessionManager");
-        } catch (Error e) {
-            stdout.printf ("Unable to connect to session manager\n");
-        }
         set_type_hint (Gdk.WindowTypeHint.DOCK);
 
         adjustment = new PanelAnimatedAdjustment (0, 0, 0, 5, 0, 0);
@@ -159,6 +144,7 @@ public class PanelMenuBox : PanelAbstractWindow {
             }
         });
 
+        var session = new PanelSessionManager ();
         if (session != null) {
             var logout = new PanelItem.with_label ( _("Logout...") );
             logout.show ();
@@ -167,7 +153,7 @@ public class PanelMenuBox : PanelAbstractWindow {
             logout.activate.connect (() => {
                 try {
                     dismiss ();
-                    session.logout (0);
+                    session.logout ();
                 } catch (Error e) {
                     show_dialog (_("Unable to logout: %s").printf (e.message));
                 }
@@ -348,6 +334,10 @@ public class PanelMenuBox : PanelAbstractWindow {
                 else
                     slide_left ();
                 return true;
+            } else if (Gdk.keyval_name(e.keyval) == "Print") {
+                if (Utils.print_screen () == false) {
+                    stdout.printf ("Unable to take screenshot\n");
+                }
             }
             return false;
         });
