@@ -334,7 +334,7 @@ public class PanelMenuBox : PanelAbstractWindow {
                 else
                     slide_left ();
                 return true;
-            } else if (Gdk.keyval_name(e.keyval) == "Print Screen") {
+            } else if (Gdk.keyval_name(e.keyval) == "Print") {
                 if (Utils.print_screen () == false) {
                     stdout.printf ("Unable to take screenshoot\n");
                 }
