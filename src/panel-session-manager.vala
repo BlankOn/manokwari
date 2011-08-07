@@ -19,11 +19,23 @@ public class PanelSessionManager {
     }
 
     public void logout () {
-        session.logout (0);
+        if (session != null) {
+            try {
+                session.logout (0);
+            } catch (Error e) {
+                stdout.printf ("Unable to logout\n");
+            }
+        }
     }
 
     public void shutdown () {
-        session.shutdown ();
+        if (session != null) {
+            try {
+                session.shutdown ();
+            } catch (Error e) {
+                stdout.printf ("Unable to shutdown\n");
+            }
+        }
     }
 
     public bool can_shutdown () {
@@ -32,6 +44,7 @@ public class PanelSessionManager {
             return true;
         } catch (Error e) {
             stdout.printf ("Unable to shutdown\n");
+            return false;
         }
     }
 }
