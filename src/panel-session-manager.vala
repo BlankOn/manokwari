@@ -23,7 +23,7 @@ public class PanelSessionManager {
             try {
                 session.logout (0);
             } catch (Error e) {
-                stdout.printf ("Unable to logout\n");
+                throw e;
             }
         }
     }
@@ -33,7 +33,7 @@ public class PanelSessionManager {
             try {
                 session.shutdown ();
             } catch (Error e) {
-                stdout.printf ("Unable to shutdown\n");
+                throw e;
             }
         }
     }
