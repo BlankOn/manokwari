@@ -380,11 +380,7 @@ public class PanelWindowHost : PanelAbstractWindow {
         });
 
         enter_notify_event.connect (() => {
-            // Only resize if there are visible windows
-            if (entry_map.size > 0) {
-
-                resize (Size.BIG);
-            }
+            resize (Size.BIG);
             return false;
         });
 
