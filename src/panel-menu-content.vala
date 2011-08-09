@@ -12,6 +12,7 @@ public class PanelMenuContent : VBox {
         if (label != null) {
             var l = new Label ("");
             l.set_markup ("<big>\n" + label + "</big>");
+            l.show ();
             pack_start (l, false, false, 5);
         }
         show_all ();
