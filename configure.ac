@@ -29,8 +29,9 @@ GEE_REQUIRED=0.6.1
 CAIRO_REQUIRED=1.10.2
 LIBGNOME_MENU_REQUIRED=2.30.5
 LIBWNCK_REQUIRED=3.0.0
+UNIQUE_REQUIRED=3.0.0
 
-PKG_CHECK_MODULES(BLANKON_PANEL, glib-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED gtk+-3.0 >= $GTK_REQUIRED atk >= $ATK_REQUIRED gee-1.0 >= $GEE_REQUIRED cairo >= $CAIRO_REQUIRED libgnome-menu >= $LIBGNOME_MENU_REQUIRED libwnck-3.0 >= $LIBWNCK_REQUIRED)
+PKG_CHECK_MODULES(BLANKON_PANEL, glib-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED gtk+-3.0 >= $GTK_REQUIRED atk >= $ATK_REQUIRED gee-1.0 >= $GEE_REQUIRED cairo >= $CAIRO_REQUIRED libgnome-menu >= $LIBGNOME_MENU_REQUIRED libwnck-3.0 >= $LIBWNCK_REQUIRED unique-3.0 >= $UNIQUE_REQUIRED)
 
 WNCK_GMENU_DISCLAIMER='-DGMENU_I_KNOW_THIS_IS_UNSTABLE -DWNCK_I_KNOW_THIS_IS_UNSTABLE'
 
@@ -38,7 +39,7 @@ AC_SUBST(WNCK_GMENU_DISCLAIMER)
 AC_SUBST(BLANKON_PANEL_CFLAGS)
 AC_SUBST(BLANKON_PANEL_LIBS)
 
-VALA_PACKAGES="--pkg atk --pkg gdk-x11-3.0 --pkg gee-1.0 --pkg cairo --pkg gtk+-3.0 --pkg gio-unix-2.0 --pkg libgnome-menu --pkg gdk-3.0 --pkg libwnck-3.0 "
+VALA_PACKAGES="--pkg atk --pkg gdk-x11-3.0 --pkg gee-1.0 --pkg cairo --pkg gtk+-3.0 --pkg gio-unix-2.0 --pkg libgnome-menu --pkg gdk-3.0 --pkg libwnck-3.0 --pkg unique-3.0"
 
 AC_SUBST(VALA_PACKAGES)
 

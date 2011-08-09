@@ -12,6 +12,13 @@ int main (string[] args) {
 
     Gtk.init (ref args);
 
+    var app = new Unique.App ("id.or.blankonlinux.Panel", null);
+    if (app.is_running ()) {
+        stdout.printf ("BlankOn Panel is already running.\n");
+        return 0;    
+    }
+
+
     var m = new PanelButtonWindow();
     m.show_all();
 
