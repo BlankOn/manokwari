@@ -2,9 +2,13 @@ using Gtk;
 
 public class PanelClock : Label {
 	
+    private const int MARGIN = 20;
+    private Pango.Layout pango;
+
 	public PanelClock () {
+        pango = new Pango.Layout (get_pango_context ());
+        pango.set_alignment (Pango.Alignment.CENTER);
 		Timeout.add (1000 * 30, update);
-        set_justify (Justification.CENTER);
         update ();
 	}
 	
@@ -14,15 +18,25 @@ public class PanelClock : Label {
 		Time t = Time.local (time_t ());
 		t.strftime (bufferClock, _("%H:%M"));
 		t.strftime (bufferDate, _("%a, %e %b %Y"));
-		set_markup ("\n\r<span font='24' weight='bold'>     <u>" + (string) bufferClock + "</u>     </span>" + "\n" + "<span font='10'>" + (string) bufferDate + "</span>\n\r");
+
+        StyleContext style = get_style_context ();
+        pango.set_font_description (style.get_font (get_state_flags ()));
+		pango.set_markup ("<span font='20' weight='bold'><u>" + (string) bufferClock + "</u></span>" + "\n" + "<span font='10'>" + (string) bufferDate + "</span>", -1);
+        int text_w, text_h;
+        pango.get_pixel_size (out text_w, out text_h);
+
+        set_size_request (text_w + 20 , text_h + 20);
+        queue_draw ();
 		return true;
 	}
 	
 	public override bool draw (Cairo.Context cr) {
         StyleContext style = get_style_context ();
         style.set_state (get_state_flags ());
-        Gtk.render_background (style, cr, 0, 0, get_allocated_width (), get_allocated_height ());
-        base.draw (cr);
+        int w = get_allocated_width ();
+        int h = get_allocated_height ();
+        Gtk.render_background (style, cr, 0, 0, w, h);
+        Gtk.render_layout (style, cr, 10, 10, pango);
         return true;
     }
 	
@@ -113,7 +127,7 @@ public class ClockWindow : PanelAbstractWindow {
 
         var rect = PanelScreen.get_primary_monitor_geometry ();
 
-        move (rect.x + rect.width - w - (w / 8), rect.y + h / 8);
+        move (rect.x + rect.width - w - (w / 8), rect.y + rect.height - 50 - h);
         queue_resize ();
     }
 
