@@ -64,6 +64,7 @@ public class PanelWindowPager : PanelAbstractWindow {
 
 public class PanelWindowPagerEntry : DrawingArea {
     private PanelWindowPager pager;
+    private Gdk.Pixbuf icon = null;
 
     public signal void pager_shown ();
 
@@ -78,6 +79,12 @@ public class PanelWindowPagerEntry : DrawingArea {
             | Gdk.EventMask.ENTER_NOTIFY_MASK
             | Gdk.EventMask.LEAVE_NOTIFY_MASK);
 
+        var icon_theme = IconTheme.get_default ();
+        try {
+            icon = icon_theme.load_icon ("user-desktop", 32, 0);
+        } catch (Error e) {
+            stderr.printf ("Unable to load icon 'user-desktop': %s\n", e.message);
+        }
         pager = new PanelWindowPager ();
         show ();
 
@@ -105,7 +112,12 @@ public class PanelWindowPagerEntry : DrawingArea {
 
     public override bool draw (Context cr) {
         StyleContext style = get_style_context ();
-        Gtk.render_background (style, cr, 0, 0, get_window ().get_width (), get_window ().get_height ());
+        int w = get_window ().get_width ();
+        int h = get_window ().get_height ();
+        Gtk.render_background (style, cr, 0, 0, w, h);
+        if (icon != null)
+            Gdk.cairo_set_source_pixbuf (cr, icon, (w - icon.width) / 2, (h - icon.height) / 2);
+        cr.paint ();
         return true;
     }
 
