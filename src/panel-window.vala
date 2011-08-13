@@ -138,6 +138,10 @@ public class PanelWindowEntry : DrawingArea {
 
     public bool draw_info { private get; set; default = false; }
 
+    public bool is_on_current_workspace () {
+        return window_info.is_on_workspace (window_info.get_screen ().get_active_workspace());
+    }
+
     public void sync_window_states () {
         if (window_info.is_minimized ()) {
             state = StateFlags.INSENSITIVE;
@@ -387,6 +391,10 @@ public class PanelWindowHost : PanelAbstractWindow {
             }
         });
 
+        screen.viewports_changed.connect (() => {
+            update (true);
+        });
+
         screen.active_workspace_changed.connect (() => {
             update (true);
         });
@@ -448,26 +456,33 @@ public class PanelWindowHost : PanelAbstractWindow {
                 box.remove (w);
         }
 
+        var workspace = screen.get_active_workspace ();
+        if (workspace == null)
+            return;
         var num_total_windows = 0;
         var num_windows = 0;
         foreach (unowned Wnck.Window w in screen.get_windows()) {
             if (!w.is_skip_tasklist () 
               && (w.get_name() != "blankon-panel")
-              && w.is_on_workspace (screen.get_active_workspace())) {
+              && w.is_on_workspace (workspace)) {
                 var e = entry_map [w];
                 if (e == null) {
                     e = new PanelWindowEntry (w);
                     entry_map.set (w, e);
                 }
-
-                if (height == Size.BIG) {
-                    e.draw_info = true;
-                }
-                e.show ();
-                box.pack_start (e, true, true, 1);
                 if (!w.is_minimized ())
                     num_windows ++;
                 num_total_windows ++;
+            }
+        }
+
+        foreach (PanelWindowEntry e in entry_map.values) {
+            if (height == Size.BIG) {
+                e.draw_info = true;
+            }
+            if (e.is_on_current_workspace ()) {
+                e.show ();
+                box.pack_start (e, true, true, 1);
             }
         }
         if (emit_change_signals) {
