@@ -1,4 +1,14 @@
 namespace Utils {
+    public bool launch_search () {
+        try {
+            GLib.Process.spawn_command_line_async ("synapse");
+            return true;
+        } catch (Error e) {
+            return false;
+        }
+    }
+
+
     public bool lock_screen () {
         try {
             GLib.Process.spawn_command_line_async ("gnome-screensaver-command -l");

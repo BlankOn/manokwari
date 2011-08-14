@@ -134,6 +134,18 @@ public class PanelMenuBox : PanelAbstractWindow {
         places_opener.set_image ("gtk-home");
         left_column.pack_start (places_opener, false, false, 0);
 
+        var search = new PanelItem.with_label ( _("Search..."));
+        search.show ();
+        search.set_image ("system-search");
+        left_column.pack_start (search, false, false, 0);
+        search.activate.connect (() => {
+            dismiss ();
+            if (Utils.launch_search () == false) {
+                show_dialog (_("Unable to search"));
+            }
+        });
+
+
         var lock_screen = new PanelItem.with_label ( _("Lock Screen"));
         lock_screen.show ();
         lock_screen.set_image ("gnome-lockscreen");
