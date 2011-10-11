@@ -67,7 +67,6 @@ public class PanelUserIcon : DrawingArea {
 
     void load_data () {
         name = get_name ();
-        name = "Really really long long long long name";
         try {
             icon = new Gdk.Pixbuf.from_file_at_scale (Environment.get_home_dir () + "/.face", ICON_SIZE, ICON_SIZE, false);
         } catch (Error e) {
