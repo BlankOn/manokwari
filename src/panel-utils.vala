@@ -8,6 +8,14 @@ namespace Utils {
         }
     }
 
+    public bool launch_profile () {
+        try {
+            GLib.Process.spawn_command_line_async ("gnome-about-me");
+            return true;
+        } catch (Error e) {
+            return false;
+        }
+    }
 
     public bool lock_screen () {
         try {

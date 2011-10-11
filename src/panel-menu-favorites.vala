@@ -170,7 +170,7 @@ public class PanelMenuFavorites: PanelMenuContent {
     public signal void deactivate ();
 
     public PanelMenuFavorites () {
-        base (_("Favorites"));
+        base (null);
         populate ();
         content = new Favorites ();
         content.monitor ();

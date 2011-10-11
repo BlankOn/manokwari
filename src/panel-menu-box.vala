@@ -90,6 +90,7 @@ public class PanelMenuBox : PanelAbstractWindow {
         right_scrollable.set_size_request (COLUMN_WIDTH, height);
 
         var left_column = new VBox (false, 0);
+        var left_lower_box = new VBox (false, 0);
         left_scrollable.set_widget (left_column);
 
         var right_column = new VBox (false, 0);
@@ -119,25 +120,28 @@ public class PanelMenuBox : PanelAbstractWindow {
             Utils.grab (this);
         });
 
+        left_column.pack_end (left_lower_box, false, false, 0);
+        left_lower_box.show ();
+
         var all_apps_opener = new PanelItem.with_label ( _("All applications") );
         all_apps_opener.set_image ("gnome-applications");
         all_apps_opener.show ();
-        left_column.pack_start (all_apps_opener, false, false, 0);
+        left_lower_box.pack_start (all_apps_opener, false, false, 0);
 
         var cc_opener = new PanelItem.with_label ( _("Settings") );
         cc_opener.show ();
         cc_opener.set_image ("gnome-control-center");
-        left_column.pack_start (cc_opener, false, false, 0);
+        left_lower_box.pack_start (cc_opener, false, false, 0);
 
         var places_opener = new PanelItem.with_label ( _("Places") );
         places_opener.show ();
         places_opener.set_image ("gtk-home");
-        left_column.pack_start (places_opener, false, false, 0);
+        left_lower_box.pack_start (places_opener, false, false, 0);
 
         var search = new PanelItem.with_label ( _("Search..."));
         search.show ();
         search.set_image ("system-search");
-        left_column.pack_start (search, false, false, 0);
+        left_lower_box.pack_start (search, false, false, 0);
         search.activate.connect (() => {
             dismiss ();
             if (Utils.launch_search () == false) {
@@ -149,7 +153,7 @@ public class PanelMenuBox : PanelAbstractWindow {
         var lock_screen = new PanelItem.with_label ( _("Lock Screen"));
         lock_screen.show ();
         lock_screen.set_image ("gnome-lockscreen");
-        left_column.pack_start (lock_screen, false, false, 0);
+        left_lower_box.pack_start (lock_screen, false, false, 0);
         lock_screen.activate.connect (() => {
             dismiss ();
             if (Utils.lock_screen () == false) {
@@ -162,7 +166,7 @@ public class PanelMenuBox : PanelAbstractWindow {
             var logout = new PanelItem.with_label ( _("Logout...") );
             logout.show ();
             logout.set_image ("gnome-logout");
-            left_column.pack_start (logout, false, false, 0);
+            left_lower_box.pack_start (logout, false, false, 0);
             logout.activate.connect (() => {
                 try {
                     dismiss ();
@@ -177,7 +181,7 @@ public class PanelMenuBox : PanelAbstractWindow {
                     var shutdown = new PanelItem.with_label ( _("Shutdown...") );
                     shutdown.show ();
                     shutdown.set_image ("system-shutdown");
-                    left_column.pack_start (shutdown, false, false, 0);
+                    left_lower_box.pack_start (shutdown, false, false, 0);
                     shutdown.activate.connect (() => {
                         try {
                             dismiss ();
@@ -191,6 +195,14 @@ public class PanelMenuBox : PanelAbstractWindow {
                 stdout.printf ("Can't determine can shutdown or not");
             }
         }
+
+        var user_icon = new PanelUserIcon ();
+        user_icon.show ();
+        left_lower_box.pack_start (user_icon, false, false, 0);
+
+        user_icon.deactivate.connect (() => {
+            Utils.grab (this);
+        });
 
         //////////////////////////////////////////////////////
         // Second column

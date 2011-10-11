@@ -28,6 +28,7 @@ blankon_panel_SOURCES = panel-item.vala \
     panel-utils.vala \
     panel-hotkey.vala \
     panel-session-manager.vala \
+    panel-user-icon.vala \
 	$(NULL)
 
 blankon_panel_VALAFLAGS = \
