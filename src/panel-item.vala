@@ -27,6 +27,7 @@ public class PanelItem : Box {
     private Image image;
     private Gtk.Settings settings;
     private int MARGIN = 6;
+    private bool pressed;
 
     public new signal void activate ();
     public new signal void right_clicked (Gdk.EventButton event);
@@ -48,6 +49,7 @@ public class PanelItem : Box {
     }
 
     private void init () {
+        pressed = false;
         settings = Gtk.Settings.get_default ();
         box = new HBox (false, 0);
         event_box = new EventBox ();
@@ -78,7 +80,18 @@ public class PanelItem : Box {
             | Gdk.EventMask.KEY_RELEASE_MASK
             | Gdk.EventMask.POINTER_MOTION_MASK);
 
+
+        event_box.button_press_event.connect ((event) => {
+            pressed = true;
+
+            return true;
+        });
+
         event_box.button_release_event.connect ((event) => {
+            if (pressed == false)
+                return true;
+
+            pressed = false;
             if (event.button == 1 && event.type == Gdk.EventType.BUTTON_RELEASE) { // left click
                 activate ();
             } else if (event.button == 3 && event.type == Gdk.EventType.BUTTON_RELEASE) { // right click
