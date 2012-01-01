@@ -52,7 +52,7 @@ public class PanelMenuXdg : PanelMenuContent {
                     try {
                         info.launch (null, new AppLaunchContext ());
                     } catch (Error e) {
-                        var dialog = new MessageDialog (null, DialogFlags.DESTROY_WITH_PARENT, MessageType.ERROR, ButtonsType.CLOSE, _("Error opening menu item %s: %s").printf (i.get_display_name (), e.message));
+                        var dialog = new MessageDialog (null, DialogFlags.DESTROY_WITH_PARENT, MessageType.ERROR, ButtonsType.CLOSE, _("Error opening menu item %s: %s"), i.get_display_name (), e.message);
                         dialog.response.connect (() => {
                             dialog.destroy ();
                         });
