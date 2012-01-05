@@ -1,6 +1,7 @@
 using Gtk;
 [DBus (name = "org.gnome.SessionManager")]
 interface SessionManager : Object {
+    public abstract string register_client (string app_id, string startup_id) throws IOError;
     public abstract void shutdown () throws IOError;
     public abstract void logout (uint32 mode) throws IOError;
     public abstract bool can_shutdown () throws IOError;
@@ -15,6 +16,17 @@ public class PanelSessionManager {
                                            "org.gnome.SessionManager", "/org/gnome/SessionManager");
         } catch (Error e) {
             stdout.printf ("Unable to connect to session manager\n");
+        }
+    }
+
+    public void register () {
+         if (session != null) {
+            try {
+                var id = GLib.Environment.get_variable("DESKTOP_AUTOSTART_ID");
+                session.register_client ("blankon-panel", id);
+            } catch (Error e) {
+                throw e;
+            }
         }
     }
 

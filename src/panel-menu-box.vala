@@ -162,6 +162,7 @@ public class PanelMenuBox : PanelAbstractWindow {
         });
 
         var session = new PanelSessionManager ();
+        session.register ();
         if (session != null) {
             var logout = new PanelItem.with_label ( _("Logout...") );
             logout.show ();
