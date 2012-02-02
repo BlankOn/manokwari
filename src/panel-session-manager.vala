@@ -23,7 +23,9 @@ public class PanelSessionManager {
          if (session != null) {
             try {
                 var id = GLib.Environment.get_variable("DESKTOP_AUTOSTART_ID");
-                session.register_client ("blankon-panel", id);
+                if (id != null) {
+                    session.register_client ("blankon-panel", id);
+                }
             } catch (Error e) {
                 throw e;
             }
