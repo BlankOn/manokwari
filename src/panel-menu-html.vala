@@ -28,12 +28,12 @@ public class PanelMenuHTML: WebView {
 
         resource_request_starting.connect((frame, resource, request, response) => {
             var uri = translate_uri (resource.uri);
-            stdout.printf(uri+"\n");
             request.set_uri(uri);
         });
 
         window_object_cleared.connect ((frame, context) => {
             PanelXdgData.setup_js_class ((JSCore.GlobalContext) context);
+            Utils.setup_js_class ((JSCore.GlobalContext) context);
         });
     }
 

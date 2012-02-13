@@ -1,3 +1,6 @@
+using JSCore;
+using Gtk;
+
 namespace Utils {
     public bool launch_search () {
         try {
@@ -63,5 +66,70 @@ namespace Utils {
         device.ungrab(Gdk.CURRENT_TIME);
         secondary.ungrab(Gdk.CURRENT_TIME);
     }
+
+
+    public static JSCore.Value js_run_desktop (Context ctx,
+            JSCore.Object function,
+            JSCore.Object thisObject,
+            JSCore.Value[] arguments,
+            out JSCore.Value exception) {
+
+        if (arguments.length == 1) {
+            var s = arguments [0].to_string_copy (ctx, null);
+            char buffer[1024];
+            s.get_utf8_c_string (buffer, buffer.length);
+            var info = new DesktopAppInfo.from_filename ((string) buffer);
+            try {
+                info.launch (null, new AppLaunchContext ());
+            } catch (Error e) {
+                var dialog = new MessageDialog (null, DialogFlags.DESTROY_WITH_PARENT, MessageType.ERROR, ButtonsType.CLOSE, _("Error opening menu item %s: %s"), info.get_display_name (), e.message);
+                dialog.response.connect (() => {
+                            dialog.destroy ();
+                        });
+                dialog.show ();
+            }
+        }
+
+        return new JSCore.Value.undefined (ctx);
+    }
+
+    static const JSCore.StaticFunction[] js_funcs = {
+        { "run_desktop", js_run_desktop, PropertyAttribute.ReadOnly },
+        { null, null, 0 }
+    };
+
+
+    static const ClassDefinition js_class = {
+        0,
+        ClassAttribute.None,
+        "Utils",
+        null,
+
+        null,
+        js_funcs,
+
+        null,
+        null,
+
+        null,
+        null,
+        null,
+        null,
+
+        null,
+        null,
+        null,
+        null,
+        null
+    };
+
+    public static void setup_js_class (GlobalContext context) {
+        var c = new Class (js_class);
+        var o = new JSCore.Object (context, c, context);
+        var g = context.get_global_object ();
+        var s = new String.with_utf8_c_string ("Utils");
+        g.set_property (context, s, o, PropertyAttribute.None, null);
+    }
+
 
 }

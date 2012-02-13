@@ -57,17 +57,19 @@ public class PanelButtonWindow : PanelAbstractWindow {
                 // then we want it to be closed when we got here.
 
                 // But refuse to close it when there's no windows around
+                /*XXX
                 if (menu_box.get_active_column () == 0 
                     && w.no_windows_around ()) {
                     return false;
-                }
+                }*/
                 
                 // If it's showing second column, just go back to 
                 // first column
+                /*XXX
                 if (menu_box.get_active_column () == 1) {
                     menu_box.slide_left ();
                     return true;
-                }
+                }*/
 
                 // Close it otherwise
                 menu_box.hide ();

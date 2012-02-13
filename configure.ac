@@ -51,7 +51,7 @@ AC_SUBST(WNCK_GMENU_DISCLAIMER)
 AC_SUBST(BLANKON_PANEL_CFLAGS)
 AC_SUBST(BLANKON_PANEL_LIBS)
 
-VALA_PACKAGES="--pkg atk --pkg gdk-x11-3.0 --pkg gee-1.0 --pkg cairo --pkg gtk+-3.0 --pkg gio-unix-2.0 --pkg libgnome-menu --pkg gdk-3.0 --pkg libwnck-3.0 --pkg unique-3.0 --pkg webkit-1.0"
+VALA_PACKAGES="--pkg atk --pkg gdk-x11-3.0 --pkg gee-1.0 --pkg cairo --pkg gtk+-3.0 --pkg gio-unix-2.0 --pkg libgnome-menu --pkg gdk-3.0 --pkg libwnck-3.0 --pkg unique-3.0 --pkg webkit-1.0 --pkg javascriptcore"
 
 AC_SUBST(VALA_PACKAGES)
 

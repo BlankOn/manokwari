@@ -60,7 +60,6 @@ public class PanelXdgData {
             json.erase (json.len - 1, 1); // Remove trailing comma
         }
         json.append("]");
-        stdout.printf("%s\n", get_json());
     }
 
     string get_json () {

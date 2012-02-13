@@ -190,12 +190,15 @@ MenuList.prototype.render = function() {
                     "data-role": "listview"
                    });
             for (var i = 0; i < entry.children.length; i ++) {
+                var desktop = entry.children[i].desktop;
                 var $li  = $("<li/>", { "data-icon": "false" });
                 var $a   = $("<a/>", {
+                                "id" : "desktop_" + i,
                                 "href": "",
+                                "desktop": desktop,
                                 "text": entry.children[i].name
                             }).bind("tap", function (event, ui) {
-                                console.log("tap");
+                                Utils.run_desktop($(this).attr("desktop"));
                             });
                 var $img = $("<img/>", {
                                 "width": 24,
