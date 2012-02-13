@@ -2,6 +2,7 @@ using GMenu;
 using Gee;
 using Gtk;
 using GLib;
+using JSCore;
 
 public class Favorites {
 
@@ -161,6 +162,79 @@ public class Favorites {
         }
         return list;
     }
+
+    public static JSCore.Value js_add (Context ctx,
+            JSCore.Object function,
+            JSCore.Object thisObject,
+            JSCore.Value[] arguments,
+            out JSCore.Value exception) {
+
+        if (arguments.length == 1) {
+            var s = arguments [0].to_string_copy (ctx, null);
+            char buffer[1024];
+            s.get_utf8_c_string (buffer, buffer.length);
+            add ((string) buffer);
+        }
+
+        return new JSCore.Value.undefined (ctx);
+    }
+
+    public static JSCore.Value js_remove (Context ctx,
+            JSCore.Object function,
+            JSCore.Object thisObject,
+            JSCore.Value[] arguments,
+            out JSCore.Value exception) {
+
+        if (arguments.length == 1) {
+            var s = arguments [0].to_string_copy (ctx, null);
+            char buffer[1024];
+            s.get_utf8_c_string (buffer, buffer.length);
+            remove ((string) buffer);
+        }
+
+        return new JSCore.Value.undefined (ctx);
+    }
+
+    static const JSCore.StaticFunction[] js_funcs = {
+        { "add", js_add, PropertyAttribute.ReadOnly },
+        { "remove", js_remove, PropertyAttribute.ReadOnly },
+        { null, null, 0 }
+    };
+
+
+    static const ClassDefinition js_class = {
+        0,
+        ClassAttribute.None,
+        "Favorites",
+        null,
+
+        null,
+        js_funcs,
+
+        null,
+        null,
+
+        null,
+        null,
+        null,
+        null,
+
+        null,
+        null,
+        null,
+        null,
+        null
+    };
+
+    public static void setup_js_class (GlobalContext context) {
+        var c = new Class (js_class);
+        var o = new JSCore.Object (context, c, context);
+        var g = context.get_global_object ();
+        var s = new String.with_utf8_c_string ("Favorites");
+        g.set_property (context, s, o, PropertyAttribute.None, null);
+    }
+
+
 }
 
 

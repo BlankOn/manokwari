@@ -66,6 +66,52 @@ public class PanelXdgData {
         return json.str;
     }
 
+    static void put_to_desktop (string filename) {
+        var input_file = File.new_for_path (filename);
+        var path = Environment.get_user_special_dir (UserDirectory.DESKTOP) + "/" + input_file.get_basename ();
+        var file = File.new_for_path (path);
+        if (file.query_exists ()) {
+            show_dialog (_("Shortcut %s already exists in %s").printf (input_file.get_basename (), path));
+            return;
+        }
+
+        DataInputStream input;
+        DataOutputStream output;
+        
+        try {
+            input = new DataInputStream (input_file.read ());
+        } catch (Error e) {
+            show_dialog (_("Unable to read %s: %s").printf (filename, e.message));
+            return;
+        }
+
+        try {
+            output = new DataOutputStream (file.create (FileCreateFlags.PRIVATE, null)); 
+            var value = true;
+        } catch (Error e) {
+            show_dialog (_("Unable to create %s shortcut in %s: %s").printf (input_file.get_basename (), path, e.message));
+            input.close ();
+            return;
+        }
+
+        try {
+            output.put_string ("#!/usr/bin/env xdg-open\n\n");
+            string line;
+            while ((line = input.read_line (null)) != null) {
+                output.put_string (line + "\n");
+            }
+            output.close ();
+            input.close ();
+            GLib.FileUtils.chmod (path, 0700);
+        } catch (Error e) {
+            show_dialog (_("Unable to write %s shortcut in %s: %s").printf (input_file.get_basename (), path, e.message));
+            input.close ();
+            output.close ();
+            return;
+        }
+
+    }
+
     string get_icon_path (string name) {
         var i = icon.lookup_icon (name, 24, IconLookupFlags.GENERIC_FALLBACK);
         return i.get_filename();
@@ -109,6 +155,26 @@ public class PanelXdgData {
         return new JSCore.Value.undefined (ctx);
     }
 
+    public static JSCore.Value js_put_to_desktop (Context ctx,
+            JSCore.Object function,
+            JSCore.Object thisObject,
+            JSCore.Value[] arguments,
+            out JSCore.Value exception) {
+
+        if (arguments.length == 1) {
+            var s = arguments [0].to_string_copy (ctx, null);
+            char buffer[1024];
+            s.get_utf8_c_string (buffer, buffer.length);
+            put_to_desktop ((string) buffer);
+        }
+
+        return new JSCore.Value.undefined (ctx);
+    }
+
+    static const JSCore.StaticFunction[] js_funcs = {
+        { "put_to_desktop", js_put_to_desktop, PropertyAttribute.ReadOnly },
+        { null, null, 0 }
+    };
 
     static const ClassDefinition js_class = {
         0,
@@ -117,7 +183,7 @@ public class PanelXdgData {
         null,
 
         null,
-        null,
+        js_funcs,
 
         null,
         null,
@@ -141,6 +207,14 @@ public class PanelXdgData {
         var g = context.get_global_object ();
         var s = new String.with_utf8_c_string ("XdgDataBackEnd");
         g.set_property (context, s, o, PropertyAttribute.None, null);
+    }
+
+    static void show_dialog (string message) {
+        var dialog = new MessageDialog (null, DialogFlags.DESTROY_WITH_PARENT, MessageType.ERROR, ButtonsType.CLOSE, "%s", message);
+        dialog.response.connect (() => {
+            dialog.destroy ();
+        });
+        dialog.show ();
     }
 
 }

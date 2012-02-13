@@ -34,6 +34,7 @@ public class PanelMenuHTML: WebView {
         window_object_cleared.connect ((frame, context) => {
             PanelXdgData.setup_js_class ((JSCore.GlobalContext) context);
             Utils.setup_js_class ((JSCore.GlobalContext) context);
+            Favorites.setup_js_class ((JSCore.GlobalContext) context);
         });
     }
 

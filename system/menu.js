@@ -1,35 +1,4 @@
-var X = [
-    { 
-        icon: "/usr/share/icons/BlankOn/categories/scalable/gnome-system.svg",
-        name: "Graphics",
-        children: [
-            {
-                icon: "/usr/share/icons/hicolor/48x48/apps/gimp.png",
-                name: "Gimp Image Editor"
-            },
-            {
-                icon: "/usr/share/icons/hicolor/48x48/apps/inkscape.png",
-                name: "Editor Grafis Inkscape"
-            },
-            {
-                icon: "/usr/share/icons/hicolor/48x48/apps/libreoffice-draw.png",
-                name: "Libre Office Draw"
-            },
-            {
-                icon: "/usr/share/icons/BlankOn/apps/scalable/shotwell.svg",
-                name: "Shotwell Photo Manager"
-            },
-            {
-                icon: "/usr/share/icons/BlankOn/devices/scalable/scanner.svg",
-                name: "Simple Scan"
-            }
-        ]
-     }
-];
-
-
 var DataChanged = 1;
-
 
 function inherit() {
     var superclasses = [];
@@ -191,14 +160,23 @@ MenuList.prototype.render = function() {
                    });
             for (var i = 0; i < entry.children.length; i ++) {
                 var desktop = entry.children[i].desktop;
+                var name = entry.children[i].name;
                 var $li  = $("<li/>", { "data-icon": "false" });
                 var $a   = $("<a/>", {
                                 "id" : "desktop_" + i,
-                                "href": "",
+                                "href": "#",
                                 "desktop": desktop,
-                                "text": entry.children[i].name
+                                "text": name
                             }).bind("tap", function (event, ui) {
                                 Utils.run_desktop($(this).attr("desktop"));
+                            }).bind("taphold", function (event, ui) {
+                                $("#add_to_favorites").attr("desktop", $(this).attr("desktop"));
+                                $("#add_to_desktop").attr("desktop", $(this).attr("desktop"));
+                                $("#add_to_fav_or_desktop_caption").text($(this).text());
+                                $.mobile.changePage($("#add_to_fav_or_desktop"), {
+                                    role: "dialog",
+                                    transition: "fade"
+                                });
                             });
                 var $img = $("<img/>", {
                                 "width": 24,
@@ -220,6 +198,14 @@ var dataApplications = new XdgData("applications.menu");
 $(document).ready(function() {
     var xdg = new MenuList(dataApplications);
     xdg.attach("listApplications");
+
+    $("#add_to_desktop").bind("tap", function (event, ui) {
+        XdgDataBackEnd.put_to_desktop($(this).attr("desktop"));
+    });
+
+    $("#add_to_favorites").bind("tap", function (event, ui) {
+        Favorites.add($(this).attr("desktop"));
+    });
 
     console.log($(".ui-mobile-viewport").css('width'));
 });
