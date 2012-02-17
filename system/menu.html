@@ -9,18 +9,21 @@
 </head>                                                                 
 <body>                                                                  
 <div data-role="page" id="first">
-    <div data-role="header" data-add-back-btn="true">
-        <h1>Favorites</h1>
-    </div><!-- /header -->
-
     <div data-role="content">   
-    <ul data-role="listview">
+    
+    <ul data-role="listview" id="listFavorites" data-inset="true" >
+    
+    </ul>
+
+    <div>
+    <ul data-role="listview" id="listA" data-inset="true" >
         <li> <a href="#applications" data-transition="slide" id="btn-applications">Applications</a> </li>
         <li> <a href="#locations" data-transition="slide" id="btn-locations">Locations</a> </li>
         <li> <a href="" id="btn-locations">Settings</a></li>
-        <li> <a href="" id="btn-locations">Log Out</a></li>
+        <li data-icon="false"> <a href="" id="btn-locations">Log Out</a></li>
         <li> <a href="" id="btn-locations">Shut Down</a></li>
     </ul>
+    </div>
     </div><!-- /content -->
 </div><!-- /page -->
 
@@ -53,6 +56,17 @@
         <a id="add_to_desktop" href="#" data-role="button" data-rel="back">Add to Desktop</a>
     </div><!-- /content -->
 </div><!-- /page -->
+
+<div data-role="page" id="remove_from_favorites">
+    <div data-role="header" data-add-back-btn="true">
+        <h1 id="remove_from_fav_caption"></h1>
+    </div><!-- /header -->
+
+    <div data-role="content">   
+        <a id="remove_from_favorites_button" href="#" data-role="button" data-rel="back">Remove from Favorites</a>
+    </div><!-- /content -->
+</div><!-- /page -->
+
 
 
 </body>                                                                 

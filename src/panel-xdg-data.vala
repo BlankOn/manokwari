@@ -23,7 +23,7 @@ public class PanelXdgData {
                 var i = (TreeDirectory) item;
 
                 var s = "{icon: '%s', name: '%s',".printf(
-                            get_icon_path(i.get_icon ().replace(".svg", "").replace(".png", "").replace(".xpm","")),
+                            Utils.get_icon_path(i.get_icon ().replace(".svg", "").replace(".png", "").replace(".xpm","")),
                             i.get_name ()
                         );
                 json.append (s);
@@ -40,7 +40,7 @@ public class PanelXdgData {
                 var i = (TreeEntry) item;
                
                 var s = "{icon: '%s', name: '%s', desktop: '%s'},".printf(
-                            get_icon_path(i.get_icon ().replace(".svg", "").replace(".png", "").replace(".xpm","")),
+                            Utils.get_icon_path(i.get_icon ().replace(".svg", "").replace(".png", "").replace(".xpm","")),
                             i.get_display_name (),
                             i.get_desktop_file_path ()
                         );
@@ -110,11 +110,6 @@ public class PanelXdgData {
             return;
         }
 
-    }
-
-    string get_icon_path (string name) {
-        var i = icon.lookup_icon (name, 24, IconLookupFlags.GENERIC_FALLBACK);
-        return i.get_filename();
     }
 
     public static JSCore.Object js_constructor (Context ctx,

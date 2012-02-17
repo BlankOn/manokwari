@@ -82,7 +82,20 @@ MenuData.prototype.set = function(value) {
 MenuData.prototype.constructor = MenuData;
 
 MenuData.prototype.update = function() {
-    this.data = X;
+}
+
+function FavoritesData() {
+    this.backend = new Favorites();
+    this.data = this.backend.update();
+    this.dataReady = true;
+}
+inherit(FavoritesData, MenuData);
+FavoritesData.prototype.constructor = FavoritesData;
+
+FavoritesData.prototype.update = function() {
+    this.dataReady = false;
+    this.data = this.backend.update();
+    this.emit(DataChanged);
     this.dataReady = true;
 }
 
@@ -109,6 +122,7 @@ function MenuList(data) {
         throw new Error("MenuList requires an MenuData to be attached");
     }
     this.data = data;
+    this.type = "plain";
 }
 MenuList.prototype.constructor = MenuList;
 
@@ -130,6 +144,66 @@ MenuList.prototype.attach = function(id) {
 }
 
 MenuList.prototype.render = function() {
+    if (this.type == "plain") {
+        this.render_plain();
+    } else {
+        this.render_collapsible();
+    }
+}
+
+MenuList.prototype.render_plain = function() {
+    $(this.element).empty();
+
+    if (this.data.data === undefined) {
+        console.log("Data is not connected in the model");
+    }
+
+
+    for (var i = 0; i < this.data.data.length; i ++) {
+        var entry = this.data.data[i];
+        if (entry.isHeader == true) {
+            var $li  = $("<li>", { 
+                        "data-icon": "false",
+                        "text": entry.name
+                    }
+                );
+            $(this.element).append($li);
+        } else {
+            var desktop = entry.desktop;
+            console.log (desktop);
+            var name = entry.name;
+            var $li  = $("<li>", { "data-icon": "false" });
+            var $a   = $("<a/>", {
+                            "id" : "desktop_" + this.element.replace("#", "") + "_"+ i,
+                            "href": "#",
+                            "desktop": desktop,
+                            "text": name
+                        }).bind("tap", function (event, ui) {
+                            Utils.run_desktop($(this).attr("desktop"));
+                        }).bind("taphold", function (event, ui) {
+                            $("#remove_from_favorites_button").attr("desktop", $(this).attr("desktop"));
+                            $("#remove_from_fav_caption").text($(this).text());
+                            $.mobile.changePage($("#remove_from_favorites"), {
+                                role: "dialog",
+                                transition: "fade"
+                            });
+                        });
+            var $img = $("<img/>", {
+                            "width": 24,
+                            "height": 24,
+                            "src": entry.icon,
+                            "class": "ui-li-icon ui-li-thumb"
+                        });
+            $(this.element).append($li);
+            $li.append($a);
+            $a.append($img);
+        }
+    }
+    $(this.element).listview("refresh");
+    console.log(document.getElementById("listFavorites").outerHTML);
+}
+
+MenuList.prototype.render_collapsible = function() {
     $(this.element).empty();
 
     if (this.data.data === undefined) {
@@ -155,7 +229,7 @@ MenuList.prototype.render = function() {
         $(this.element).append($div);
 
         if (typeof entry.children != "undefined") {
-            $ul = $("<ul/>", {
+            var $ul = $("<ul/>", {
                     "data-role": "listview"
                    });
             for (var i = 0; i < entry.children.length; i ++) {
@@ -163,7 +237,7 @@ MenuList.prototype.render = function() {
                 var name = entry.children[i].name;
                 var $li  = $("<li/>", { "data-icon": "false" });
                 var $a   = $("<a/>", {
-                                "id" : "desktop_" + i,
+                                "id" : "desktop_" + this.element.replace("#", "") + "_"+ i,
                                 "href": "#",
                                 "desktop": desktop,
                                 "text": name
@@ -194,10 +268,16 @@ MenuList.prototype.render = function() {
 }
 
 var dataApplications = new XdgData("applications.menu");
+var dataFavorites = new FavoritesData();
+dataFavorites.backend.updateCallback("dataFavorites.update()");
 
 $(document).ready(function() {
     var xdg = new MenuList(dataApplications);
+    xdg.type = "collapsible";
     xdg.attach("listApplications");
+
+    var fav = new MenuList(dataFavorites);
+    fav.attach("listFavorites");
 
     $("#add_to_desktop").bind("tap", function (event, ui) {
         XdgDataBackEnd.put_to_desktop($(this).attr("desktop"));
@@ -206,6 +286,11 @@ $(document).ready(function() {
     $("#add_to_favorites").bind("tap", function (event, ui) {
         Favorites.add($(this).attr("desktop"));
     });
+
+    $("#remove_from_favorites_button").bind("tap", function (event, ui) {
+        Favorites.remove($(this).attr("desktop"));
+    });
+
 
     console.log($(".ui-mobile-viewport").css('width'));
 });
