@@ -298,3 +298,10 @@ $(document).ready(function() {
 function updateData(d) {
     d.update();
 }
+
+function reset() {
+    $.mobile.changePage($("#first"), {
+        transition: "none"
+    });
+    $('div.ui-collapsible-content').addClass('ui-collapsible-content-collapsed');
+}
