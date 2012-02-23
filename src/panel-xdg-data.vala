@@ -9,11 +9,54 @@ public class PanelXdgData {
     string catalog;
     StringBuilder json; // use StringBuilder to avoid appending immutable strings
     IconTheme icon;
+    static Context* jsContext;
+    JSCore.Object* jsObject;
+
+    public signal void changed ();
 
     public PanelXdgData (string catalog) {
         json = new StringBuilder ();
         this.catalog = catalog;
         icon = IconTheme.get_default ();
+        monitor();
+
+        changed.connect (() => {
+            if (jsContext != null && jsObject != null) {
+
+                var s = new String.with_utf8_c_string ("updateCallback");
+                var v = jsObject->get_property (jsContext, s, null);
+                if (v != null) {
+                    s = v.to_string_copy (jsContext, null);
+            char buffer[1024];
+            s.get_utf8_c_string (buffer, buffer.length);
+            stdout.printf("%s\n", (string) buffer);
+                    jsContext->evaluate_script (s, null, null, 0, null);
+                }
+            }
+        });
+
+    }
+
+    void monitor () {
+        var xdg_menu_dir = File.new_for_path ("/etc/xdg/menus");
+        try {
+            var xdg_menu_monitor = xdg_menu_dir.monitor (FileMonitorFlags.NONE, null);
+            xdg_menu_monitor.changed.connect (() => {
+                changed();
+            });
+        } catch (Error e) {
+            stdout.printf ("Can't monitor /etc/xdg/menus directory: %s\n", e.message);
+        }
+        var apps_dir = File.new_for_path ("/usr/share/applications");
+        try {
+            var apps_monitor = apps_dir.monitor (FileMonitorFlags.NONE, null);
+            apps_monitor.changed.connect (() => {
+                changed();
+            });
+        } catch (Error e) {
+            stdout.printf ("Can't monitor applications directory: %s\n", e.message);
+        }
+
     }
 
     void update_tree (TreeDirectory root) {
@@ -54,7 +97,7 @@ public class PanelXdgData {
         var tree = GMenu.Tree.lookup (catalog, TreeFlags.NONE);
         var root = tree.get_root_directory ();
 
-        json.append("[");
+        json.assign("[");
         update_tree (root);
         if (json.str [json.len - 1] == ',') {
             json.erase (json.len - 1, 1); // Remove trailing comma
@@ -122,6 +165,9 @@ public class PanelXdgData {
         var s = new String.with_utf8_c_string ("update");
         var f = new JSCore.Object.function_with_callback (ctx, s, js_update);
         o.set_property (ctx, s, f, 0, null);
+        s = new String.with_utf8_c_string ("updateCallback");
+        f = new JSCore.Object.function_with_callback (ctx, s, js_set_update_callback);
+        o.set_property (ctx, s, f, 0, null);
 
         if (arguments.length == 1) {
             s = arguments [0].to_string_copy (ctx, null);
@@ -129,8 +175,25 @@ public class PanelXdgData {
             s.get_utf8_c_string (buffer, buffer.length);
             PanelXdgData* i = new PanelXdgData ((string) buffer);
             o.set_private (i);
+            i->jsObject = o;
         }
         return o;
+    }
+
+    public static JSCore.Value js_set_update_callback (Context ctx,
+            JSCore.Object function,
+            JSCore.Object thisObject,
+            JSCore.Value[] arguments,
+
+            out JSCore.Value exception) {
+
+        var i = thisObject.get_private() as PanelXdgData; 
+        if (i != null && arguments.length == 1) {
+            var s = new String.with_utf8_c_string ("updateCallback");
+            thisObject.set_property (ctx, s, arguments[0], 0, null);
+        }
+
+        return new JSCore.Value.undefined (ctx);
     }
 
     public static JSCore.Value js_update (Context ctx,
@@ -197,6 +260,7 @@ public class PanelXdgData {
 
 
     public static void setup_js_class (GlobalContext context) {
+        jsContext = context;
         var c = new Class (js_class);
         var o = new JSCore.Object (context, c, context);
         var g = context.get_global_object ();

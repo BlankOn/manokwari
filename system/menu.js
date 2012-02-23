@@ -170,7 +170,6 @@ MenuList.prototype.render_plain = function() {
             $(this.element).append($li);
         } else {
             var desktop = entry.desktop;
-            console.log (desktop);
             var name = entry.name;
             var $li  = $("<li>", { "data-icon": "false" });
             var $a   = $("<a/>", {
@@ -200,7 +199,6 @@ MenuList.prototype.render_plain = function() {
         }
     }
     $(this.element).listview("refresh");
-    console.log(document.getElementById("listFavorites").outerHTML);
 }
 
 MenuList.prototype.render_collapsible = function() {
@@ -212,35 +210,37 @@ MenuList.prototype.render_collapsible = function() {
 
     for (var j = 0; j < this.data.data.length; j ++) {
         var entry = this.data.data[j];
-        var $div = $("<div/>", {
+        var div = $("<div/>", {
                      "data-role": "collapsible",
                      "data-iconpos": "right"
                    });
-        var $h3  = $("<h3/>", {
+        var h3  = $("<h3/>", {
                      "text": entry.name
                    });
-        var $img = $("<img/>", {
+        var img = $("<img/>", {
                      "width": 24,
                      "height": 24,
                      "src": entry.icon,
                    });
 
-        $div.append($h3);
-        $(this.element).append($div);
+        div.append(h3);
+        $(this.element).append(div);
 
         if (typeof entry.children != "undefined") {
-            var $ul = $("<ul/>", {
-                    "data-role": "listview"
+            var group = $('<div/>', {
+                    "data-role": "controlgroup"
                    });
+                   
+            div.append(group);
             for (var i = 0; i < entry.children.length; i ++) {
                 var desktop = entry.children[i].desktop;
                 var name = entry.children[i].name;
-                var $li  = $("<li/>", { "data-icon": "false" });
-                var $a   = $("<a/>", {
+                var a   = $("<a/>", {
                                 "id" : "desktop_" + this.element.replace("#", "") + "_"+ i,
                                 "href": "#",
+                                "data-role": "button",
                                 "desktop": desktop,
-                                "text": name
+                                "class": "ui-btn-xdg-menu"
                             }).bind("tap", function (event, ui) {
                                 Utils.run_desktop($(this).attr("desktop"));
                             }).bind("taphold", function (event, ui) {
@@ -252,22 +252,28 @@ MenuList.prototype.render_collapsible = function() {
                                     transition: "fade"
                                 });
                             });
-                var $img = $("<img/>", {
+                var img = $("<img/>", {
                                 "width": 24,
                                 "height": 24,
-                                "src": entry.children[i].icon,
-                                "class": "ui-li-icon ui-li-thumb"
+                                "class": "ui-btn-xdg-menu-icon",
+                                "src": entry.children[i].icon
                             });
-                $li.append($a);
-                $a.append($img);
-                $ul.append($li);
+                var span = $("<span/>", {
+                                "text": name,
+                                "title": name
+                            });
+                a.append(img);
+                a.append(span);
+                group.append(a);
             }
-            $div.append($ul);
         } 
     }
+    //+ ":" + document.getElementById("listApplications").outerHTML);
+    $(this.element).trigger('create')
 }
 
 var dataApplications = new XdgData("applications.menu");
+dataApplications.backend.updateCallback("dataApplications.update()");
 var dataFavorites = new FavoritesData();
 dataFavorites.backend.updateCallback("dataFavorites.update()");
 
@@ -292,7 +298,6 @@ $(document).ready(function() {
     });
 
 
-    console.log($(".ui-mobile-viewport").css('width'));
 });
 
 function updateData(d) {
@@ -305,3 +310,7 @@ function reset() {
     });
     $('div.ui-collapsible-content').addClass('ui-collapsible-content-collapsed');
 }
+
+
+
+
