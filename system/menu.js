@@ -184,15 +184,22 @@ MenuList.prototype.render_plain = function() {
             $(this.element).append($li);
         } else {
             var desktop = entry.desktop;
+            var uri = entry.uri;
             var name = entry.name;
             var $li  = $("<li>", { "data-icon": "false" });
             var $a   = $("<a/>", {
                             "id" : "desktop_" + this.element.replace("#", "") + "_"+ i,
                             "href": "#",
                             "desktop": desktop,
+                            "uri": uri,
                             "text": name
                         }).bind("tap", function (event, ui) {
-                            Utils.run_desktop($(this).attr("desktop"));
+                            var uri = $(this).attr("uri");
+                            if (typeof uri !== "undefined") {
+                                Utils.open_uri($(this).attr("uri"));
+                            } else {
+                                Utils.run_desktop($(this).attr("desktop"));
+                            }
                         }).bind("taphold", function (event, ui) {
                             $("#remove_from_favorites_button").attr("desktop", $(this).attr("desktop"));
                             $("#remove_from_fav_caption").text($(this).text());
