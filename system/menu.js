@@ -115,6 +115,20 @@ XdgData.prototype.update = function() {
     this.dataReady = true;
 }
 
+function PlacesData() {
+    this.backend = new Places();
+    this.data = this.backend.update();
+    this.dataReady = true;
+}
+inherit(PlacesData, MenuData);
+PlacesData.prototype.constructor = PlacesData;
+
+PlacesData.prototype.update = function() {
+    this.dataReady = false;
+    this.data = this.backend.update();
+    this.emit(DataChanged);
+    this.dataReady = true;
+}
 
 /* MenuList */
 function MenuList(data) {
@@ -277,6 +291,9 @@ dataApplications.backend.updateCallback("dataApplications.update()");
 var dataFavorites = new FavoritesData();
 dataFavorites.backend.updateCallback("dataFavorites.update()");
 
+var dataPlaces = new PlacesData();
+dataPlaces.backend.updateCallback("dataPlaces.update()");
+
 $(document).ready(function() {
     var xdg = new MenuList(dataApplications);
     xdg.type = "collapsible";
@@ -284,6 +301,9 @@ $(document).ready(function() {
 
     var fav = new MenuList(dataFavorites);
     fav.attach("listFavorites");
+
+    var places = new MenuList(dataPlaces);
+    places.attach("listPlaces");
 
     $("#add_to_desktop").bind("tap", function (event, ui) {
         XdgDataBackEnd.put_to_desktop($(this).attr("desktop"));
