@@ -186,27 +186,39 @@ MenuList.prototype.render_plain = function() {
             var desktop = entry.desktop;
             var uri = entry.uri;
             var name = entry.name;
+            var command = entry.command;
             var $li  = $("<li>", { "data-icon": "false" });
             var $a   = $("<a/>", {
                             "id" : "desktop_" + this.element.replace("#", "") + "_"+ i,
                             "href": "#",
                             "desktop": desktop,
                             "uri": uri,
+                            "command": command,
                             "text": name
                         }).bind("tap", function (event, ui) {
+                            var desktop = $(this).attr("desktop");
                             var uri = $(this).attr("uri");
+                            var command = $(this).attr("command");
                             if (typeof uri !== "undefined") {
-                                Utils.open_uri($(this).attr("uri"));
-                            } else {
-                                Utils.run_desktop($(this).attr("desktop"));
+                                Utils.open_uri(uri);
+                            } else if (typeof desktop !== "undefined"){
+                                Utils.run_desktop(desktop);
+                            } else if (typeof command !== "undefined") {
+                                Utils.run_command(command);
                             }
                         }).bind("taphold", function (event, ui) {
-                            $("#remove_from_favorites_button").attr("desktop", $(this).attr("desktop"));
-                            $("#remove_from_fav_caption").text($(this).text());
-                            $.mobile.changePage($("#remove_from_favorites"), {
-                                role: "dialog",
-                                transition: "fade"
-                            });
+                            var uri = $(this).attr("uri");
+                            var command = $(this).attr("command");
+                            // HACK
+                            var in_favorites = (typeof uri === "undefined") && (typeof command === "undefined");
+                            if (in_favorites) {
+                                $("#remove_from_favorites_button").attr("desktop", $(this).attr("desktop"));
+                                $("#remove_from_fav_caption").text($(this).text());
+                                $.mobile.changePage($("#remove_from_favorites"), {
+                                    role: "dialog",
+                                    transition: "fade"
+                                });
+                            }
                         });
             var $img = $("<img/>", {
                             "width": 24,

@@ -107,7 +107,34 @@ namespace Utils {
             try {
                 show_uri (Gdk.Screen.get_default (), f.get_uri (), get_current_event_time());
             } catch (Error e) {
-                var dialog = new MessageDialog (null, DialogFlags.DESTROY_WITH_PARENT, MessageType.ERROR, ButtonsType.CLOSE, _("Error opening menu item %s: %s"), (string) buffer, e.message);
+                var dialog = new MessageDialog (null, DialogFlags.DESTROY_WITH_PARENT, MessageType.ERROR, ButtonsType.CLOSE, _("Error opening menu item '%s': %s"), (string) buffer, e.message);
+                dialog.response.connect (() => {
+                            dialog.destroy ();
+                        });
+                dialog.show ();
+            }
+        }
+
+        return new JSCore.Value.undefined (ctx);
+    }
+
+
+    public static JSCore.Value js_run_command (Context ctx,
+            JSCore.Object function,
+            JSCore.Object thisObject,
+            JSCore.Value[] arguments,
+            out JSCore.Value exception) {
+
+        if (arguments.length == 1) {
+            var s = arguments [0].to_string_copy (ctx, null);
+            char buffer[1024];
+            s.get_utf8_c_string (buffer, buffer.length);
+            var f = File.new_for_path ((string) buffer);
+            try {
+                var app = AppInfo.create_from_commandline ((string) buffer, (string) buffer, AppInfoCreateFlags.NONE);
+                app.launch (null, null);
+            } catch (Error e) {
+                var dialog = new MessageDialog (null, DialogFlags.DESTROY_WITH_PARENT, MessageType.ERROR, ButtonsType.CLOSE, _("Error running command '%s': %s"), (string) buffer, e.message);
                 dialog.response.connect (() => {
                             dialog.destroy ();
                         });
@@ -121,6 +148,7 @@ namespace Utils {
     static const JSCore.StaticFunction[] js_funcs = {
         { "run_desktop", js_run_desktop, PropertyAttribute.ReadOnly },
         { "open_uri", js_open_uri, PropertyAttribute.ReadOnly },
+        { "run_command", js_run_command, PropertyAttribute.ReadOnly },
         { null, null, 0 }
     };
 
