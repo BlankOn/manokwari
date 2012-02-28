@@ -103,9 +103,8 @@ namespace Utils {
             var s = arguments [0].to_string_copy (ctx, null);
             char buffer[1024];
             s.get_utf8_c_string (buffer, buffer.length);
-            var f = File.new_for_path ((string) buffer);
             try {
-                show_uri (Gdk.Screen.get_default (), f.get_uri (), get_current_event_time());
+                show_uri (Gdk.Screen.get_default (), (string) buffer, get_current_event_time());
             } catch (Error e) {
                 var dialog = new MessageDialog (null, DialogFlags.DESTROY_WITH_PARENT, MessageType.ERROR, ButtonsType.CLOSE, _("Error opening menu item '%s': %s"), (string) buffer, e.message);
                 dialog.response.connect (() => {

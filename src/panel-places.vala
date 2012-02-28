@@ -71,10 +71,11 @@ public class PanelPlaces {
     }
 
     private void setup_home () {
+        var f = File.new_for_path (Environment.get_home_dir ());
         var s = "{icon: '%s', name: '%s', uri: '%s'},".printf(
                     Utils.get_icon_path("gtk-home"),
                     _("Home"),
-                    Environment.get_home_dir () 
+                    f.get_uri ()
                 );
 
         json.append (s);
@@ -94,10 +95,11 @@ public class PanelPlaces {
             if (i == (int) UserDirectory.DESKTOP)
                 icon = "desktop";
 
+            var f = File.new_for_path (path);
             var s = "{icon: '%s', name: '%s', uri: '%s'},".printf(
                         Utils.get_icon_path(icon),
                         Filename.display_basename(path),
-                        path    
+                        f.get_uri ()
                      );
 
             json.append (s);
