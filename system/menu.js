@@ -231,7 +231,10 @@ MenuList.prototype.render_plain = function() {
             $a.append($img);
         }
     }
-    $(this.element).listview("refresh");
+    try {
+        $(this.element).listview("refresh");
+    } catch(err) {
+    }
 }
 
 MenuList.prototype.render_collapsible = function() {
@@ -336,6 +339,13 @@ $(document).ready(function() {
         Favorites.remove($(this).attr("desktop"));
     });
 
+    $("#remove_from_favorites_button").bind("tap", function (event, ui) {
+        Favorites.remove($(this).attr("desktop"));
+    });
+
+    $("#settings_button").bind("tap", function (event, ui) {
+        Utils.run_command("gnome-control-center");
+    });
 
 });
 
