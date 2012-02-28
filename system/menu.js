@@ -316,6 +316,8 @@ dataFavorites.backend.updateCallback("dataFavorites.update()");
 var dataPlaces = new PlacesData();
 dataPlaces.backend.updateCallback("dataPlaces.update()");
 
+var sessionManager = new SessionManager();
+
 $(document).ready(function() {
     var xdg = new MenuList(dataApplications);
     xdg.type = "collapsible";
@@ -346,6 +348,19 @@ $(document).ready(function() {
     $("#settings_button").bind("tap", function (event, ui) {
         Utils.run_command("gnome-control-center");
     });
+
+    $("#logout_button").bind("tap", function (event, ui) {
+        sessionManager.logout(); 
+    });
+
+    if (sessionManager.canShutdown()) {
+        $("#shutdown_button").bind("tap", function (event, ui) {
+            sessionManager.shutdown(); 
+        });
+    } else {
+        $("#shutdown_option").hide();
+        $("#listGeneral").listview("refresh");
+    }
 
 });
 

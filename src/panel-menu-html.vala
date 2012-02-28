@@ -36,6 +36,7 @@ public class PanelMenuHTML: WebView {
             Utils.setup_js_class ((JSCore.GlobalContext) context);
             Favorites.setup_js_class ((JSCore.GlobalContext) context);
             PanelPlaces.setup_js_class ((JSCore.GlobalContext) context);
+            PanelSessionManager.setup_js_class ((JSCore.GlobalContext) context);
         });
     }
 
