@@ -3,24 +3,33 @@ using JSCore;
 
 [DBus (name = "org.gnome.SessionManager")]
 interface SessionManager : GLib.Object {
-    public abstract string register_client (string app_id, string startup_id) throws IOError;
+    public abstract void register_client (string app_id, string startup_id, out ObjectPath path) throws IOError;
     public abstract void shutdown () throws IOError;
     public abstract void logout (uint32 mode) throws IOError;
     public abstract bool can_shutdown () throws IOError;
 }
 
+[DBus (name = "org.gnome.SessionManager.ClientPrivate")]
+interface ClientPrivate: GLib.Object {
+    public abstract void end_session_response(bool ok, string reason) throws IOError;
+    public signal void query_end_session(int flags);
+    public signal void end_session(int flags);
+}
+
+
 public class PanelSessionManager {
-    static bool registered = false;
+    static ObjectPath session_id = null;
     private SessionManager session = null;
+    private ClientPrivate client = null;
 
     public PanelSessionManager () {
         try {
             session =  Bus.get_proxy_sync (BusType.SESSION,
                                            "org.gnome.SessionManager", "/org/gnome/SessionManager");
         } catch (Error e) {
-            stdout.printf ("Unable to connect to session manager\n");
+            stderr.printf ("Unable to connect to session manager\n");
         }
-        if (!registered) {
+        if (session_id == null) {
             register();
         }
     }
@@ -30,8 +39,17 @@ public class PanelSessionManager {
             try {
                 var id = GLib.Environment.get_variable("DESKTOP_AUTOSTART_ID");
                 if (id != null) {
-                    session.register_client ("blankon-panel", id);
-                    registered = true;
+                    session.register_client ("blankon-panel", id, out session_id);
+                    client =  Bus.get_proxy_sync (BusType.SESSION,
+                                                   "org.gnome.SessionManager", session_id);
+                    client.end_session.connect((flags)=> {
+                        client.end_session_response(true, "");
+                        Gtk.main_quit();
+                    });
+                    client.query_end_session.connect((flags)=> {
+                        client.end_session_response(true, "");
+                    });
+
                 }
             } catch (Error e) {
                 throw e;
