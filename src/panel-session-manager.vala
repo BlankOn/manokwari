@@ -10,6 +10,7 @@ interface SessionManager : GLib.Object {
 }
 
 public class PanelSessionManager {
+    static bool registered = false;
     private SessionManager session = null;
 
     public PanelSessionManager () {
@@ -19,6 +20,9 @@ public class PanelSessionManager {
         } catch (Error e) {
             stdout.printf ("Unable to connect to session manager\n");
         }
+        if (!registered) {
+            register();
+        }
     }
 
     public void register () {
@@ -27,6 +31,7 @@ public class PanelSessionManager {
                 var id = GLib.Environment.get_variable("DESKTOP_AUTOSTART_ID");
                 if (id != null) {
                     session.register_client ("blankon-panel", id);
+                    registered = true;
                 }
             } catch (Error e) {
                 throw e;
