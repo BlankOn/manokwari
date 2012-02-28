@@ -45,6 +45,7 @@ public class PanelPlaces {
     public void reset () {
 
         json.assign ("");
+        init_contents ();
 
         if (jsContext != null && jsObject != null) {
 
@@ -55,8 +56,6 @@ public class PanelPlaces {
                 jsContext->evaluate_script (s, null, null, 0, null);
             }
         }
-
-        init_contents ();
     }
 
     private void init_contents () {
