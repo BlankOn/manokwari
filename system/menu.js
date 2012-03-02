@@ -375,9 +375,27 @@ function reset() {
 }
 
 
+// Setup visibility of an object depending
+// on the result of the function defined
+// in the data-visibility attribute of the
+// object
+function setupObjectVisibility() {
+    var f = $(this).attr("data-visibility");
+    if (typeof window[f] === "function") {
+        var r = window[f]();
+        // hide if the function return false
+        if (r != true) {
+            $(this).hide();
+        }
+    }
+}
+
 function setupPages() {
     $('div[data-role="page"]').hide();
     $('div[data-role="page"]').first().show();
+
+    // Setup visibility of the objects in the pages
+    $('[data-visibility]').each(setupObjectVisibility);
 
 }
 
@@ -529,7 +547,7 @@ function handleShutDown() {
 // specify the function name 
 // in data-visibility attribute of the button
 // Returns bool
-function handleShutDown() {
+function shutdownEnabled() {
     return sessionManager.canShutdown();
 }
 
