@@ -378,14 +378,17 @@ function reset() {
 // Setup visibility of an object depending
 // on the result of the function defined
 // in the data-visibility attribute of the
-// object
+// object.
+// Not visible means that the object is removed
+// completely from the DOM as this is expected
+// that the objects are static.
 function setupObjectVisibility() {
     var f = $(this).attr("data-visibility");
     if (typeof window[f] === "function") {
         var r = window[f]();
-        // hide if the function return false
+        // remove if the function return false
         if (r != true) {
-            $(this).hide();
+            $(this).remove();
         }
     }
 }
