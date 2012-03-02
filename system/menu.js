@@ -465,8 +465,11 @@ function linkHandleClick(e) {
 // Call the handler function defined in
 // the data-tap-handler attribute
 function linkHandleTapHandler(e) {
-    var h = $(this).attr("data-tap-handler");
-    window[h]();
+    var f = $(this).attr("data-tap-handler");
+    // only call the function if it is a function
+    if (typeof window[f] === "function") {
+        window[f]();
+    }
 }
 
 function setupLinks() {
