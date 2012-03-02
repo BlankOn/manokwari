@@ -507,6 +507,7 @@ function changePage(page) {
 
     if (activePage == null) {
         activePage = $("#first");
+        activePage.addClass("ui-animation-slide");
     }
 
     if (activePage == page) {
