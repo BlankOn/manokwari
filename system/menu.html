@@ -2,9 +2,8 @@
 <head>                                                                  
 <meta name="viewport" content="width=device-width, initial-scale=1" /> 
 <link rel="stylesheet" href="style.css" />
+
 <script type="text/javascript" src="jq.js"></script>
-<script type="text/javascript" src="jqm-settings.js"></script>
-<script type="text/javascript" src="jqm.js"></script>
 <script type="text/javascript" src="menu.js"></script>
 </head>                                                                 
 <body>                                                                  
@@ -17,11 +16,11 @@
 
     <div>
     <ul data-role="listview" id="listGeneral" data-inset="true" >
-        <li> <a href="#applications" data-transition="slide" id="btn-applications">Applications</a> </li>
-        <li> <a href="#locations" data-transition="slide" id="btn-locations">Locations</a> </li>
-        <li data-icon="false"> <a href="" id="settings_button">Settings</a></li>
-        <li data-icon="false"> <a href="" id="logout_button">Log Out</a></li>
-        <li data-icon="false" id="shutdown_option"> <a href="" id="shutdown_button">Shut Down</a></li>
+        <li> <a href="#applications" data-transition="slide" id="btn-applications"><span>Applications</span></a> </li>
+        <li> <a href="#locations" data-transition="slide" id="btn-locations"><span>Locations</span></a> </li>
+        <li data-icon="false"> <a href="" id="settings_button"><span>Settings</span></a></li>
+        <li data-icon="false"> <a href="" id="logout_button"><span>Log Out</span></a></li>
+        <li data-icon="false" id="shutdown_option"> <a href="" id="shutdown_button"><span>Shut Down</span></a></li>
     </ul>
     </div>
     </div><!-- /content -->
@@ -29,7 +28,7 @@
 
 <div data-role="page" id="applications">
     <div data-role="header" data-add-back-btn="true">
-        <h1>Applications</h1>
+        <span>Applications</span>
     </div><!-- /header -->
 
     <div data-role="content">   
@@ -39,7 +38,7 @@
 
 <div data-role="page" id="locations">
     <div data-role="header" data-add-back-btn="true">
-        <h1>Locations</h1>
+        <span>Locations</span>
     </div><!-- /header -->
 
     <div data-role="content">   
@@ -51,22 +50,22 @@
 
 <div data-role="page" id="add_to_fav_or_desktop">
     <div data-role="header" data-add-back-btn="true">
-        <h1 id="add_to_fav_or_desktop_caption"></h1>
+        <span translate=no id="add_to_fav_or_desktop_caption"></span
     </div><!-- /header -->
 
     <div data-role="content">   
-        <a id="add_to_favorites" href="#" data-role="button" data-rel="back">Add to Favorites</a>
-        <a id="add_to_desktop" href="#" data-role="button" data-rel="back">Add to Desktop</a>
+        <a id="add_to_favorites" href="#" data-role="button" data-rel="back"><span>Add to Favorites</span></a>
+        <a id="add_to_desktop" href="#" data-role="button" data-rel="back"><span>Add to Desktop</span></a>
     </div><!-- /content -->
 </div><!-- /page -->
 
 <div data-role="page" id="remove_from_favorites">
     <div data-role="header" data-add-back-btn="true">
-        <h1 id="remove_from_fav_caption"></h1>
+        <span translate=no id="remove_from_fav_caption"></span
     </div><!-- /header -->
 
     <div data-role="content">   
-        <a id="remove_from_favorites_button" href="#" data-role="button" data-rel="back">Remove from Favorites</a>
+        <a id="remove_from_favorites_button" href="#" data-role="button" data-rel="back"><span>Remove from Favorites</span></a>
     </div><!-- /content -->
 </div><!-- /page -->
 

@@ -46,7 +46,7 @@ public class PanelMenuHTML: WebView {
 
     public void setPosition (int pos) {
         unowned JSCore.Context context = get_focused_frame ().get_global_context();
-        var s = new String.with_utf8_c_string ("$('.ui-mobile-viewport').css('left', '" + pos.to_string() + "px');reset();");
+        var s = new String.with_utf8_c_string ("$('.ui-mobile-viewport').css('left', '" + pos.to_string() + "px');$('.ui-mobile-viewport').css('width', '" + get_window ().get_width ().to_string() + "px'); reset()");
         context.evaluate_script (s, null, null, 0, null);
     }
 

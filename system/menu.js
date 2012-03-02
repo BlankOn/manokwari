@@ -1,4 +1,5 @@
 var DataChanged = 1;
+var activePage = null;
 
 function inherit() {
     var superclasses = [];
@@ -165,6 +166,54 @@ MenuList.prototype.render = function() {
     }
 }
 
+MenuList.prototype.handle_tap = function(event) {
+    var desktop = event.data.desktop;
+    var uri = event.data.uri;
+    var command = event.data.command;
+
+    console.log("xxx");
+    if (typeof uri !== "undefined") {
+        Utils.open_uri(uri);
+    } else if (typeof desktop !== "undefined"){
+        Utils.run_desktop(desktop);
+    } else if (typeof command !== "undefined") {
+        Utils.run_command(command);
+    }
+}
+
+MenuList.prototype.handle_tap_hold = function(event) {
+    var text = event.data.text;
+    var desktop = event.data.desktop;
+    var uri = event.data.uri;
+    var command = event.data.command;
+
+    // HACK
+    var in_favorites = (typeof uri === "undefined") && (typeof command === "undefined");
+    if (in_favorites) {
+        $("#remove_from_favorites_button").attr("desktop", desktop);
+        $("#remove_from_fav_caption").text(text);
+        changePage($("#remove_from_favorites"), {
+            role: "dialog",
+            transition: "fade"
+        });
+    }
+}
+
+MenuList.prototype.handle_tap_hold_applications = function(event) {
+    var text = event.data.text;
+    var desktop = event.data.desktop;
+    var uri = event.data.uri;
+    var command = event.data.command;
+
+    $("#add_to_favorites").attr("desktop", desktop);
+    $("#add_to_desktop").attr("desktop", desktop);
+    $("#add_to_fav_or_desktop_caption").text(text);
+    changePage($("#add_to_fav_or_desktop"), {
+        role: "dialog",
+        transition: "fade"
+    });
+}
+
 MenuList.prototype.render_plain = function() {
     $(this.element).empty();
 
@@ -176,65 +225,49 @@ MenuList.prototype.render_plain = function() {
     for (var i = 0; i < this.data.data.length; i ++) {
         var entry = this.data.data[i];
         if (entry.isHeader == true) {
-            var $li  = $("<li>", { 
+            var li  = $("<li>", { 
                         "data-icon": "false",
                         "text": entry.name
                     }
                 );
-            $(this.element).append($li);
+            $(this.element).append(li);
         } else {
             var desktop = entry.desktop;
-            var uri = entry.uri;
             var name = entry.name;
+            var uri = entry.uri;
             var command = entry.command;
-            var $li  = $("<li>", { "data-icon": "false" });
-            var $a   = $("<a/>", {
+            var li  = $("<li>", { "data-icon": "false" });
+            var a   = $("<a/>", {
                             "id" : "desktop_" + this.element.replace("#", "") + "_"+ i,
                             "href": "#",
                             "desktop": desktop,
                             "uri": uri,
-                            "command": command,
-                            "text": name
-                        }).bind("tap", function (event, ui) {
-                            var desktop = $(this).attr("desktop");
-                            var uri = $(this).attr("uri");
-                            var command = $(this).attr("command");
-                            if (typeof uri !== "undefined") {
-                                Utils.open_uri(uri);
-                            } else if (typeof desktop !== "undefined"){
-                                Utils.run_desktop(desktop);
-                            } else if (typeof command !== "undefined") {
-                                Utils.run_command(command);
-                            }
-                        }).bind("taphold", function (event, ui) {
-                            var uri = $(this).attr("uri");
-                            var command = $(this).attr("command");
-                            // HACK
-                            var in_favorites = (typeof uri === "undefined") && (typeof command === "undefined");
-                            if (in_favorites) {
-                                $("#remove_from_favorites_button").attr("desktop", $(this).attr("desktop"));
-                                $("#remove_from_fav_caption").text($(this).text());
-                                $.mobile.changePage($("#remove_from_favorites"), {
-                                    role: "dialog",
-                                    transition: "fade"
-                                });
-                            }
+                            "command": command
                         });
-            var $img = $("<img/>", {
+            a.on("taphold", { "text": a.text(), "uri": uri, "desktop": desktop, "command": command }, MenuList.prototype.handle_tap_hold);
+            a.on("tap", { "uri": uri, "desktop": desktop, "command": command }, MenuList.prototype.handle_tap);
+            var img = $("<img/>", {
                             "width": 24,
                             "height": 24,
                             "src": entry.icon,
-                            "class": "ui-li-icon ui-li-thumb"
+                            "class": "ui-listview-item-icon"
                         });
-            $(this.element).append($li);
-            $li.append($a);
-            $a.append($img);
+
+            var span = $("<span/>", {
+                            "translate": "no",
+                            "text": name,
+                            "title": name,
+                            "class": "ui-listview-item-text"
+                        });
+
+            $(this.element).append(li);
+            li.append(a);
+            a.append(img);
+            a.append(span);
         }
     }
-    try {
-        $(this.element).listview("refresh");
-    } catch(err) {
-    }
+
+    refreshStyle($(this.element));
 }
 
 MenuList.prototype.render_collapsible = function() {
@@ -250,7 +283,8 @@ MenuList.prototype.render_collapsible = function() {
                      "data-role": "collapsible",
                      "data-iconpos": "right"
                    });
-        var h3  = $("<h3/>", {
+        var h3  = $("<div/>", {
+                     "data-role": "collapsible-header", 
                      "text": entry.name
                    });
         var img = $("<img/>", {
@@ -271,30 +305,26 @@ MenuList.prototype.render_collapsible = function() {
             for (var i = 0; i < entry.children.length; i ++) {
                 var desktop = entry.children[i].desktop;
                 var name = entry.children[i].name;
+                var uri = entry.children[i].uri;
+                var command = entry.children[i].command;
                 var a   = $("<a/>", {
                                 "id" : "desktop_" + this.element.replace("#", "") + "_"+ i,
                                 "href": "#",
                                 "data-role": "button",
-                                "desktop": desktop,
-                                "class": "ui-btn-xdg-menu"
-                            }).bind("tap", function (event, ui) {
-                                Utils.run_desktop($(this).attr("desktop"));
-                            }).bind("taphold", function (event, ui) {
-                                $("#add_to_favorites").attr("desktop", $(this).attr("desktop"));
-                                $("#add_to_desktop").attr("desktop", $(this).attr("desktop"));
-                                $("#add_to_fav_or_desktop_caption").text($(this).text());
-                                $.mobile.changePage($("#add_to_fav_or_desktop"), {
-                                    role: "dialog",
-                                    transition: "fade"
-                                });
+                                "desktop": desktop
                             });
+
+                a.on("taphold", { "text": a.text(), "uri": uri, "desktop": desktop, "command": command }, MenuList.prototype.handle_tap_hold_applications);
+                a.on("tap", { "uri": uri, "desktop": desktop, "command": command }, MenuList.prototype.handle_tap);
+
                 var img = $("<img/>", {
                                 "width": 24,
                                 "height": 24,
-                                "class": "ui-btn-xdg-menu-icon",
+                                "class": "ui-listview-item-icon",
                                 "src": entry.children[i].icon
                             });
                 var span = $("<span/>", {
+                                "translate": "no",
                                 "text": name,
                                 "title": name
                             });
@@ -304,8 +334,7 @@ MenuList.prototype.render_collapsible = function() {
             }
         } 
     }
-    //+ ":" + document.getElementById("listApplications").outerHTML);
-    $(this.element).trigger('create')
+    refreshStyle($(this.element));
 }
 
 var dataApplications = new XdgData("applications.menu");
@@ -319,6 +348,7 @@ dataPlaces.backend.updateCallback("dataPlaces.update()");
 var sessionManager = new SessionManager();
 
 $(document).ready(function() {
+
     var xdg = new MenuList(dataApplications);
     xdg.type = "collapsible";
     xdg.attach("listApplications");
@@ -329,6 +359,83 @@ $(document).ready(function() {
     var places = new MenuList(dataPlaces);
     places.attach("listPlaces");
 
+    setup();
+});
+
+function updateData(d) {
+    d.update();
+}
+
+function reset() {
+    changePage($("#first"), {
+        transition: "none"
+    });
+
+    $(".ui-collapsible-control-group").hide();
+}
+
+function setupPages() {
+    $('div[data-role="page"]').hide();
+    $('div[data-role="page"]').first().show();
+}
+
+function linkHandleTapHold(e, o) {
+    if (e.data.source.attr("mouse-is-down") == true) {
+        o.trigger("taphold");
+    }
+    e.data.source.attr("mouse-is-down", false);
+    e.data.source.attr("mouse-down-time", -1);
+}
+
+function linkHandleMouseDown(e) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    var currentTime = new Date();
+    e.data.source.attr("mouse-is-down", true);
+    e.data.source.attr("mouse-down-time", currentTime);
+    setTimeout(linkHandleTapHold, 1100, e, $(this));
+}
+
+function linkHandleMouseUp(e) {
+    e.stopPropagation();
+    e.preventDefault();
+
+    if (e.data.source.attr("mouse-is-down") == true) {
+        var currentTime = new Date();
+        var lastTime = e.data.source.attr("mouse-down-time");
+        if (typeof lastTime != "undefined" && (currentTime.getTime() - lastTime < 1000)) {
+            if ($(this).attr("href") != "#") {
+                changePage($($(this).attr("href")));
+            } else {
+                $(this).trigger("tap");
+            }
+
+        }
+        e.data.source.attr("mouse-is-down", false);
+    }
+}
+
+function linkHandleClick(e) {
+    e.preventDefault();
+    e.stopPropagation();
+}
+
+function setupLinks() {
+    $('a').mousedown({ source: $(this)}, linkHandleMouseDown);
+    $('a').mouseup({ source: $(this)}, linkHandleMouseUp);
+    $('a').click({ source: $(this)}, linkHandleClick);
+}
+
+function setup() {
+    setupPages();
+    setupLinks();
+    setupBasicStyle();
+    setupAdditionalStyle();
+    translate();
+}
+
+function setupX() {
     $("#add_to_desktop").bind("tap", function (event, ui) {
         XdgDataBackEnd.put_to_desktop($(this).attr("desktop"));
     });
@@ -361,20 +468,133 @@ $(document).ready(function() {
         $("#shutdown_option").hide();
         $("#listGeneral").listview("refresh");
     }
-
-});
-
-function updateData(d) {
-    d.update();
 }
 
-function reset() {
-    $.mobile.changePage($("#first"), {
-        transition: "none"
+function changePage(page) {
+    var width = $('.ui-mobile-viewport').width();
+    if (typeof width === "undefined") {
+        width = 1000;
+    }
+
+    var h = page.find("div[data-role='header']");
+    if (h.attr("data-add-back-btn") == "true" &&
+        h.attr("back-btn-added") != "true") {
+        var b = $("<div>", {
+            "class": "ui-back-button"
+        }).click(function() { changePage($("#first"))});
+        h.prepend(b);
+        h.attr("back-btn-added", "true");
+    }
+
+    page.show();
+    page.removeClass("ui-animation-slide");
+    var p = activePage; 
+
+    if (p != null) {
+        if (page.attr("id") == "first") {
+            console.log("going to first");
+            // we're coming to first page
+            // so the incoming must come from -width 
+            page.css("left", "-" + width + "px");
+            // and outgoing should come from +width
+            p.css("left", width + "px");
+        } else {
+
+            console.log("going away from first");
+            // we're moving away from first page
+            // so the incoming must come from +width
+            page.css("left", width + "px");
+            // and outgoing (#first) must go to -width
+            p.css("left", "-" + width + "px");
+        }
+
+    console.log("current page: " + page.css("left") + ": outgoing: "+  p.css("left"));
+    }
+
+    page.addClass("ui-animation-slide");
+    page.css("left", "0px");
+    console.log("-" + width);
+    activePage = page;
+}
+
+
+function setupBasicStyle() {
+    $('body').addClass("ui-mobile-viewport");
+    $('a').addClass("ui-link");
+}
+
+function setupAdditionalStyle() {
+    $('div[data-role="page"]').addClass("ui-page");
+    $('div[data-role="header"]').addClass("ui-header");
+    $('div[data-role="content"]').addClass("ui-content");
+
+    refreshStyle('ul[data-role="listview"]');
+}
+
+function propagateMouseUp() {
+    $(this).find("a").trigger("mouseup");
+}
+
+function propagateMouseDown() {
+    $(this).find("a").trigger("mousedown");
+}
+
+function toggleCollapsible(e) {
+    var g = $(this).parent().find(".ui-collapsible-control-group");
+    if (g.css('display') == "none") {
+        $(this).parent().parent().find(".ui-collapsible-control-group").hide();
+        var h = g.height();
+        if (h == 0) {
+            g.css("height", "inherit");
+            h = g.height();
+        }
+        g.show();
+        g.height(h);
+    } else {
+        g.height(0);
+        g.hide();
+    }
+}
+
+function refreshStyle(e) {
+    if (typeof e.attr === "undefined") {
+        e = $(e);
+    }
+
+    switch (e.attr("data-role")) {
+        case "listview":    {
+            e.addClass("ui-listview");
+            e.find("a").wrap("<div class=ui-listview-item/>");
+            $(".ui-listview-item").mousedown(propagateMouseDown);
+            $(".ui-listview-item").mouseup(propagateMouseUp);
+            break;
+        }
+        case "collapsible-set": {
+            e.find("div[data-role='controlgroup']").addClass("ui-collapsible-control-group");
+            e.find("div[data-role='collapsible']").addClass("ui-collapsible");
+            e.find(".ui-collapsible-control-group").hide();
+            var c = e.find(".ui-collapsible");
+            c.find("a").wrap("<div class=ui-listview-item/>");
+            var h = c.find("div[data-role='collapsible-header']");
+            h.addClass("ui-collapsible-header");
+            h.click(toggleCollapsible);
+            h.first().addClass("ui-collapsible-header-top");
+            h.last().addClass("ui-collapsible-header-bottom");
+            for (var i = 0; i < e.length; i ++) {
+                console.log(e[i].outerHTML);
+            }
+            break;
+        }
+    }
+    setupBasicStyle();
+}
+
+function gettext(text) {
+    return Utils.translate(text);
+}
+
+function translate() {
+    $("span[translate!='no']").text(function(index, text) {
+        $(this).text(gettext(text));
     });
-    $('div.ui-collapsible-content').addClass('ui-collapsible-content-collapsed');
 }
-
-
-
-

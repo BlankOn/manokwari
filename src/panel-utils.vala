@@ -144,10 +144,30 @@ namespace Utils {
         return new JSCore.Value.undefined (ctx);
     }
 
+    public static JSCore.Value js_translate (Context ctx,
+            JSCore.Object function,
+            JSCore.Object thisObject,
+            JSCore.Value[] arguments,
+            out JSCore.Value exception) {
+
+        if (arguments.length == 1) {
+            var s = arguments [0].to_string_copy (ctx, null);
+            char[] buffer = new char[s.get_length() + 1];
+            s.get_utf8_c_string (buffer, buffer.length);
+
+            s = new String.with_utf8_c_string (_((string) buffer));
+            return new JSCore.Value.string (ctx, s);
+        }
+
+        return new JSCore.Value.undefined (ctx);
+    }
+
+
     static const JSCore.StaticFunction[] js_funcs = {
         { "run_desktop", js_run_desktop, PropertyAttribute.ReadOnly },
         { "open_uri", js_open_uri, PropertyAttribute.ReadOnly },
         { "run_command", js_run_command, PropertyAttribute.ReadOnly },
+        { "translate", js_translate, PropertyAttribute.ReadOnly },
         { null, null, 0 }
     };
 
