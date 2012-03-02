@@ -417,7 +417,6 @@ function linkHandleMouseUp(e) {
 
     // only consider the button which was pressed 
     if (e.data.source.attr("mouse-is-down") == true) {
-    console.log("DOWN" + e.data.source.attr("mouse-is-down"));
         var currentTime = new Date();
         var lastTime = e.data.source.attr("mouse-down-time");
         if (typeof lastTime != "undefined" && (currentTime.getTime() - lastTime < 1000)) {
@@ -581,6 +580,7 @@ function toggleCollapsible(e) {
     }
 }
 
+// Refresh styles of the specified jQuery object 
 function refreshStyle(e) {
     if (typeof e.attr === "undefined") {
         e = $(e);
@@ -588,21 +588,36 @@ function refreshStyle(e) {
 
     switch (e.attr("data-role")) {
         case "listview":    {
+            // Specify the style for listview
             e.addClass("ui-listview");
+            // Wrap the button with a listview item
             e.find("a").wrap("<div class=ui-listview-item/>");
+            // And rewire the mouse event handling for these items
             $(".ui-listview-item").mousedown(propagateMouseDown);
             $(".ui-listview-item").mouseup(propagateMouseUp);
             break;
         }
+
         case "collapsible-set": {
+            // Specify the style for the control group and
+            // the inner collapsibles
             e.find("div[data-role='controlgroup']").addClass("ui-collapsible-control-group");
             e.find("div[data-role='collapsible']").addClass("ui-collapsible");
+            // Hide all control group initially
             e.find(".ui-collapsible-control-group").hide();
+
             var c = e.find(".ui-collapsible");
+            // Wrap the button inside collapsible with
+            // a listview item
             c.find("a").wrap("<div class=ui-listview-item/>");
+
+            // Find the header inside inner collapsible
             var h = c.find("div[data-role='collapsible-header']");
+            // specify the header style to it
             h.addClass("ui-collapsible-header");
+            // handle the click event
             h.click(toggleCollapsible);
+            // Give different styles for top and bottom items
             h.first().addClass("ui-collapsible-header-top");
             h.last().addClass("ui-collapsible-header-bottom");
             for (var i = 0; i < e.length; i ++) {
