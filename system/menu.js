@@ -396,6 +396,12 @@ function linkHandleMouseDown(e) {
     e.preventDefault();
 
     var currentTime = new Date();
+
+    // ignore if the button is already pressed
+    if (e.data.source.attr("mouse-is-down") ==  true) {
+        return;
+    }
+
     // take note that this button is now pressed
     e.data.source.attr("mouse-is-down", true);
     // also put the timestamp so we can distinguish
@@ -411,6 +417,7 @@ function linkHandleMouseUp(e) {
 
     // only consider the button which was pressed 
     if (e.data.source.attr("mouse-is-down") == true) {
+    console.log("DOWN" + e.data.source.attr("mouse-is-down"));
         var currentTime = new Date();
         var lastTime = e.data.source.attr("mouse-down-time");
         if (typeof lastTime != "undefined" && (currentTime.getTime() - lastTime < 1000)) {
