@@ -492,50 +492,64 @@ function setupX() {
     }
 }
 
+// Changes the page to the specifed page
+// when back button is pressed
+function handleBackButton(e) {
+    changePage($("#" + e.data.destination));
+}
+
+// Changes to page to the specified page
 function changePage(page) {
     var width = $('.ui-mobile-viewport').width();
     if (typeof width === "undefined") {
         width = 1000;
     }
 
+    if (activePage == null) {
+        activePage = $("#first");
+    }
+
+    if (activePage == page) {
+        console.log("Trying to change to same page, exiting.");
+        return;
+    }
+
     var h = page.find("div[data-role='header']");
     if (h.attr("data-add-back-btn") == "true" &&
         h.attr("back-btn-added") != "true") {
+        // Create the back button when requested
         var b = $("<div>", {
             "class": "ui-back-button"
-        }).click(function() { changePage($("#first"))});
+        });
+        // handle the click
+        b.click({ destination: activePage.attr("id") }, handleBackButton);
+        // insert the button in the header
         h.prepend(b);
+        // take a note to avoid duplicates
         h.attr("back-btn-added", "true");
     }
 
     page.show();
     page.removeClass("ui-animation-slide");
-    var p = activePage; 
 
-    if (p != null) {
-        if (page.attr("id") == "first") {
-            console.log("going to first");
-            // we're coming to first page
-            // so the incoming must come from -width 
-            page.css("left", "-" + width + "px");
-            // and outgoing should come from +width
-            p.css("left", width + "px");
-        } else {
-
-            console.log("going away from first");
-            // we're moving away from first page
-            // so the incoming must come from +width
-            page.css("left", width + "px");
-            // and outgoing (#first) must go to -width
-            p.css("left", "-" + width + "px");
-        }
-
-    console.log("current page: " + page.css("left") + ": outgoing: "+  p.css("left"));
+    if (page.attr("id") == "first") {
+        console.log("going to first");
+        // we're coming to first page
+        // so the incoming must come from -width 
+        page.css("left", "-" + width + "px");
+        // and outgoing should come from +width
+        activePage.css("left", width + "px");
+    } else {
+        console.log("going away from first");
+        // we're moving away from first page
+        // so the incoming must come from +width
+        page.css("left", width + "px");
+        // and outgoing (#first) must go to -width
+        activePage.css("left", "-" + width + "px");
     }
 
     page.addClass("ui-animation-slide");
     page.css("left", "0px");
-    console.log("-" + width);
     activePage = page;
 }
 
