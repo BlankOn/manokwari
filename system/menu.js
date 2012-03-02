@@ -380,9 +380,13 @@ function setupPages() {
 }
 
 function linkHandleTapHold(e, o) {
+    // if the button is still pressed
+    // until 1100 ms later then this is
+    // truely a tap and hold gesture
     if (e.data.source.attr("mouse-is-down") == true) {
         o.trigger("taphold");
     }
+    // reset all values
     e.data.source.attr("mouse-is-down", false);
     e.data.source.attr("mouse-down-time", -1);
 }
@@ -392,8 +396,12 @@ function linkHandleMouseDown(e) {
     e.preventDefault();
 
     var currentTime = new Date();
+    // take note that this button is now pressed
     e.data.source.attr("mouse-is-down", true);
+    // also put the timestamp so we can distinguish
+    // later whether this is a long tap or not
     e.data.source.attr("mouse-down-time", currentTime);
+    // kick the tap hold detector
     setTimeout(linkHandleTapHold, 1100, e, $(this));
 }
 
@@ -401,27 +409,35 @@ function linkHandleMouseUp(e) {
     e.stopPropagation();
     e.preventDefault();
 
+    // only consider the button which was pressed 
     if (e.data.source.attr("mouse-is-down") == true) {
         var currentTime = new Date();
         var lastTime = e.data.source.attr("mouse-down-time");
         if (typeof lastTime != "undefined" && (currentTime.getTime() - lastTime < 1000)) {
+
+            // Just change if the href contains a page name
             if ($(this).attr("href") != "#") {
                 changePage($($(this).attr("href")));
             } else {
+            // or emit the "tap" signal
                 $(this).trigger("tap");
             }
 
         }
+        // reset the "down" state after finishing
+        // meaning that the button's job is "done"
         e.data.source.attr("mouse-is-down", false);
     }
 }
 
 function linkHandleClick(e) {
+    // just ignore clicks
     e.preventDefault();
     e.stopPropagation();
 }
 
 function setupLinks() {
+    // all "a" elements are considered as "button"
     $('a').mousedown({ source: $(this)}, linkHandleMouseDown);
     $('a').mouseup({ source: $(this)}, linkHandleMouseUp);
     $('a').click({ source: $(this)}, linkHandleClick);
@@ -532,10 +548,12 @@ function setupAdditionalStyle() {
 }
 
 function propagateMouseUp() {
+    // simply propagate this to the mouseup handler above
     $(this).find("a").trigger("mouseup");
 }
 
 function propagateMouseDown() {
+    // simply propagate this to the mousedown handler above
     $(this).find("a").trigger("mousedown");
 }
 
