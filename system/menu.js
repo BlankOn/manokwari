@@ -500,7 +500,7 @@ function handleBackButton(e) {
 
 // Changes to page to the specified page
 function changePage(page) {
-    if (typeof page.length || page.length == 0) {
+    if (typeof page === "undefined" || page.length == 0) {
         console.log("The specified page is invalid");
         return;
     }
