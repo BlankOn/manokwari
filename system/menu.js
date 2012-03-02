@@ -500,6 +500,11 @@ function handleBackButton(e) {
 
 // Changes to page to the specified page
 function changePage(page) {
+    if (typeof page.length || page.length == 0) {
+        console.log("The specified page is invalid");
+        return;
+    }
+
     var width = $('.ui-mobile-viewport').width();
     if (typeof width === "undefined") {
         width = 1000;
