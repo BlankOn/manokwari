@@ -18,9 +18,9 @@
     <ul data-role="listview" id="listGeneral" data-inset="true" >
         <li> <a href="#applications" data-transition="slide" id="btn-applications"><span>Applications</span></a> </li>
         <li> <a href="#locations" data-transition="slide" id="btn-locations"><span>Locations</span></a> </li>
-        <li data-icon="false"> <a href="" id="settings_button"><span>Settings</span></a></li>
-        <li data-icon="false"> <a href="" id="logout_button"><span>Log Out</span></a></li>
-        <li data-icon="false" id="shutdown_option"> <a href="" id="shutdown_button"><span>Shut Down</span></a></li>
+        <li data-icon="false"> <a href="#" data-tap-handler="handleSettings"><span>Settings</span></a></li>
+        <li data-icon="false"> <a href="#" data-tap-handler="handleLogOut"><span>Log Out</span></a></li>
+        <li data-icon="false" data-visibility="shutdownEnabled"> <a href="" data-tap-handler="handleShutDown"><span>Shut Down</span></a></li>
     </ul>
     </div>
     </div><!-- /content -->

@@ -374,9 +374,11 @@ function reset() {
     $(".ui-collapsible-control-group").hide();
 }
 
+
 function setupPages() {
     $('div[data-role="page"]').hide();
     $('div[data-role="page"]').first().show();
+
 }
 
 function linkHandleTapHold(e, o) {
@@ -442,11 +444,22 @@ function linkHandleClick(e) {
     e.stopPropagation();
 }
 
+// Call the handler function defined in
+// the data-tap-handler attribute
+function linkHandleTapHandler(e) {
+    var h = $(this).attr("data-tap-handler");
+    window[h]();
+}
+
 function setupLinks() {
     // all "a" elements are considered as "button"
     $('a').mousedown({ source: $(this)}, linkHandleMouseDown);
     $('a').mouseup({ source: $(this)}, linkHandleMouseUp);
     $('a').click({ source: $(this)}, linkHandleClick);
+
+    // rewire the tap only for the object
+    // which has data-tap-handler attribute
+    $('a[data-tap-handler]').on("tap", linkHandleTapHandler);
 }
 
 function setup() {
@@ -475,7 +488,6 @@ function setupX() {
     });
 
     $("#settings_button").bind("tap", function (event, ui) {
-        Utils.run_command("gnome-control-center");
     });
 
     $("#logout_button").bind("tap", function (event, ui) {
@@ -490,6 +502,35 @@ function setupX() {
         $("#shutdown_option").hide();
         $("#listGeneral").listview("refresh");
     }
+}
+
+// Handles Settings button. The function is defined
+// in data-handler attribute of the button
+function handleSettings() {
+    Utils.run_command("gnome-control-center");
+}
+
+// Handles LogOut button. The function is defined
+// in data-handler attribute of the button
+function handleLogOut() {
+    sessionManager.logout(); 
+}
+
+// Handles ShutDown button. The function is defined
+// in data-handler attribute of the button
+function handleShutDown() {
+    if (sessionManager.canShutdown()) {
+        sessionManager.shutdown(); 
+    }
+}
+
+// Determine whether shutdown is enabled or not.
+// This controls the visibility of element which
+// specify the function name 
+// in data-visibility attribute of the button
+// Returns bool
+function handleShutDown() {
+    return sessionManager.canShutdown();
 }
 
 // Changes the page to the specifed page
