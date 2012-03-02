@@ -545,6 +545,8 @@ function changePage(page) {
         // we're moving away from first page
         // so the incoming must come from +width
         page.css("left", width + "px");
+        page.css("left"); // XXX without this
+                          // animation fails in the first time
         // and outgoing (#first) must go to -width
         activePage.css("left", "-" + width + "px");
     }
