@@ -629,10 +629,14 @@ function refreshStyle(e) {
     setupBasicStyle();
 }
 
+// Calls the gettext function defined in backend
 function gettext(text) {
     return Utils.translate(text);
 }
 
+// Translates all <span> element which has
+// translate attribute set to "yes" (if not given
+// then considered as "yes")
 function translate() {
     $("span[translate!='no']").text(function(index, text) {
         $(this).text(gettext(text));
