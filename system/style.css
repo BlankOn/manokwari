@@ -23,6 +23,7 @@ body {
 }
 
 .ui-mobile-viewport {
+    -webkit-transition: left 0.2s ease-out;
 }
 
 .ui-animation-slide {
@@ -70,6 +71,14 @@ body {
     margin: auto;
 }
 
+.ui-listview-item-pressed {
+    background-image: -webkit-linear-gradient(#c0c0b0 /*{e-bup-background-start}*/, #b0b0b0 /*{e-bup-background-end}*/);
+}
+
+.ui-listview-item-normal {
+    background-image: -webkit-linear-gradient(#b0b0b0 /*{e-bup-background-start}*/, #a0a0a0 /*{e-bup-background-end}*/);
+}
+
 .ui-listview-item {
     vertical-align: middle;
     display: block;
@@ -80,7 +89,6 @@ body {
     border-radius: inherit;
     cursor: pointer;
 
-    background-image: -webkit-linear-gradient(#b0b0b0 /*{e-bup-background-start}*/, #a0a0a0 /*{e-bup-background-end}*/);
 }
 
 .ui-listview-header {
@@ -116,7 +124,7 @@ span {
     padding: 5px;
     display: block;
     color: black;
-    background-image: -webkit-linear-gradient(#b0b0b0 /*{e-bup-background-start}*/, #a0a0a0 /*{e-bup-background-end}*/);
+    background-image: -webkit-linear-gradient(#d0d0d0 /*{e-bup-background-start}*/, #b0b0b0 /*{e-bup-background-end}*/);
     cursor: pointer;
 }
 
@@ -132,6 +140,7 @@ span {
 
 .ui-collapsible-control-group {
     overflow: hidden;
+    margin: 10px;
     -webkit-transition: height 0.2s ease-out;
 }
 
@@ -148,19 +157,16 @@ span {
 .ui-header {
     color: white;
     font-size: 20px;
+    margin-left: 20px;
 }
 
 .ui-button {
     display: block;
-    color: black;
+    color: white;
     text-align:center;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    margin-left: 10px;
-    margin-right: 10px;
     padding: 5px;
     border-radius: 5px;
-    background-image: -webkit-linear-gradient(#b0b0b0 /*{e-bup-background-start}*/, #a0a0a0 /*{e-bup-background-end}*/);
+    background-image: -webkit-linear-gradient(#505050 /*{e-bup-background-start}*/, #000000 /*{e-bup-background-end}*/);
 }
 
 .ui-popup {
