@@ -83,6 +83,14 @@ body {
     background-image: -webkit-linear-gradient(#b0b0b0 /*{e-bup-background-start}*/, #a0a0a0 /*{e-bup-background-end}*/);
 }
 
+.ui-listview-header {
+    border-radius: inherit;
+    color: white;
+    text-align: center;
+    background-image: -webkit-linear-gradient(#505050 /*{e-bup-background-start}*/, #101010 /*{e-bup-background-end}*/);
+
+}
+
 .ui-listview-first-child {
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;

@@ -228,6 +228,7 @@ MenuList.prototype.render_plain = function() {
         if (entry.isHeader == true) {
             var li  = $("<div>", { 
                         "data-icon": "false",
+                        "data-role": "header",
                         "text": entry.name
                     }
                 );
@@ -598,7 +599,7 @@ function changePage(page) {
         return;
     }
 
-    var h = page.find("div[data-role='header']");
+    var h = page.find("div[data-role='header']").first();
     if (h.attr("data-add-back-btn") == "true" &&
         h.attr("back-btn-added") != "true") {
         // Create the back button when requested
@@ -698,6 +699,7 @@ function refreshStyle(e) {
             e.find("a").wrap("<div class=ui-listview-item/>");
             e.children().first().addClass("ui-listview-first-child");
             e.children().last().addClass("ui-listview-last-child");
+            e.find("div[data-role='header']").addClass("ui-listview-header").removeClass("ui-header");
 
             for (var i = 0; i < e.length; i ++) {
                 console.log(e[i].outerHTML);
