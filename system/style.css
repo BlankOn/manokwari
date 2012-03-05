@@ -119,9 +119,14 @@ span {
     vertical-align: middle;
 }
 
+.ui-collapsible {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
 .ui-collapsible-header {
     margin: 0px;
-    padding: 5px;
+    padding: 10px;
     display: block;
     color: black;
     background-image: -webkit-linear-gradient(#d0d0d0 /*{e-bup-background-start}*/, #b0b0b0 /*{e-bup-background-end}*/);
