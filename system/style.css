@@ -36,21 +36,21 @@ body {
     margin-right: 5px;
     margin-top: 5px;
     margin-bottom: 5px;
+    vertical-align: middle;
     padding: 0px;
 }
 
 
 .ui-listview li {
-    display: block;
     width: 100%;
+    min-height: 40px;
 
     text-align: center; 
     vertical-align: middle; 
     color: white;
     background-image: -webkit-linear-gradient(#505050 /*{e-bup-background-start}*/, #101010 /*{e-bup-background-end}*/);
-    height: 40px;
-}
 
+}
 
 .ui-content {
     margin: 5px;
@@ -65,26 +65,30 @@ body {
 }
 
 .ui-listview-item-text {
+    vertical-align: middle;
     text-align: left; 
+    margin: auto;
 }
 
 .ui-listview-item {
+    vertical-align: middle;
+    display: block;
+    min-height: 40px;
     text-align: left; 
     padding-right: 20px;
     padding-left: 20px;
     border-radius: inherit;
-    vertical-align: middle;
     cursor: pointer;
 
     background-image: -webkit-linear-gradient(#b0b0b0 /*{e-bup-background-start}*/, #a0a0a0 /*{e-bup-background-end}*/);
 }
 
-.ui-listview li:first-child {
+.ui-listview-first-child {
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
 }
 
-.ui-listview li:last-child {
+.ui-listview-last-child {
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
 }
@@ -92,6 +96,10 @@ body {
 .ui-link {
     text-decoration: none;
     color: black; 
+    vertical-align: middle;
+}
+
+span {
     vertical-align: middle;
 }
 

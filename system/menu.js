@@ -226,7 +226,7 @@ MenuList.prototype.render_plain = function() {
     for (var i = 0; i < this.data.data.length; i ++) {
         var entry = this.data.data[i];
         if (entry.isHeader == true) {
-            var li  = $("<li>", { 
+            var li  = $("<div>", { 
                         "data-icon": "false",
                         "text": entry.name
                     }
@@ -237,7 +237,6 @@ MenuList.prototype.render_plain = function() {
             var name = entry.name;
             var uri = entry.uri;
             var command = entry.command;
-            var li  = $("<li>", { "data-icon": "false" });
             var a   = $("<a/>", {
                             "id" : "desktop_" + this.element.replace("#", "") + "_"+ i,
                             "href": "#",
@@ -261,8 +260,7 @@ MenuList.prototype.render_plain = function() {
                             "class": "ui-listview-item-text"
                         });
 
-            $(this.element).append(li);
-            li.append(a);
+            $(this.element).append(a);
             a.append(img);
             a.append(span);
         }
@@ -415,6 +413,8 @@ function setupPages() {
 
     // Setup visibility of the objects in the pages
     $('[data-visibility]').each(setupObjectVisibility);
+
+    refreshStyle("#listGeneral");
 
 }
 
@@ -652,7 +652,7 @@ function setupAdditionalStyle() {
     $('div[data-role="content"]').addClass("ui-content");
 
     $("[data-role='popup']").addClass("ui-popup");
-    refreshStyle('ul[data-role="listview"]');
+    refreshStyle('[data-role="listview"]');
 }
 
 function propagateMouseUp(e) {
@@ -696,6 +696,12 @@ function refreshStyle(e) {
             e.addClass("ui-listview");
             // Wrap the button with a listview item
             e.find("a").wrap("<div class=ui-listview-item/>");
+            e.children().first().addClass("ui-listview-first-child");
+            e.children().last().addClass("ui-listview-last-child");
+
+            for (var i = 0; i < e.length; i ++) {
+                console.log(e[i].outerHTML);
+            }
             break;
         }
 
@@ -721,9 +727,6 @@ function refreshStyle(e) {
             // Give different styles for top and bottom items
             h.first().addClass("ui-collapsible-header-top");
             h.last().addClass("ui-collapsible-header-bottom");
-            for (var i = 0; i < e.length; i ++) {
-                console.log(e[i].outerHTML);
-            }
             break;
         }
     }
