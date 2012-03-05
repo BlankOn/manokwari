@@ -70,7 +70,6 @@ body {
 
 .ui-listview-item {
     text-align: left; 
-    height: 40px;
     padding-right: 20px;
     padding-left: 20px;
     border-radius: inherit;
@@ -133,4 +132,26 @@ body {
 .ui-header {
     color: white;
     font-size: 20px;
+}
+
+.ui-button {
+    display: block;
+    color: black;
+    text-align:center;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 5px;
+    border-radius: 5px;
+    background-image: -webkit-linear-gradient(#b0b0b0 /*{e-bup-background-start}*/, #a0a0a0 /*{e-bup-background-end}*/);
+}
+
+.ui-popup {
+    height: 0;
+    background-color: blue;
+    display: block;
+    border-radius: 5px;
+    background-image: -webkit-linear-gradient(#202020 /*{e-bup-background-start}*/, #101010 /*{e-bup-background-end}*/);
+    -webkit-transition: height 0.5s ease-out;
 }

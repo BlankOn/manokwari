@@ -1,5 +1,6 @@
 var DataChanged = 1;
 var activePage = null;
+var activePopup = null;
 
 function inherit() {
     var superclasses = [];
@@ -192,10 +193,10 @@ MenuList.prototype.handle_tap_hold = function(event) {
     if (in_favorites) {
         $("#remove_from_favorites_button").attr("desktop", desktop);
         $("#remove_from_fav_caption").text(text);
-        changePage($("#remove_from_favorites"), {
-            role: "dialog",
-            transition: "fade"
-        });
+
+        var popup = $("#remove_from_favorites");
+        popup.appendTo($(this).parent());
+        showPopup(popup);
     }
 }
 
@@ -208,10 +209,12 @@ MenuList.prototype.handle_tap_hold_applications = function(event) {
     $("#add_to_favorites").attr("desktop", desktop);
     $("#add_to_desktop").attr("desktop", desktop);
     $("#add_to_fav_or_desktop_caption").text(text);
-    changePage($("#add_to_fav_or_desktop"), {
-        role: "dialog",
-        transition: "fade"
-    });
+
+    var popup = $("#add_to_fav_or_desktop");
+    popup.appendTo($(this).parent());
+    showPopup(popup);
+
+    console.log($(this).parent().html());
 }
 
 MenuList.prototype.render_plain = function() {
@@ -310,7 +313,6 @@ MenuList.prototype.render_collapsible = function() {
                 var a   = $("<a/>", {
                                 "id" : "desktop_" + this.element.replace("#", "") + "_"+ i,
                                 "href": "#",
-                                "data-role": "button",
                                 "desktop": desktop
                             });
 
@@ -366,12 +368,28 @@ function updateData(d) {
     d.update();
 }
 
+// Shows the specified popup
+function showPopup(id) {
+   id.css("height", "inherit");
+   id.show();
+   activePopup = id;
+}
+
+// Hides the specified popup
+function hidePopup(id) {
+   id.height(0); 
+   // move the popup to the popup-pool
+   $("#popup-pool").append(id.detach());
+   activePopup = null;
+}
+
 function reset() {
     changePage($("#first"), {
         transition: "none"
     });
 
     $(".ui-collapsible-control-group").hide();
+    hidePopup();
 }
 
 
@@ -403,6 +421,7 @@ function setupPages() {
 }
 
 function linkHandleTapHold(e, o) {
+    console.log("TH");
     // if the button is still pressed
     // until 1100 ms later then this is
     // truely a tap and hold gesture
@@ -415,6 +434,7 @@ function linkHandleTapHold(e, o) {
 }
 
 function linkHandleMouseDown(e) {
+    console.log("DOWN");
     e.stopPropagation();
     e.preventDefault();
 
@@ -435,6 +455,7 @@ function linkHandleMouseDown(e) {
 }
 
 function linkHandleMouseUp(e) {
+    console.log("UP");
     e.stopPropagation();
     e.preventDefault();
 
@@ -444,12 +465,25 @@ function linkHandleMouseUp(e) {
         var lastTime = e.data.source.attr("mouse-down-time");
         if (typeof lastTime != "undefined" && (currentTime.getTime() - lastTime < 1000)) {
 
-            // Just change if the href contains a page name
-            if ($(this).attr("href") != "#") {
-                changePage($($(this).attr("href")));
-            } else {
-            // or emit the "tap" signal
-                $(this).trigger("tap");
+            var cancel = false;
+            if (activePopup != null) {
+                // Cancel if the button is not inside the activePopup
+                if (activePopup.find("#" + $(this).attr("id")).length == 0) {
+                    cancel = true;
+                }
+                // hide the popup in all cases
+                hidePopup(activePopup);
+            } 
+
+            // only eat the event when it's not canceled
+            if (cancel == false) {
+                // Just change if the href contains a page name
+                if ($(this).attr("href") != "#") {
+                    changePage($($(this).attr("href")));
+                } else {
+                // or emit the "tap" signal
+                    $(this).trigger("tap");
+                }
             }
 
         }
@@ -491,10 +525,11 @@ function setup() {
     setupLinks();
     setupBasicStyle();
     setupAdditionalStyle();
+    setupPopupButtons();
     translate();
 }
 
-function setupX() {
+function setupPopupButtons() {
     $("#add_to_desktop").bind("tap", function (event, ui) {
         XdgDataBackEnd.put_to_desktop($(this).attr("desktop"));
     });
@@ -507,25 +542,6 @@ function setupX() {
         Favorites.remove($(this).attr("desktop"));
     });
 
-    $("#remove_from_favorites_button").bind("tap", function (event, ui) {
-        Favorites.remove($(this).attr("desktop"));
-    });
-
-    $("#settings_button").bind("tap", function (event, ui) {
-    });
-
-    $("#logout_button").bind("tap", function (event, ui) {
-        sessionManager.logout(); 
-    });
-
-    if (sessionManager.canShutdown()) {
-        $("#shutdown_button").bind("tap", function (event, ui) {
-            sessionManager.shutdown(); 
-        });
-    } else {
-        $("#shutdown_option").hide();
-        $("#listGeneral").listview("refresh");
-    }
 }
 
 // Handles Settings button. The function is defined
@@ -633,10 +649,12 @@ function setupBasicStyle() {
 }
 
 function setupAdditionalStyle() {
+    $('a[data-role="button"]').addClass("ui-button");
     $('div[data-role="page"]').addClass("ui-page");
     $('div[data-role="header"]').addClass("ui-header");
     $('div[data-role="content"]').addClass("ui-content");
 
+    $("[data-role='popup']").addClass("ui-popup");
     refreshStyle('ul[data-role="listview"]');
 }
 
