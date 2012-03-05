@@ -150,8 +150,11 @@ body {
 .ui-popup {
     height: 0;
     background-color: blue;
-    display: block;
     border-radius: 5px;
     background-image: -webkit-linear-gradient(#202020 /*{e-bup-background-start}*/, #101010 /*{e-bup-background-end}*/);
     -webkit-transition: height 0.5s ease-out;
+}
+
+#popup-pool {
+    display: none;
 }

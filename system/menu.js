@@ -172,7 +172,6 @@ MenuList.prototype.handle_tap = function(event) {
     var uri = event.data.uri;
     var command = event.data.command;
 
-    console.log("xxx");
     if (typeof uri !== "undefined") {
         Utils.open_uri(uri);
     } else if (typeof desktop !== "undefined"){
@@ -214,7 +213,6 @@ MenuList.prototype.handle_tap_hold_applications = function(event) {
     popup.appendTo($(this).parent());
     showPopup(popup);
 
-    console.log($(this).parent().html());
 }
 
 MenuList.prototype.render_plain = function() {
@@ -421,7 +419,6 @@ function setupPages() {
 }
 
 function linkHandleTapHold(e, o) {
-    console.log("TH");
     // if the button is still pressed
     // until 1100 ms later then this is
     // truely a tap and hold gesture
@@ -434,7 +431,6 @@ function linkHandleTapHold(e, o) {
 }
 
 function linkHandleMouseDown(e) {
-    console.log("DOWN");
     e.stopPropagation();
     e.preventDefault();
 
@@ -455,7 +451,6 @@ function linkHandleMouseDown(e) {
 }
 
 function linkHandleMouseUp(e) {
-    console.log("UP");
     e.stopPropagation();
     e.preventDefault();
 
@@ -514,6 +509,8 @@ function setupLinks() {
     $('a').mousedown({ source: $(this)}, linkHandleMouseDown);
     $('a').mouseup({ source: $(this)}, linkHandleMouseUp);
     $('a').click({ source: $(this)}, linkHandleClick);
+    $(".ui-listview-item").on("mousedown", propagateMouseDown);
+    $(".ui-listview-item").on("mouseup", propagateMouseUp);
 
     // rewire the tap only for the object
     // which has data-tap-handler attribute
@@ -658,12 +655,14 @@ function setupAdditionalStyle() {
     refreshStyle('ul[data-role="listview"]');
 }
 
-function propagateMouseUp() {
+function propagateMouseUp(e) {
+    e.stopPropagation();
     // simply propagate this to the mouseup handler above
     $(this).find("a").trigger("mouseup");
 }
 
-function propagateMouseDown() {
+function propagateMouseDown(e) {
+    e.stopPropagation();
     // simply propagate this to the mousedown handler above
     $(this).find("a").trigger("mousedown");
 }
@@ -697,9 +696,6 @@ function refreshStyle(e) {
             e.addClass("ui-listview");
             // Wrap the button with a listview item
             e.find("a").wrap("<div class=ui-listview-item/>");
-            // And rewire the mouse event handling for these items
-            $(".ui-listview-item").mousedown(propagateMouseDown);
-            $(".ui-listview-item").mouseup(propagateMouseUp);
             break;
         }
 
@@ -731,7 +727,10 @@ function refreshStyle(e) {
             break;
         }
     }
+
     setupBasicStyle();
+    // And rewire the mouse event handling for these items
+    setupLinks();
 }
 
 // Calls the gettext function defined in backend
