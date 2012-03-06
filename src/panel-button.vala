@@ -77,8 +77,9 @@ public class PanelButtonWindow : PanelAbstractWindow {
         });
 
         w.windows_visible.connect (() => {
-            if (menu_box.visible) 
+            if (menu_box.visible) {
                 menu_box.try_hide ();
+            }
         });
 
         w.activated.connect (() => {

@@ -490,11 +490,11 @@ public class PanelWindowHost : PanelAbstractWindow {
         }
         if (emit_change_signals) {
             if (num_windows == 0) {
-                resize (Size.SMALL); 
                 windows_gone ();
             } else {
                 windows_visible ();
             }
+            resize (Size.SMALL); 
 
             if (num_windows == num_total_windows)
                 all_windows_visible ();
