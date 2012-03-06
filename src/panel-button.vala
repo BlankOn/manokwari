@@ -10,7 +10,7 @@ public class PanelButtonWindow : PanelAbstractWindow {
     public signal void menu_shown ();
 
     public PanelButtonWindow() {
-        set_type_hint (Gdk.WindowTypeHint.DOCK);
+        set_type_hint (Gdk.WindowTypeHint.UTILITY);
         menu_box = new PanelMenuBox();
         set_visual (this.screen.get_rgba_visual ());
 
@@ -81,6 +81,22 @@ public class PanelButtonWindow : PanelAbstractWindow {
                 menu_box.try_hide ();
         });
 
+        w.activated.connect (() => {
+            get_window ().raise ();
+        });
+        
+        map_event.connect (() => {
+            set_keep_above(true);
+            return true;
+        });
+
+        menu_box.shown.connect (() => {
+            hide ();
+        });
+
+        menu_box.dismissed.connect (() => {
+            show ();
+        });
     }
 
 

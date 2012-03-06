@@ -44,7 +44,7 @@ public class PanelWindowPager : PanelAbstractWindow {
         });
 
         map_event.connect (() => {
-            PanelScreen.move_window (this, Gdk.Gravity.SOUTH_EAST);
+            PanelScreen.move_window (this, Gdk.Gravity.NORTH_EAST);
             get_window ().raise ();
             Utils.grab (this);
             return true;
@@ -318,6 +318,8 @@ public class PanelWindowHost : PanelAbstractWindow {
     public signal void windows_visible (); // Emitted when there is at least one window visible
     public signal void all_windows_visible (); // Emitted when all normal windows visible
 
+    public signal void activated (); // Emitted when the window host is activated (the size is getting bigger)
+
     enum Size {
         SMALL = 12,
         BIG = 34
@@ -345,10 +347,10 @@ public class PanelWindowHost : PanelAbstractWindow {
         var pager_entry = new PanelWindowPagerEntry ();
         pager_entry.set_name ("PAGER");
         pager_entry.show ();
-        outer_box.pack_end (pager_entry, false, false, 1);
 
-        outer_box.pack_start (tray, false, false, 0);
-        outer_box.pack_start (box, true, true, 0);
+        outer_box.pack_end (pager_entry, false, false, 1);
+        outer_box.pack_end (tray, false, false, 0);
+        outer_box.pack_start (box, true, true, 40);
         outer_box.show ();
         box.show();
 
@@ -401,6 +403,7 @@ public class PanelWindowHost : PanelAbstractWindow {
 
         enter_notify_event.connect (() => {
             resize (Size.BIG);
+            activated ();
             return false;
         });
 
@@ -408,7 +411,7 @@ public class PanelWindowHost : PanelAbstractWindow {
             int x, y;
             get_window ().get_position (out x, out y);
             // If e.y is negative then it's outside the area
-            if (e.y < 0) {
+            if (e.y > height) {
                 resize (Size.SMALL);
             }
             return false;
@@ -500,7 +503,8 @@ public class PanelWindowHost : PanelAbstractWindow {
     }
 
     public new void reposition () {
-        PanelScreen.move_window (this, Gdk.Gravity.SOUTH_WEST);
+        PanelScreen.move_window (this, Gdk.Gravity.NORTH_WEST);
+        set_keep_above(false);
     }
 
     public void dismiss () {

@@ -4,6 +4,7 @@ public class PanelMenuBox : PanelAbstractWindow {
     private const int COLUMN_WIDTH = 320;
 
     public signal void dismissed ();
+    public signal void shown ();
     public signal void about_to_show_content ();
     PanelMenuHTML view;
 
@@ -46,6 +47,7 @@ public class PanelMenuBox : PanelAbstractWindow {
         
 
         map_event.connect (() => {
+            shown ();
             PanelScreen.move_window (this, Gdk.Gravity.NORTH_WEST);
             get_window ().raise ();
             Utils.grab (this);
@@ -90,5 +92,6 @@ public class PanelMenuBox : PanelAbstractWindow {
     public void try_hide () {
         view.triggerHideAnimation();
         GLib.Timeout.add (500, real_hide);
+        dismissed ();
     }
 }
