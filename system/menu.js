@@ -529,6 +529,7 @@ function setup() {
     setupAdditionalStyle();
     setupPopupButtons();
     translate();
+    $("body").keydown(handleKeyDown);
 }
 
 function setupPopupButtons() {
@@ -777,4 +778,37 @@ function translate() {
     $("span[translate!='no']").text(function(index, text) {
         $(this).text(gettext(text));
     });
+}
+
+// Handles keydown
+function handleKeyDown(e) {
+    switch (e.keyCode) {
+        case 27: { // Esc
+            handleEsc(e);
+            break;
+        }
+    }
+}
+
+function handleEsc(e) {
+    // First try to hide active popup
+    if (activePopup != null) {
+        hidePopup(activePopup);
+        return;
+    }
+
+    // then collapsible
+    var activeCollapsible = $(".ui-collapsible-control-group:visible");
+    if (activeCollapsible.length > 0) {
+        activeCollapsible.hide();
+        return;
+    }
+
+    // then return page to first
+    if (activePage != null) {
+        if (activePage != $("#first")) {
+            changePage($("#first"));
+            return;
+        }
+    }
 }
