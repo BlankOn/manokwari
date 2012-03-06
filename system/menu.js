@@ -1,6 +1,7 @@
 var DataChanged = 1;
 var activePage = null;
 var activePopup = null;
+var userAccount = new UserAccount();
 
 function inherit() {
     var superclasses = [];
@@ -390,6 +391,7 @@ function reset() {
     hidePopup();
     $(".ui-collapsible-control-group").hide();
     $("#first").addClass("ui-animation-slide");
+    setupUserAccount();
 }
 
 
@@ -420,6 +422,16 @@ function setupPages() {
 
     refreshStyle("#listGeneral");
 
+}
+
+function setupUserAccount() {
+    var e = $("#userAccount");
+    e.find("img").attr("src", userAccount.getIconFile());
+    e.find("h1").text(userAccount.getRealName());
+    e.find("span").text(userAccount.getHostName());
+    e.click(function() {
+        Utils.run_desktop("/usr/share/applications/gnome-user-accounts-panel.desktop");
+    });
 }
 
 function linkHandleTapHold(e, o) {
@@ -530,6 +542,7 @@ function setup() {
     setupPopupButtons();
     translate();
     $("body").keydown(handleKeyDown);
+    setupUserAccount();
 }
 
 function setupPopupButtons() {

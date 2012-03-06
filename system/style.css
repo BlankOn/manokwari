@@ -179,3 +179,41 @@ span {
 #popup-pool {
     display: none;
 }
+
+#userAccount {
+    position: absolute;
+    bottom: 0;
+    height: 60px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    width: 300; 
+    margin-left: 5px;
+    margin-right: 5px;
+    padding: 5px;
+
+    background-image: -webkit-linear-gradient(#505050 /*{e-bup-background-start}*/, #101010 /*{e-bup-background-end}*/);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space:nowrap; 
+
+
+}
+
+#userAccount img {
+    border-radius: 5px;
+    float: left;
+    width: 48;
+    height: 48;
+    margin-right: 5px;
+}
+
+#userAccount h1 {
+    font-size: 20px;
+    margin: 0px;
+}
+
+#userAccount span {
+    font-size: 12px;
+}
+
+
