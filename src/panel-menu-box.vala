@@ -96,7 +96,11 @@ public class PanelMenuBox : PanelAbstractWindow {
         stdout.printf("Menu box dismissed \n");
         view.triggerHideAnimation();
         Utils.ungrab (this);
-        hide ();
+        GLib.Timeout.add (500, try_hide);
     }
 
+    bool try_hide () {
+        hide ();
+        return false;
+    }
 }

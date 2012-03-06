@@ -18,16 +18,10 @@ body {
     width: 100%;
 }
 
-.ui-page-hidden {
-    left: -1000;
-}
-
 .ui-mobile-viewport {
-    -webkit-transition: left 0.2s ease-out;
 }
 
 .ui-animation-slide {
-    left: 320px;
     -webkit-transition: left 0.3s ease-out;
 }
 

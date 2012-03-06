@@ -374,19 +374,22 @@ function showPopup(id) {
 
 // Hides the specified popup
 function hidePopup(id) {
-   id.height(0); 
-   // move the popup to the popup-pool
-   $("#popup-pool").append(id.detach());
-   activePopup = null;
+    if (typeof id === "undefined") {
+        id = $("div[data-role='popup']");
+    }
+    id.height(0); 
+    // move the popup to the popup-pool
+    $("#popup-pool").append(id.detach());
+    activePopup = null;
 }
 
 function reset() {
     changePage($("#first"), {
         transition: "none"
     });
-
-    $(".ui-collapsible-control-group").hide();
     hidePopup();
+    $(".ui-collapsible-control-group").hide();
+    $("#first").addClass("ui-animation-slide");
 }
 
 
@@ -585,6 +588,11 @@ function changePage(page) {
         return;
     }
 
+    var withAnimation = true;
+
+    if (arguments.length == 2) {
+        withAnimation = (arguments[1].transition != "none");
+    }
     var width = $('.ui-mobile-viewport').width();
     if (typeof width === "undefined") {
         width = 1000;
@@ -616,27 +624,36 @@ function changePage(page) {
     }
 
     page.show();
+    if (withAnimation == false) {
+        activePage.removeClass("ui-animation-slide");
+    }
     page.removeClass("ui-animation-slide");
 
     if (page.attr("id") == "first") {
         console.log("going to first");
         // we're coming to first page
         // so the incoming must come from -width 
-        page.css("left", "-" + width + "px");
+        if (withAnimation) {
+            page.css("left", "-" + width + "px");
+        }
         // and outgoing should come from +width
         activePage.css("left", width + "px");
     } else {
         console.log("going away from first");
         // we're moving away from first page
         // so the incoming must come from +width
-        page.css("left", width + "px");
+        if (withAnimation) {
+            page.css("left", width + "px");
+        }
         page.css("left"); // XXX without this
                           // animation fails in the first time
         // and outgoing (#first) must go to -width
         activePage.css("left", "-" + width + "px");
     }
 
-    page.addClass("ui-animation-slide");
+    if (withAnimation) {
+        page.addClass("ui-animation-slide");
+    }
     page.css("left", "0px");
     activePage = page;
 }
