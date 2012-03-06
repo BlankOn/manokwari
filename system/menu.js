@@ -783,32 +783,31 @@ function translate() {
 // Handles keydown
 function handleKeyDown(e) {
     switch (e.keyCode) {
-        case 27: { // Esc
-            handleEsc(e);
-            break;
-        }
     }
 }
 
+// Handles esc key
+// This is called by the backend
 function handleEsc(e) {
     // First try to hide active popup
     if (activePopup != null) {
         hidePopup(activePopup);
-        return;
+        return true;
     }
 
     // then collapsible
     var activeCollapsible = $(".ui-collapsible-control-group:visible");
     if (activeCollapsible.length > 0) {
         activeCollapsible.hide();
-        return;
+        return true;
     }
 
     // then return page to first
     if (activePage != null) {
-        if (activePage != $("#first")) {
+        if (activePage.attr("id") != "first") {
             changePage($("#first"));
-            return;
+            return true;
         }
     }
+    return false; // Not handled
 }

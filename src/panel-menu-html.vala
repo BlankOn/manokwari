@@ -62,6 +62,16 @@ public class PanelMenuHTML: WebView {
         setPosition (-1 * get_window ().get_width ());
     }
 
+    public bool handleEsc() {
+        unowned JSCore.Context context = get_focused_frame ().get_global_context();
+        var s = new String.with_utf8_c_string ("handleEsc()");
+        var r = context.evaluate_script (s, null, null, 0, null);
+        if (r.is_boolean (context)) {
+            return r.to_boolean (context);
+        }
+
+        return false;
+    }
 
 
 }

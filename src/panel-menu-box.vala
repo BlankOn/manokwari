@@ -54,7 +54,11 @@ public class PanelMenuBox : PanelAbstractWindow {
         });
 
         key_press_event.connect ((e) => {
-            if (Gdk.keyval_name(e.keyval) == "Print") {
+            if (Gdk.keyval_name(e.keyval) == "Escape") {
+                if (view.handleEsc () == false) {
+                    dismiss ();
+                }
+            } else if (Gdk.keyval_name(e.keyval) == "Print") {
                 if (Utils.print_screen () == false) {
                     stdout.printf ("Unable to take screenshot\n");
                 }
