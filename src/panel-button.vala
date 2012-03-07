@@ -5,8 +5,6 @@ using GMenu;
 public class PanelButtonWindow : PanelAbstractWindow {
 
     private PanelMenuBox menu_box;
-    private Image image;
-
     public signal void menu_shown ();
 
     public PanelButtonWindow() {
@@ -24,10 +22,6 @@ public class PanelButtonWindow : PanelAbstractWindow {
         override_background_color(StateFlags.NORMAL, c);
         set_app_paintable(true);
         
-        image = new Image.from_icon_name("distributor-logo", IconSize.LARGE_TOOLBAR);
-        //add (image);
-
-        //show ();
         PanelScreen.move_window (this, Gdk.Gravity.NORTH_WEST);
 
         var hotkey = new PanelHotkey ();
