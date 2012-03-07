@@ -726,7 +726,8 @@ function propagateMouseDown(e) {
 function toggleCollapsible(e) {
     var g = $(this).parent().find(".ui-collapsible-control-group");
     if (g.css('display') == "none") {
-        $(this).parent().parent().find(".ui-collapsible-control-group").hide();
+        var shown = $(this).parent().parent().find(".ui-collapsible-control-group:visible").hide();
+        shown.parent().find(".ui-expandable-icon").removeClass("ui-expandable-icon-expanded")
         g.show();
         var h = g.height();
         if (h == 0) {
@@ -734,9 +735,11 @@ function toggleCollapsible(e) {
             h = g.height();
         }
         g.height(h);
+        g.parent().find(".ui-expandable-icon").addClass("ui-expandable-icon-expanded")
     } else {
         g.height(0);
         g.hide();
+        g.parent().find(".ui-expandable-icon").removeClass("ui-expandable-icon-expanded")
     }
 }
 
@@ -785,6 +788,7 @@ function refreshStyle(e) {
             // Give different styles for top and bottom items
             h.first().addClass("ui-collapsible-header-top");
             h.last().addClass("ui-collapsible-header-bottom");
+            h.append("<div class='ui-expandable-icon'></div>");
             for (var i = 0; i < e.length; i ++) {
                 console.log(e[i].outerHTML);
             }
