@@ -40,10 +40,6 @@ public class PanelButtonWindow : PanelAbstractWindow {
         var w = new PanelWindowHost ();
         w.show();
 
-        // Clock
-        var clock = new ClockWindow ();
-        clock.show ();
-
         // SIGNALS
         w.menu_clicked.connect (() => {
             if (menu_box.visible) {

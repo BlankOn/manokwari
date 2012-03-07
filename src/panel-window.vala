@@ -307,6 +307,7 @@ public class PanelWindowEntry : DrawingArea {
 
 public class PanelWindowHost : PanelAbstractWindow {
     private Image image;
+    private PanelClock clock;
     private bool active;
     private HBox box;
     private PanelTray tray;
@@ -356,7 +357,19 @@ public class PanelWindowHost : PanelAbstractWindow {
         pager_entry.set_name ("PAGER");
         pager_entry.show ();
 
+        var clock = new PanelClock ();
+        clock.show ();
+
+        var a = new Alignment(0, 0.5f, 0, 0);
+        a.add (clock);
+        a.show ();
+
+        var clock_event = new EventBox ();
+        clock_event.show_all ();
+        clock_event.add (a);
+
         outer_box.pack_end (pager_entry, false, false, 1);
+        outer_box.pack_end (clock_event, false, false, 0);
         outer_box.pack_end (tray, false, false, 0);
         outer_box.pack_start (event_box, false, false, 0);
         outer_box.pack_start (box, true, true, 0);
@@ -441,6 +454,24 @@ public class PanelWindowHost : PanelAbstractWindow {
             menu_clicked ();
             return false;
         });
+
+        clock_event.button_release_event.connect(() => {
+            stdout.printf("xxxx\n");
+            var info = new DesktopAppInfo.from_filename ("/usr/share/applications/gnome-datetime-panel.desktop");
+            try {
+                info.launch (null, new AppLaunchContext ());
+            } catch (Error e) {
+                var dialog = new MessageDialog (null, DialogFlags.DESTROY_WITH_PARENT, MessageType.ERROR, ButtonsType.CLOSE, _("Unable to launch date-time applet: %s"), e.message);
+                dialog.response.connect (() => {
+                            dialog.destroy ();
+                        });
+                dialog.show ();
+            }
+
+            return true;
+        });
+
+
     }
 
     private new void resize (Size size) {
