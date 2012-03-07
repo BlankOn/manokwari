@@ -405,7 +405,6 @@ function reset() {
         transition: "none"
     });
     hidePopup();
-    $(".ui-collapsible-control-group").hide();
     $("#first").addClass("ui-animation-slide");
 }
 
@@ -617,6 +616,7 @@ function changePage(page) {
         return;
     }
 
+    $(".ui-collapsible-control-group").hide();
     var withAnimation = true;
 
     if (arguments.length == 2) {
