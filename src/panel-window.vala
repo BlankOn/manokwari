@@ -317,6 +317,7 @@ public class PanelWindowHost : PanelAbstractWindow {
     public signal void windows_gone (); // Emitted when all windows have gone, either closed or minimized
     public signal void windows_visible (); // Emitted when there is at least one window visible
     public signal void all_windows_visible (); // Emitted when all normal windows visible
+    public signal void dialog_opened (); // Emitted when a dialog is opened
 
     public signal void activated (); // Emitted when the window host is activated (the size is getting bigger)
 
@@ -369,13 +370,13 @@ public class PanelWindowHost : PanelAbstractWindow {
                 w.activate (get_current_event_time());
                 update (true);
 
-                w.state_changed.connect(() => {
-                    update (true);
-                });
-
                 w.workspace_changed.connect(() => {
                     update (true);
                 });
+            }
+
+            if (w.get_window_type () == Wnck.WindowType.DIALOG) {
+                dialog_opened ();
             }
         });
         screen.window_closed.connect ((w) => {
