@@ -615,7 +615,10 @@ function changePage(page) {
         return;
     }
 
-    $(".ui-collapsible-control-group").hide();
+    var cg = $(".ui-collapsible-control-group");
+    cg.hide();
+    cg.parent().find(".ui-expandable-icon").removeClass("ui-expandable-icon-expanded")
+
     var withAnimation = true;
 
     if (arguments.length == 2) {
