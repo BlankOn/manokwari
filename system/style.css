@@ -23,6 +23,7 @@ body {
 html {
     overflow: hidden;
     -webkit-user-select: none;
+    cursor: default;
 }
 
 .ui-mobile-viewport {
