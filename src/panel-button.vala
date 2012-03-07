@@ -25,9 +25,9 @@ public class PanelButtonWindow : PanelAbstractWindow {
         set_app_paintable(true);
         
         image = new Image.from_icon_name("distributor-logo", IconSize.LARGE_TOOLBAR);
-        add (image);
+        //add (image);
 
-        show ();
+        //show ();
         PanelScreen.move_window (this, Gdk.Gravity.NORTH_WEST);
 
         var hotkey = new PanelHotkey ();
@@ -51,15 +51,13 @@ public class PanelButtonWindow : PanelAbstractWindow {
         clock.show ();
 
         // SIGNALS
-        button_press_event.connect (() => {
+        w.menu_clicked.connect (() => {
             if (menu_box.visible) {
                 menu_box.hide ();
             } else {
                 // Otherwise we want to show it
                 show_menu_box ();
             }
-
-           return true;
         });
 
         screen_size_changed.connect (() =>  {

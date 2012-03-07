@@ -211,7 +211,7 @@ public class PanelWindowEntry : DrawingArea {
                 }
                 sync_window_states ();
             }
-            return true; 
+            return false; 
         });
 
         drag_motion.connect (() => {
@@ -306,6 +306,7 @@ public class PanelWindowEntry : DrawingArea {
 }
 
 public class PanelWindowHost : PanelAbstractWindow {
+    private Image image;
     private bool active;
     private HBox box;
     private PanelTray tray;
@@ -318,11 +319,12 @@ public class PanelWindowHost : PanelAbstractWindow {
     public signal void windows_visible (); // Emitted when there is at least one window visible
     public signal void all_windows_visible (); // Emitted when all normal windows visible
     public signal void dialog_opened (); // Emitted when a dialog is opened
+    public signal void menu_clicked (); // Emitted when the menu is clicked
 
     public signal void activated (); // Emitted when the window host is activated (the size is getting bigger)
 
     enum Size {
-        SMALL = 12,
+        SMALL = 22,
         BIG = 34
     }
 
@@ -332,6 +334,11 @@ public class PanelWindowHost : PanelAbstractWindow {
     }
 
     public PanelWindowHost () {
+        image = new Image.from_icon_name("distributor-logo", IconSize.LARGE_TOOLBAR);
+        var event_box = new EventBox();
+        event_box.add (image);
+        event_box.show_all ();
+
         entry_map = new HashMap <Wnck.Window, PanelWindowEntry> (); 
 
         tray = new PanelTray ();
@@ -351,7 +358,8 @@ public class PanelWindowHost : PanelAbstractWindow {
 
         outer_box.pack_end (pager_entry, false, false, 1);
         outer_box.pack_end (tray, false, false, 0);
-        outer_box.pack_start (box, true, true, 40);
+        outer_box.pack_start (event_box, false, false, 0);
+        outer_box.pack_start (box, true, true, 0);
         outer_box.show ();
         box.show();
 
@@ -428,6 +436,11 @@ public class PanelWindowHost : PanelAbstractWindow {
             }
             return false;
         });
+
+        event_box.button_press_event.connect (() => {
+            menu_clicked ();
+            return false;
+        });
     }
 
     private new void resize (Size size) {
@@ -441,6 +454,7 @@ public class PanelWindowHost : PanelAbstractWindow {
         foreach (PanelWindowEntry e in entry_map.values) {
             e.draw_info = draw_info;
         }
+        image.set_pixel_size (size);
         reposition();
     }
 
