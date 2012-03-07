@@ -1,21 +1,36 @@
 using Gtk;
+using JSCore;
+
 [DBus (name = "org.gnome.SessionManager")]
-interface SessionManager : Object {
-    public abstract string register_client (string app_id, string startup_id) throws IOError;
+interface SessionManager : GLib.Object {
+    public abstract void register_client (string app_id, string startup_id, out ObjectPath path) throws IOError;
     public abstract void shutdown () throws IOError;
     public abstract void logout (uint32 mode) throws IOError;
     public abstract bool can_shutdown () throws IOError;
 }
 
+[DBus (name = "org.gnome.SessionManager.ClientPrivate")]
+interface ClientPrivate: GLib.Object {
+    public abstract void end_session_response(bool ok, string reason) throws IOError;
+    public signal void query_end_session(int flags);
+    public signal void end_session(int flags);
+}
+
+
 public class PanelSessionManager {
+    static ObjectPath session_id = null;
     private SessionManager session = null;
+    private ClientPrivate client = null;
 
     public PanelSessionManager () {
         try {
             session =  Bus.get_proxy_sync (BusType.SESSION,
                                            "org.gnome.SessionManager", "/org/gnome/SessionManager");
         } catch (Error e) {
-            stdout.printf ("Unable to connect to session manager\n");
+            stderr.printf ("Unable to connect to session manager\n");
+        }
+        if (session_id == null) {
+            register();
         }
     }
 
@@ -23,7 +38,19 @@ public class PanelSessionManager {
          if (session != null) {
             try {
                 var id = GLib.Environment.get_variable("DESKTOP_AUTOSTART_ID");
-                session.register_client ("blankon-panel", id);
+                if (id != null) {
+                    session.register_client ("blankon-panel", id, out session_id);
+                    client =  Bus.get_proxy_sync (BusType.SESSION,
+                                                   "org.gnome.SessionManager", session_id);
+                    client.end_session.connect((flags)=> {
+                        client.end_session_response(true, "");
+                        Gtk.main_quit();
+                    });
+                    client.query_end_session.connect((flags)=> {
+                        client.end_session_response(true, "");
+                    });
+
+                }
             } catch (Error e) {
                 throw e;
             }
@@ -59,4 +86,104 @@ public class PanelSessionManager {
             return false;
         }
     }
+
+    public static JSCore.Object js_constructor (Context ctx,
+            JSCore.Object constructor,
+            JSCore.Value[] arguments,
+            out JSCore.Value exception) {
+
+        var c = new Class (js_class);
+        var o = new JSCore.Object (ctx, c, null);
+        var s = new String.with_utf8_c_string ("canShutdown");
+        var f = new JSCore.Object.function_with_callback (ctx, s, js_can_shutdown);
+        o.set_property (ctx, s, f, 0, null);
+        s = new String.with_utf8_c_string ("logout");
+        f = new JSCore.Object.function_with_callback (ctx, s, js_logout);
+        o.set_property (ctx, s, f, 0, null);
+        s = new String.with_utf8_c_string ("shutdown");
+        f = new JSCore.Object.function_with_callback (ctx, s, js_shutdown);
+        o.set_property (ctx, s, f, 0, null);
+
+        PanelSessionManager* i = new PanelSessionManager ();
+        o.set_private (i);
+        return o;
+    }
+
+    public static JSCore.Value js_can_shutdown (Context ctx,
+            JSCore.Object function,
+            JSCore.Object thisObject,
+            JSCore.Value[] arguments,
+
+            out JSCore.Value exception) {
+
+        var i = thisObject.get_private() as PanelSessionManager; 
+        if (i != null) {
+            return new JSCore.Value.boolean (ctx, i.can_shutdown()); 
+        }
+        return new JSCore.Value.undefined (ctx);
+    }
+
+    public static JSCore.Value js_shutdown (Context ctx,
+            JSCore.Object function,
+            JSCore.Object thisObject,
+            JSCore.Value[] arguments,
+
+            out JSCore.Value exception) {
+
+        var i = thisObject.get_private() as PanelSessionManager; 
+        if (i != null) {
+            i.shutdown(); 
+        }
+        return new JSCore.Value.undefined (ctx);
+    }
+
+    public static JSCore.Value js_logout (Context ctx,
+            JSCore.Object function,
+            JSCore.Object thisObject,
+            JSCore.Value[] arguments,
+
+            out JSCore.Value exception) {
+
+        var i = thisObject.get_private() as PanelSessionManager; 
+        if (i != null) {
+            i.logout(); 
+        }
+        return new JSCore.Value.undefined (ctx);
+    }
+
+
+    static const ClassDefinition js_class = {
+        0,
+        ClassAttribute.None,
+        "SessionManager",
+        null,
+
+        null,
+        null,
+
+        null,
+        null,
+
+        null,
+        null,
+        null,
+        null,
+
+        null,
+        null,
+        js_constructor,
+        null,
+        null
+    };
+
+
+    public static void setup_js_class (GlobalContext context) {
+        var c = new Class (js_class);
+        var o = new JSCore.Object (context, c, context);
+        var g = context.get_global_object ();
+        var s = new String.with_utf8_c_string ("SessionManager");
+        g.set_property (context, s, o, PropertyAttribute.None, null);
+    }
+
+
 }

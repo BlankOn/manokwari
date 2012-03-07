@@ -25,12 +25,15 @@ int main (string[] args) {
     try {
         XDGDBus session =  Bus.get_proxy_sync (BusType.SESSION, 
             "org.freedesktop.DBus", "/org/freedesktop/DBus");
-        var r = session.request_name ("org.gnome.Panel", 
-            BusNameOwnerFlags.ALLOW_REPLACEMENT | BusNameOwnerFlags.REPLACE);
 
-        if (r != 1 || // DBus.RequestNameReply.PRIMARY_OWNER
-            r != 4) { // DBus.RequestNameReply.ALREADYY_OWNER
-            stdout.printf ("Panel registration failed: %d\n", (int) r);
+        if (session != null) {
+            var r = session.request_name ("org.gnome.Panel", 
+                BusNameOwnerFlags.ALLOW_REPLACEMENT | BusNameOwnerFlags.REPLACE);
+
+            if (r != 1 || // DBus.RequestNameReply.PRIMARY_OWNER
+                r != 4) { // DBus.RequestNameReply.ALREADYY_OWNER
+                stdout.printf ("Panel registration failed: %d\n", (int) r);
+            }
         }
     } catch (Error e) {
         stdout.printf ("Unable to claim Panel to gnome-session");

@@ -1,7 +1,12 @@
 using Gtk;
 using GLib;
+using JSCore;
 
-public class PanelPlaces : PanelMenuContent {
+public class PanelPlaces {
+    StringBuilder json;
+    static Context* jsContext;
+    JSCore.Object* jsObject;
+
     private VolumeMonitor vol_monitor;
     private File bookmark_file;
     private FileMonitor bookmark_monitor;
@@ -10,7 +15,8 @@ public class PanelPlaces : PanelMenuContent {
     public signal void launching ();
 
     public PanelPlaces () {
-        base (_("Places"));
+        json = new StringBuilder ();
+
         vol_monitor = VolumeMonitor.get ();
         bookmark_file = File.new_for_path (Environment.get_home_dir () + "/.gtk-bookmarks");
         try {
@@ -20,7 +26,6 @@ public class PanelPlaces : PanelMenuContent {
         }
 
         init_contents ();
-        show_all ();
 
         vol_monitor.mount_added.connect (() => {
             reset ();
@@ -39,48 +44,66 @@ public class PanelPlaces : PanelMenuContent {
 
     public void reset () {
 
-        foreach (unowned Widget w in get_children ()) {
-            w.destroy ();
-        }
-
+        json.assign ("");
         init_contents ();
-        show_all ();
+
+        if (jsContext != null && jsObject != null) {
+
+            var s = new String.with_utf8_c_string ("updateCallback");
+            var v = jsObject->get_property (jsContext, s, null);
+            if (v != null) {
+                s = v.to_string_copy (jsContext, null);
+                jsContext->evaluate_script (s, null, null, 0, null);
+            }
+        }
     }
 
     private void init_contents () {
+        json.append("[");
         setup_home ();
         setup_special_dirs ();
         setup_mounts ();
         setup_network ();
+        if (json.str [json.len - 1] == ',') {
+            json.erase (json.len - 1, 1); // Remove trailing comma
+        }
+        json.append("]");
     }
 
     private void setup_home () {
-        var home = new PanelItem.with_label ( _("Home") );
-        home.set_image ("gtk-home");
-        pack_start (home, false, false, 0);
+        var f = File.new_for_path (Environment.get_home_dir ());
+        var s = "{icon: '%s', name: '%s', uri: '%s'},".printf(
+                    Utils.get_icon_path("gtk-home"),
+                    _("Home"),
+                    f.get_uri ()
+                );
 
-        home.activate.connect (() => {
-            show_uri_from_path (Environment.get_home_dir ());
-        });
+        json.append (s);
     }
 
     private void setup_special_dirs () {
-        insert_separator ();
+        json.append("{name: '%s', isHeader: true},".printf(
+                _("Bookmarks")
+            ));
+
         for (int i = UserDirectory.DESKTOP; i < UserDirectory.N_DIRECTORIES; i ++) {
             var path = Environment.get_user_special_dir ((UserDirectory) i);
             if (path == null)
                 continue;
 
-            var dir = new PanelItem.with_label (Filename.display_basename(path));
+            var icon = "gtk-directory";
             if (i == (int) UserDirectory.DESKTOP)
-                dir.set_image ("desktop");
-            else
-                dir.set_image ("gtk-directory");
-            pack_start (dir, false, false, 0);
+                icon = "desktop";
 
-            dir.activate.connect (() => {
-                show_uri_from_path (path);
-            });
+            var f = File.new_for_path (path);
+            var s = "{icon: '%s', name: '%s', uri: '%s'},".printf(
+                        Utils.get_icon_path(icon),
+                        Filename.display_basename(path),
+                        f.get_uri ()
+                     );
+
+            json.append (s);
+
         }
 
 
@@ -91,17 +114,12 @@ public class PanelPlaces : PanelMenuContent {
                 while ((line = input.read_line (null)) != null) {
                     var fields = line.split (" ");
                     if (fields.length == 2) {
-                        var item = new PanelItem.with_label (fields [1]);
-                        item.set_image ("gtk-directory");
-                        pack_start (item, false, false, 0);
-                        item.activate.connect (() => {
-                            try {
-                                show_uri (Gdk.Screen.get_default (), fields [0], get_current_event_time());
-                                launching ();
-                            } catch (Error e) {
-                                show_dialog (_("Error opening '%s': %s").printf(fields [1], e.message));
-                            }
-                        });
+                        var s = "{icon: '%s', name: '%s', uri: '%s'},".printf(
+                                    Utils.get_icon_path("gtk-directory"),
+                                    fields [1],
+                                    fields [0]
+                                 );
+                        json.append (s);
                     }
                 }
                 input.close ();
@@ -122,70 +140,132 @@ public class PanelPlaces : PanelMenuContent {
                 continue;
 
             if (first_entry == false) {
-                insert_separator ();
+                json.append("{name: '%s', isHeader: true},".printf(
+                    _("Mounts")
+                ));
                 first_entry = true;
             }
-            var item = new PanelItem.with_label (mount.get_name ());
-            item.set_image_from_icon (mount.get_icon ());
-            pack_start (item, false, false, 0);
-            item.activate.connect (() => {
-                try {
-                    show_uri (Gdk.Screen.get_default (), mount.get_root().get_uri (), get_current_event_time());
-                    launching ();
-                } catch (Error e) {
-                    error ();
-                    show_dialog (_("Error opening mount point '%s': %s").printf (mount.get_root ().get_uri (), e.message));
-                }
-            });
+
+            var s = "{icon: '%s', name: '%s', uri: '%s'},".printf(
+                        Utils.get_icon_path(mount.get_icon ().to_string ()),
+                        mount.get_name (),
+                        mount.get_root ().get_uri ()
+                     );
+            json.append (s);
         }
     }
 
     private void setup_network () {
-        insert_separator ();
-        var network = new PanelItem.with_label (_("Network"));
-        network.set_image ("gtk-network");
-        pack_start (network, false, false, 0);
-        network.activate.connect (() => {
-            try {
-                show_uri (Gdk.Screen.get_default (), "network:///", get_current_event_time());
-                launching ();
-            } catch (Error e) {
-                error ();
-                show_dialog (_("Error opening Network: %s").printf (e.message));
-            }
-        });
-        var item = new PanelItem.with_label (_("Connect to server..."));
-        item.set_image ("gnome-fs-network");
-        pack_start (item, false, false, 0);
-        item.activate.connect (() => {
-            try {
-                var app = AppInfo.create_from_commandline ("nautilus-connect-server", "Nautilus", AppInfoCreateFlags.NONE);
-                app.launch (null, null);
-                launching();
-            } catch (Error e) {
-                error ();
-                show_dialog (_("Error opening Network: %s").printf (e.message));
-            }
-        });
+        json.append("{name: '%s', isHeader: true},".printf(
+            _("Networks")
+        ));
+
+        var s = "{icon: '%s', name: '%s', uri: '%s'},".printf(
+                    Utils.get_icon_path("gtk-network"),
+                    _("My network"),
+                   "network:///" 
+                 );
+        json.append (s);
+
+        s = "{icon: '%s', name: '%s', command: '%s'},".printf(
+                    Utils.get_icon_path("gnome-fs-network"),
+                    _("Connect to server..."),
+                   "nautilus-connect-server" 
+                 );
+        json.append (s);
 
     }
 
-    private void show_uri_from_path (string? path) {
-        var f = File.new_for_path (path);
-        try {
-            show_uri (Gdk.Screen.get_default (), f.get_uri (), get_current_event_time());
-            launching();
-        } catch (Error e) {
-            error ();
-            show_dialog (_("Error opening '%s': %s").printf (path, e.message));
+    public static JSCore.Object js_constructor (Context ctx,
+            JSCore.Object constructor,
+            JSCore.Value[] arguments,
+            out JSCore.Value exception) {
+
+        var c = new Class (js_class);
+        var o = new JSCore.Object (ctx, c, null);
+        var s = new String.with_utf8_c_string ("updateCallback");
+        var f = new JSCore.Object.function_with_callback (ctx, s, js_set_update_callback);
+        o.set_property (ctx, s, f, 0, null);
+
+
+        s = new String.with_utf8_c_string ("update");
+        f = new JSCore.Object.function_with_callback (ctx, s, js_update);
+        o.set_property (ctx, s, f, 0, null);
+        
+        PanelPlaces* i = new PanelPlaces ();
+        o.set_private (i);
+        i->jsObject = o;
+        return o;
+    }
+
+    public static JSCore.Value js_set_update_callback (Context ctx,
+            JSCore.Object function,
+            JSCore.Object thisObject,
+            JSCore.Value[] arguments,
+
+            out JSCore.Value exception) {
+
+        var i = thisObject.get_private() as PanelPlaces; 
+        if (i != null && arguments.length == 1) {
+            var s = new String.with_utf8_c_string ("updateCallback");
+            thisObject.set_property (ctx, s, arguments[0], 0, null);
         }
+
+        return new JSCore.Value.undefined (ctx);
     }
 
-    private void show_dialog (string message) {
-        var dialog = new MessageDialog (null, DialogFlags.DESTROY_WITH_PARENT, MessageType.ERROR, ButtonsType.CLOSE, "%s", message);
-        dialog.response.connect (() => {
-            dialog.destroy ();
-        });
-        dialog.show ();
+    public static JSCore.Value js_update (Context ctx,
+            JSCore.Object function,
+            JSCore.Object thisObject,
+            JSCore.Value[] arguments,
+
+            out JSCore.Value exception) {
+
+        var i = thisObject.get_private() as PanelPlaces; 
+        if (i != null) {
+            var result = i.get_json();
+            var s = new String.with_utf8_c_string (result);
+            return ctx.evaluate_script (s, null, null, 0, null);
+        }
+        return new JSCore.Value.undefined (ctx);
     }
+
+
+    static const ClassDefinition js_class = {
+        0,
+        ClassAttribute.None,
+        "Places",
+        null,
+
+        null,
+        null,
+
+        null,
+        null,
+
+        null,
+        null,
+        null,
+        null,
+
+        null,
+        null,
+        js_constructor,
+        null,
+        null
+    };
+
+    public static void setup_js_class (GlobalContext context) {
+        jsContext = context;
+        var c = new Class (js_class);
+        var o = new JSCore.Object (context, c, context);
+        var g = context.get_global_object ();
+        var s = new String.with_utf8_c_string ("Places");
+        g.set_property (context, s, o, PropertyAttribute.None, null);
+    }
+
+    string get_json () {
+        return json.str;
+    }
+
 }

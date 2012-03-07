@@ -10,7 +10,7 @@ public class PanelButtonWindow : PanelAbstractWindow {
     public signal void menu_shown ();
 
     public PanelButtonWindow() {
-        set_type_hint (Gdk.WindowTypeHint.DOCK);
+        set_type_hint (Gdk.WindowTypeHint.UTILITY);
         menu_box = new PanelMenuBox();
         set_visual (this.screen.get_rgba_visual ());
 
@@ -53,23 +53,6 @@ public class PanelButtonWindow : PanelAbstractWindow {
         // SIGNALS
         button_press_event.connect (() => {
             if (menu_box.visible) {
-                // If menu_box is visible and showing first column, 
-                // then we want it to be closed when we got here.
-
-                // But refuse to close it when there's no windows around
-                if (menu_box.get_active_column () == 0 
-                    && w.no_windows_around ()) {
-                    return false;
-                }
-                
-                // If it's showing second column, just go back to 
-                // first column
-                if (menu_box.get_active_column () == 1) {
-                    menu_box.slide_left ();
-                    return true;
-                }
-
-                // Close it otherwise
                 menu_box.hide ();
             } else {
                 // Otherwise we want to show it
@@ -93,11 +76,34 @@ public class PanelButtonWindow : PanelAbstractWindow {
             return false;
         });
 
-        w.windows_visible.connect (() => {
-            if (menu_box.visible) 
-                menu_box.hide ();
+        w.dialog_opened.connect (() => {
+            if (menu_box.visible) {
+                menu_box.try_hide ();
+            }
         });
 
+        w.windows_visible.connect (() => {
+            if (menu_box.visible) {
+                menu_box.try_hide ();
+            }
+        });
+
+        w.activated.connect (() => {
+            get_window ().raise ();
+        });
+        
+        map_event.connect (() => {
+            set_keep_above(true);
+            return true;
+        });
+
+        menu_box.shown.connect (() => {
+            hide ();
+        });
+
+        menu_box.dismissed.connect (() => {
+            show ();
+        });
     }
 
 

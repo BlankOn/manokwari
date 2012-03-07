@@ -1,0 +1,262 @@
+body {
+    margin: 0px;
+    padding: 0px;
+    background-color: transparent;
+    font-family: Cantarell, sans-serif;
+}
+
+.ui-page, .ui-content {
+    color: #aaaaaa;
+    background-color: #101010;
+    margin: 0px;
+    padding: 0px;
+}
+
+.ui-page {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+html {
+    overflow: hidden;
+    -webkit-user-select: none;
+    cursor: default;
+}
+
+.ui-mobile-viewport {
+}
+
+.ui-animation-slide {
+    -webkit-transition: left 0.3s ease-out;
+}
+
+.ui-listview {
+    list-style:none;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    vertical-align: middle;
+    padding: 0px;
+}
+
+
+.ui-content {
+    margin: 5px;
+}
+
+.ui-listview-item-icon {
+    vertical-align: middle;
+    margin-right: 10px;
+}
+
+.ui-listview-item-text {
+    vertical-align: middle;
+    text-align: left; 
+}
+
+.ui-listview-item:hover {
+    color: white;
+    text-shadow: 0 1px 1px #222;
+    background-image: -webkit-linear-gradient(#b0b0b0 /*{e-bup-background-start}*/, #909090 /*{e-bup-background-end}*/);
+}
+
+.ui-listview-item {
+    background-image: -webkit-linear-gradient(#b0b0b0 /*{e-bup-background-start}*/, #a0a0a0 /*{e-bup-background-end}*/);
+    color: black;
+    vertical-align: middle;
+    display: block;
+    min-height: 30px;
+    text-align: left; 
+    border-radius: inherit;
+    cursor: pointer;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 5px;
+    margin: 0px;
+    white-space: nowrap;
+}
+
+
+.ui-listview-header {
+    border-radius: inherit;
+    color: white;
+    text-align: center;
+    background-image: -webkit-linear-gradient(#505050 /*{e-bup-background-start}*/, #101010 /*{e-bup-background-end}*/);
+
+}
+
+.ui-listview-first-child {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.ui-listview-last-child {
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.ui-link {
+    text-decoration: none;
+    color: inherit; 
+    vertical-align: middle;
+}
+
+
+span {
+    vertical-align: middle;
+}
+
+.ui-collapsible {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.ui-collapsible-header {
+    margin: 0px;
+    padding: 10px;
+    display: block;
+    color: black;
+    background-image: -webkit-linear-gradient(#d0d0d0 /*{e-bup-background-start}*/, #b0b0b0 /*{e-bup-background-end}*/);
+    cursor: pointer;
+}
+
+
+.ui-collapsible-header:hover {
+    color: white;
+    text-shadow: 0 1px 1px #222;
+    background-image: -webkit-linear-gradient(#c0c0c0 /*{e-bup-background-start}*/, #b0b0b0 /*{e-bup-background-end}*/);
+}
+
+.ui-collapsible-header-top {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.ui-collapsible-header-bottom {
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.ui-collapsible-control-group {
+    overflow: hidden;
+    margin: 10px;
+    -webkit-transition: height 0.2s ease-out;
+}
+
+.ui-back-button {
+    background-image: url("/usr/share/icons/gnome/24x24/actions/back.png");
+    background-repeat: no-repeat;
+    color: red;
+    width: 24px;
+    height: 24px; 
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+}
+
+.ui-header {
+    color: white;
+    font-size: 20px;
+    margin-left: 20px;
+}
+
+.ui-button {
+    display: block;
+    color: white;
+    text-align:center;
+    padding: 5px;
+    font-weight: bold;
+    line-height: 1;
+    border-radius: 10px;
+    background-image: -webkit-linear-gradient(#505050 /*{e-bup-background-start}*/, #000000 /*{e-bup-background-end}*/);
+    text-shadow: 0 -1px 1px #222;
+    border-bottom: 1px solid #222;
+    margin-bottom: 5px;
+}
+
+
+.ui-button:hover {
+    background-image: -webkit-linear-gradient(#707070 /*{e-bup-background-start}*/, #000000 /*{e-bup-background-end}*/);
+}
+
+.ui-popup {
+    height: 0;
+    border-radius: 10px;
+    padding-bottom: 5px;
+    -webkit-transition: height 0.5s ease-out;
+}
+
+#popup-pool {
+    display: none;
+}
+
+#userAccount {
+    position: absolute;
+    bottom: 0;
+    height: 60px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    width: 300; 
+    margin-left: 5px;
+    margin-right: 5px;
+    padding: 5px;
+
+    background-image: -webkit-linear-gradient(#505050 /*{e-bup-background-start}*/, #101010 /*{e-bup-background-end}*/);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space:nowrap; 
+    cursor: pointer;
+}
+
+#userAccount:hover {
+    background-image: -webkit-linear-gradient(#707070 /*{e-bup-background-start}*/, #101010 /*{e-bup-background-end}*/);
+}
+
+#userAccount img {
+    border-radius: 5px;
+    float: left;
+    width: 48;
+    height: 48;
+    margin-right: 5px;
+}
+
+#userAccount h1 {
+    font-size: 20px;
+    color: white;
+    margin: 0px;
+}
+
+#userAccount span {
+    font-size: 12px;
+}
+
+::-webkit-scrollbar {
+    width: 12px;
+    }
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: rgba(128,128,128,0.8); 
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+}
+
+.ui-expandable-icon {
+    background-image: url("/usr/share/icons/gnome/22x22/actions/stock_right.png");
+    background-repeat: no-repeat;
+    width: 22px;
+    height: 22px;
+    float: right;
+}
+
+.ui-expandable-icon-expanded {
+    background-image: url("/usr/share/icons/gnome/22x22/actions/stock_down.png");
+}

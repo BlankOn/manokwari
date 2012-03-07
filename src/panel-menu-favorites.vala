@@ -2,12 +2,65 @@ using GMenu;
 using Gee;
 using Gtk;
 using GLib;
+using JSCore;
 
 public class Favorites {
+    StringBuilder json; // use StringBuilder to avoid appending immutable strings
+    static Context* jsContext;
+    JSCore.Object* jsObject;
 
     public signal void changed ();
-    
+   
     public Favorites () {
+        json = new StringBuilder ();
+        monitor ();
+        populate ();
+
+        changed.connect (() => {
+            json.assign ("");
+            populate ();
+
+            if (jsContext != null && jsObject != null) {
+
+                var s = new String.with_utf8_c_string ("updateCallback");
+                var v = jsObject->get_property (jsContext, s, null);
+                if (v != null) {
+                    s = v.to_string_copy (jsContext, null);
+                    jsContext->evaluate_script (s, null, null, 0, null);
+                }
+            }
+        });
+
+    }
+
+    private void populate () {
+        var list = get_list ();
+
+        json.append("[");
+        json.append("{name: '%s', isHeader: true},".printf(
+                _("Favorites")
+            ));
+        foreach (string item in list) {
+            if (item.get_char (0) == '-') // Don't display blacklisted entries
+                continue;
+
+            var info = new DesktopAppInfo.from_filename (item);
+            var s = "{icon: '%s', name: '%s', desktop: '%s'},".printf(
+                        Utils.get_icon_path(info.get_icon ().to_string().replace(".svg", "").replace(".png", "").replace(".xpm","")),
+                        info.get_display_name (),
+                        item
+                    );
+
+            json.append (s);
+        }
+        if (json.str [json.len - 1] == ',') {
+            json.erase (json.len - 1, 1); // Remove trailing comma
+        }
+        json.append("]");
+    }
+
+    string get_json () {
+        return json.str;
     }
 
     private static File get_custom_favorites_file () {
@@ -161,90 +214,135 @@ public class Favorites {
         }
         return list;
     }
+
+    public static JSCore.Object js_constructor (Context ctx,
+            JSCore.Object constructor,
+            JSCore.Value[] arguments,
+            out JSCore.Value exception) {
+
+        var c = new Class (js_class);
+        var o = new JSCore.Object (ctx, c, null);
+        var s = new String.with_utf8_c_string ("updateCallback");
+        var f = new JSCore.Object.function_with_callback (ctx, s, js_set_update_callback);
+        o.set_property (ctx, s, f, 0, null);
+
+
+        s = new String.with_utf8_c_string ("update");
+        f = new JSCore.Object.function_with_callback (ctx, s, js_update);
+        o.set_property (ctx, s, f, 0, null);
+        
+        Favorites* i = new Favorites ();
+        o.set_private (i);
+        i->jsObject = o;
+        return o;
+    }
+
+    public static JSCore.Value js_set_update_callback (Context ctx,
+            JSCore.Object function,
+            JSCore.Object thisObject,
+            JSCore.Value[] arguments,
+
+            out JSCore.Value exception) {
+
+        var i = thisObject.get_private() as Favorites; 
+        if (i != null && arguments.length == 1) {
+            var s = new String.with_utf8_c_string ("updateCallback");
+            thisObject.set_property (ctx, s, arguments[0], 0, null);
+        }
+
+        return new JSCore.Value.undefined (ctx);
+    }
+
+    public static JSCore.Value js_update (Context ctx,
+            JSCore.Object function,
+            JSCore.Object thisObject,
+            JSCore.Value[] arguments,
+
+            out JSCore.Value exception) {
+
+        var i = thisObject.get_private() as Favorites; 
+        if (i != null) {
+            var result = i.get_json();
+            var s = new String.with_utf8_c_string (result);
+            return ctx.evaluate_script (s, null, null, 0, null);
+        }
+        return new JSCore.Value.undefined (ctx);
+    }
+
+    public static JSCore.Value js_add (Context ctx,
+            JSCore.Object function,
+            JSCore.Object thisObject,
+            JSCore.Value[] arguments,
+            out JSCore.Value exception) {
+
+        if (arguments.length == 1) {
+            var s = arguments [0].to_string_copy (ctx, null);
+            char buffer[1024];
+            s.get_utf8_c_string (buffer, buffer.length);
+            add ((string) buffer);
+        }
+
+        return new JSCore.Value.undefined (ctx);
+    }
+
+    public static JSCore.Value js_remove (Context ctx,
+            JSCore.Object function,
+            JSCore.Object thisObject,
+            JSCore.Value[] arguments,
+            out JSCore.Value exception) {
+
+        if (arguments.length == 1) {
+            var s = arguments [0].to_string_copy (ctx, null);
+            char buffer[1024];
+            s.get_utf8_c_string (buffer, buffer.length);
+            remove ((string) buffer);
+        }
+
+        return new JSCore.Value.undefined (ctx);
+    }
+
+    static const JSCore.StaticFunction[] js_funcs = {
+        { "add", js_add, PropertyAttribute.ReadOnly },
+        { "remove", js_remove, PropertyAttribute.ReadOnly },
+        { null, null, 0 }
+    };
+
+
+    static const ClassDefinition js_class = {
+        0,
+        ClassAttribute.None,
+        "Favorites",
+        null,
+
+        null,
+        js_funcs,
+
+        null,
+        null,
+
+        null,
+        null,
+        null,
+        null,
+
+        null,
+        null,
+        js_constructor,
+        null,
+        null
+    };
+
+    public static void setup_js_class (GlobalContext context) {
+        jsContext = context;
+        var c = new Class (js_class);
+        var o = new JSCore.Object (context, c, context);
+        var g = context.get_global_object ();
+        var s = new String.with_utf8_c_string ("Favorites");
+        g.set_property (context, s, o, PropertyAttribute.None, null);
+    }
+
+
 }
 
 
-public class PanelMenuFavorites: PanelMenuContent {
-    private Favorites content;
-
-    public signal void deactivate ();
-
-    public PanelMenuFavorites () {
-        base (null);
-        populate ();
-        content = new Favorites ();
-        content.monitor ();
-        show ();
-
-        content.changed.connect (() => {
-            repopulate ();
-            show_all ();
-        });
-    }
-
-    private void populate () {
-        var list = Favorites.get_list ();
-        foreach (string item in list) {
-            if (item.get_char (0) == '-') // Don't display blacklisted entries
-                continue;
-
-            var info = new DesktopAppInfo.from_filename (item);
-            var entry = new PanelItem.with_label (info.get_display_name ());
-            entry.set_image (info.get_icon ().to_string ());
-            entry.show ();
-            pack_start (entry, false, false, 0);
-
-            entry.right_clicked.connect ((e) => {
-                show_popup (e, item);
-            });
-
-            entry.activate.connect (() => {
-                try {
-                    info.launch (null, new AppLaunchContext ());
-                } catch (Error e) {
-                    var dialog = new MessageDialog (null, DialogFlags.DESTROY_WITH_PARENT, MessageType.ERROR, ButtonsType.CLOSE, _("Error opening menu item %s: %s"), info.get_display_name (), e.message);
-                    dialog.response.connect (() => {
-                        dialog.destroy ();
-                    });
-                    dialog.show ();
-                }
-                menu_clicked ();
-            });
-   
-        }
-        insert_separator ();
-    }
-
-    public void repopulate () {
-        foreach (unowned Widget w in get_children ()) {
-            if (w is PanelExpanderItem ||
-                w is PanelItem || 
-                w is Separator)
-                remove (w);
-        }
-        populate ();
-    }
-
-    public void show_popup (Gdk.EventButton event, string item) {
-        var menu = new Menu ();
-
-        var entry = new MenuItem.with_label (_("Remove from Favorites"));
-        entry.show ();
-        menu.add (entry);
-
-        entry.activate.connect (() => {
-            Favorites.remove (item);
-        });
-
-        var button = event.button;
-        var event_time = event.time;
-
-        menu.deactivate.connect (() => {
-            deactivate ();
-        });
-        menu.attach_to_widget (this, null);
-
-        menu.popup (null, null, null, button, event_time);
-    }
-}
 
