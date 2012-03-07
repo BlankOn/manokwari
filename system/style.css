@@ -22,6 +22,7 @@ body {
 
 html {
     overflow: hidden;
+    -webkit-user-select: none;
 }
 
 .ui-mobile-viewport {
