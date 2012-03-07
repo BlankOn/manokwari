@@ -177,6 +177,11 @@ span {
     background-image: -webkit-linear-gradient(#505050 /*{e-bup-background-start}*/, #000000 /*{e-bup-background-end}*/);
 }
 
+
+.ui-button:hover {
+    background-image: -webkit-linear-gradient(#707070 /*{e-bup-background-start}*/, #000000 /*{e-bup-background-end}*/);
+}
+
 .ui-popup {
     height: 0;
     background-color: blue;
