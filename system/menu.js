@@ -368,9 +368,17 @@ function updateData(d) {
 
 // Shows the specified popup
 function showPopup(id) {
-   id.css("height", "inherit");
-   id.show();
-   activePopup = id;
+    var recalc = false;
+    recalc = (id.css('display') != "none");
+
+    id.css("height", "inherit");
+    id.show();
+    activePopup = id;
+    if (recalc) {
+        var g = $(".ui-collapsible-control-group:visible");
+        var h = g.height();
+        $(".ui-collapsible-control-group:visible").height(h + id.height());
+    }
 }
 
 // Hides the specified popup
@@ -378,10 +386,14 @@ function hidePopup(id) {
     if (typeof id === "undefined") {
         id = $("div[data-role='popup']");
     }
+    var id_height = id.height();
     id.height(0); 
     // move the popup to the popup-pool
     $("#popup-pool").append(id.detach());
     activePopup = null;
+    var g = $(".ui-collapsible-control-group:visible");
+    var h = g.height();
+    $(".ui-collapsible-control-group:visible").height(h - id_height);
 }
 
 function prepareShow() {
@@ -715,12 +727,12 @@ function toggleCollapsible(e) {
     var g = $(this).parent().find(".ui-collapsible-control-group");
     if (g.css('display') == "none") {
         $(this).parent().parent().find(".ui-collapsible-control-group").hide();
+        g.show();
         var h = g.height();
         if (h == 0) {
-            g.css("height", "inherit");
+            g.css("height", "auto");
             h = g.height();
         }
-        g.show();
         g.height(h);
     } else {
         g.height(0);
