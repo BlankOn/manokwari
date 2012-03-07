@@ -384,6 +384,10 @@ function hidePopup(id) {
     activePopup = null;
 }
 
+function prepareShow() {
+    setupUserAccount();
+}
+
 function reset() {
     changePage($("#first"), {
         transition: "none"
@@ -391,7 +395,6 @@ function reset() {
     hidePopup();
     $(".ui-collapsible-control-group").hide();
     $("#first").addClass("ui-animation-slide");
-    setupUserAccount();
 }
 
 
