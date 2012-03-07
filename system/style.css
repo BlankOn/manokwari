@@ -195,8 +195,11 @@ span {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space:nowrap; 
+    cursor: pointer;
+}
 
-
+#userAccount:hover {
+    background-image: -webkit-linear-gradient(#707070 /*{e-bup-background-start}*/, #101010 /*{e-bup-background-end}*/);
 }
 
 #userAccount img {
