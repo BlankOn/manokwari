@@ -756,9 +756,6 @@ function refreshStyle(e) {
             e.children().last().addClass("ui-listview-last-child");
             e.find("div[data-role='header']").addClass("ui-listview-header").removeClass("ui-header");
 
-            for (var i = 0; i < e.length; i ++) {
-                console.log(e[i].outerHTML);
-            }
             break;
         }
 
@@ -774,6 +771,10 @@ function refreshStyle(e) {
             // Wrap the button inside collapsible with
             // a listview item
             c.find("a").wrap("<div class=ui-listview-item/>");
+            var l = c.find(".ui-listview-item:first-child");
+            l.addClass("ui-listview-first-child");
+            l = c.find(".ui-listview-item:last-child");
+            l.addClass("ui-listview-last-child");
 
             // Find the header inside inner collapsible
             var h = c.find("div[data-role='collapsible-header']");
@@ -784,6 +785,9 @@ function refreshStyle(e) {
             // Give different styles for top and bottom items
             h.first().addClass("ui-collapsible-header-top");
             h.last().addClass("ui-collapsible-header-bottom");
+            for (var i = 0; i < e.length; i ++) {
+                console.log(e[i].outerHTML);
+            }
             break;
         }
     }
