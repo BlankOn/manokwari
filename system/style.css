@@ -73,14 +73,6 @@ html {
     margin: auto;
 }
 
-.ui-listview-item-pressed {
-    background-image: -webkit-linear-gradient(#c0c0b0 /*{e-bup-background-start}*/, #b0b0b0 /*{e-bup-background-end}*/);
-}
-
-.ui-listview-item-normal {
-    background-image: -webkit-linear-gradient(#b0b0b0 /*{e-bup-background-start}*/, #a0a0a0 /*{e-bup-background-end}*/);
-}
-
 .ui-listview-item:hover {
     color: white;
     text-shadow: 0 1px 1px #222;
@@ -88,6 +80,7 @@ html {
 }
 
 .ui-listview-item {
+    background-image: -webkit-linear-gradient(#b0b0b0 /*{e-bup-background-start}*/, #a0a0a0 /*{e-bup-background-end}*/);
     color: black;
     vertical-align: middle;
     display: block;

@@ -541,7 +541,6 @@ function setupLinks() {
     $('a').click({ source: $(this)}, linkHandleClick);
     $(".ui-listview-item").on("mousedown", propagateMouseDown);
     $(".ui-listview-item").on("mouseup", propagateMouseUp);
-    $(".ui-listview-item").blur(resetPressedState);
 
     // rewire the tap only for the object
     // which has data-tap-handler attribute
@@ -703,15 +702,10 @@ function setupAdditionalStyle() {
     refreshStyle('[data-role="listview"]');
 }
 
-function resetPressedState(e) {
-    $(this).addClass("ui-listview-item-normal").removeClass("ui-listview-item-pressed")
-}
-
 function propagateMouseUp(e) {
     e.stopPropagation();
     // simply propagate this to the mouseup handler above
     $(this).find("a").trigger("mouseup");
-    $(this).addClass("ui-listview-item-normal").removeClass("ui-listview-item-pressed")
 
 }
 
@@ -719,7 +713,6 @@ function propagateMouseDown(e) {
     e.stopPropagation();
     // simply propagate this to the mousedown handler above
     $(this).find("a").trigger("mousedown");
-    $(this).addClass("ui-listview-item-pressed").removeClass("ui-listview-item-normal");
     console.log($(this).parent().html());
 }
 
@@ -759,6 +752,9 @@ function refreshStyle(e) {
             e.children().last().addClass("ui-listview-last-child");
             e.find("div[data-role='header']").addClass("ui-listview-header").removeClass("ui-header");
 
+            for (var i = 0; i < e.length; i ++) {
+                console.log(e[i].outerHTML);
+            }
             break;
         }
 
@@ -789,14 +785,10 @@ function refreshStyle(e) {
             h.first().addClass("ui-collapsible-header-top");
             h.last().addClass("ui-collapsible-header-bottom");
             h.append("<div class='ui-expandable-icon'></div>");
-            for (var i = 0; i < e.length; i ++) {
-                console.log(e[i].outerHTML);
-            }
             break;
         }
     }
 
-    $(".ui-listview-item").addClass("ui-listview-item-normal")
     setupBasicStyle();
     // And rewire the mouse event handling for these items
     setupLinks();
