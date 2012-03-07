@@ -183,8 +183,13 @@ span {
     color: white;
     text-align:center;
     padding: 5px;
-    border-radius: 5px;
+    font-weight: bold;
+    line-height: 1;
+    border-radius: 10px;
     background-image: -webkit-linear-gradient(#505050 /*{e-bup-background-start}*/, #000000 /*{e-bup-background-end}*/);
+    text-shadow: 0 -1px 1px #222;
+    border-bottom: 1px solid #222;
+    margin-bottom: 5px;
 }
 
 
@@ -194,9 +199,8 @@ span {
 
 .ui-popup {
     height: 0;
-    background-color: blue;
-    border-radius: 5px;
-    background-image: -webkit-linear-gradient(#202020 /*{e-bup-background-start}*/, #101010 /*{e-bup-background-end}*/);
+    border-radius: 10px;
+    padding-bottom: 5px;
     -webkit-transition: height 0.5s ease-out;
 }
 
