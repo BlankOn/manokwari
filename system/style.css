@@ -73,6 +73,10 @@ body {
     background-image: -webkit-linear-gradient(#b0b0b0 /*{e-bup-background-start}*/, #a0a0a0 /*{e-bup-background-end}*/);
 }
 
+.ui-listview-item:hover {
+    background-image: -webkit-linear-gradient(#b0b0b0 /*{e-bup-background-start}*/, #909090 /*{e-bup-background-end}*/);
+}
+
 .ui-listview-item {
     vertical-align: middle;
     display: block;
