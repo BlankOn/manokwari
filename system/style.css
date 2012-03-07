@@ -92,8 +92,9 @@ html {
     padding-left: 20px;
     border-radius: inherit;
     cursor: pointer;
-
+    white-space: nowrap;
 }
+
 
 .ui-listview-header {
     border-radius: inherit;
