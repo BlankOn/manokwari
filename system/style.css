@@ -44,33 +44,18 @@ html {
 }
 
 
-.ui-listview li {
-    width: 100%;
-    min-height: 40px;
-
-    text-align: center; 
-    vertical-align: middle; 
-    color: white;
-    background-image: -webkit-linear-gradient(#505050 /*{e-bup-background-start}*/, #101010 /*{e-bup-background-end}*/);
-
-}
-
 .ui-content {
     margin: 5px;
 }
 
 .ui-listview-item-icon {
     vertical-align: middle;
-    margin-top: 10px;
-    margin-left: -20px;
     margin-right: 10px;
-    margin-bottom: 10px;
 }
 
 .ui-listview-item-text {
     vertical-align: middle;
     text-align: left; 
-    margin: auto;
 }
 
 .ui-listview-item:hover {
@@ -84,12 +69,14 @@ html {
     color: black;
     vertical-align: middle;
     display: block;
-    min-height: 40px;
+    min-height: 30px;
     text-align: left; 
-    padding-right: 20px;
-    padding-left: 20px;
     border-radius: inherit;
     cursor: pointer;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 5px;
+    margin: 0px;
     white-space: nowrap;
 }
 

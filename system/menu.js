@@ -753,6 +753,7 @@ function refreshStyle(e) {
             e.find("a").wrap("<div class=ui-listview-item/>");
             e.children().first().addClass("ui-listview-first-child");
             e.children().last().addClass("ui-listview-last-child");
+            e.find("span").addClass("ui-listview-item-text");
             e.find("div[data-role='header']").addClass("ui-listview-header").removeClass("ui-header");
 
             for (var i = 0; i < e.length; i ++) {
