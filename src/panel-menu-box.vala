@@ -13,7 +13,7 @@ public class PanelMenuBox : PanelAbstractWindow {
         view.show_all ();
         add (view);
         set_type_hint (Gdk.WindowTypeHint.DOCK);
-        set_title ("_blankon_panel_menu_");
+        set_title ("_manokwari_menu_");
         set_visual (this.screen.get_rgba_visual ());
 
         Gdk.RGBA c = Gdk.RGBA();

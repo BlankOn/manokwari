@@ -39,7 +39,7 @@ public class PanelSessionManager {
             try {
                 var id = GLib.Environment.get_variable("DESKTOP_AUTOSTART_ID");
                 if (id != null) {
-                    session.register_client ("blankon-panel", id, out session_id);
+                    session.register_client ("manokwari", id, out session_id);
                     client =  Bus.get_proxy_sync (BusType.SESSION,
                                                    "org.gnome.SessionManager", session_id);
                     client.end_session.connect((flags)=> {

@@ -112,6 +112,7 @@ inherit(XdgData, MenuData);
 XdgData.prototype.constructor = XdgData;
 
 XdgData.prototype.update = function() {
+    this.data = null;
     this.dataReady = false;
     this.data = this.backend.update();
     this.emit(DataChanged);
@@ -448,52 +449,85 @@ function setupUserAccount() {
     });
 }
 
-function linkHandleTapHold(e, o) {
+function linkHandleTapHold(e, target) {
     // if the button is still pressed
     // until 1100 ms later then this is
     // truely a tap and hold gesture
-    if (e.data.source.attr("mouse-is-down") == true) {
-        o.trigger("taphold");
+    if (target.attr("mouse-is-down") == "true") {
+        target.trigger("taphold");
     }
     // reset all values
-    e.data.source.attr("mouse-is-down", false);
-    e.data.source.attr("mouse-down-time", -1);
+    target.attr("mouse-is-down", "false");
+    target.attr("mouse-down-time", -1);
+}
+
+function linkHandleClick(e) {
+    // just ignore clicks
+    e.preventDefault();
+    e.stopPropagation();
 }
 
 function linkHandleMouseDown(e) {
     e.stopPropagation();
     e.preventDefault();
 
-    var currentTime = new Date();
+    var target = $(this);
+    if (!$(this).is("A")) {
+        target = $(e.target).find("a").first();
+        if (target.length == 0) { // nothing in the children
+            // Let's go upwards
+            target = $(e.target).parents("a").first();
+        }
+    }
+    if (target.length == 0) {
+        console.log("No <A> element found");
+        return;
+    }
+
+    var currentTime = new Date().getTime();
 
     // ignore if the button is already pressed
-    if (e.data.source.attr("mouse-is-down") ==  true) {
+    if (target.attr("mouse-is-down") ==  true) {
         return;
     }
 
     // take note that this button is now pressed
-    e.data.source.attr("mouse-is-down", true);
+    target.attr("mouse-is-down", "true");
     // also put the timestamp so we can distinguish
     // later whether this is a long tap or not
-    e.data.source.attr("mouse-down-time", currentTime);
+    target.attr("mouse-down-time", currentTime);
     // kick the tap hold detector
-    setTimeout(linkHandleTapHold, 1100, e, $(this));
+    setTimeout(linkHandleTapHold, 1100, e, target);
 }
 
 function linkHandleMouseUp(e) {
     e.stopPropagation();
     e.preventDefault();
 
+    var target = $(this);
+    if (!$(this).is("A")) {
+        target = $(e.target).find("a").first();
+        if (target.length == 0) { // nothing in the children
+            // Let's go upwards
+            target = $(e.target).parents("a").first();
+        }
+    }
+    if (target.length == 0) {
+        console.log("No <A> element found");
+        return;
+    }
+
+
     // only consider the button which was pressed 
-    if (e.data.source.attr("mouse-is-down") == true) {
-        var currentTime = new Date();
-        var lastTime = e.data.source.attr("mouse-down-time");
-        if (typeof lastTime != "undefined" && (currentTime.getTime() - lastTime < 1000)) {
+    if (target.attr("mouse-is-down") == "true") {
+        var currentTime = new Date().getTime();
+        var lastTime = target.attr("mouse-down-time");
+        if (typeof lastTime != "undefined" && (currentTime - lastTime < 1000)) {
 
             var cancel = false;
             if (activePopup != null) {
                 // Cancel if the button is not inside the activePopup
-                if (activePopup.find("#" + $(this).attr("id")).length == 0) {
+                if (activePopup.find("#" + target.attr("id")).length == 0) {
                     cancel = true;
                 }
                 // hide the popup in all cases
@@ -503,25 +537,19 @@ function linkHandleMouseUp(e) {
             // only eat the event when it's not canceled
             if (cancel == false) {
                 // Just change if the href contains a page name
-                if ($(this).attr("href") != "#") {
-                    changePage($($(this).attr("href")));
+                if (target.attr("href") != "#") {
+                    changePage($(target.attr("href")));
                 } else {
                 // or emit the "tap" signal
-                    $(this).trigger("tap");
+                    target.trigger("tap");
                 }
             }
 
         }
         // reset the "down" state after finishing
         // meaning that the button's job is "done"
-        e.data.source.attr("mouse-is-down", false);
+        target.attr("mouse-is-down", false);
     }
-}
-
-function linkHandleClick(e) {
-    // just ignore clicks
-    e.preventDefault();
-    e.stopPropagation();
 }
 
 // Call the handler function defined in
@@ -536,12 +564,6 @@ function linkHandleTapHandler(e) {
 
 function setupLinks() {
     // all "a" elements are considered as "button"
-    $('a').mousedown({ source: $(this)}, linkHandleMouseDown);
-    $('a').mouseup({ source: $(this)}, linkHandleMouseUp);
-    $('a').click({ source: $(this)}, linkHandleClick);
-    $(".ui-listview-item").on("mousedown", propagateMouseDown);
-    $(".ui-listview-item").on("mouseup", propagateMouseUp);
-
     // rewire the tap only for the object
     // which has data-tap-handler attribute
     $('a[data-tap-handler]').on("tap", linkHandleTapHandler);
@@ -559,15 +581,15 @@ function setup() {
 }
 
 function setupPopupButtons() {
-    $("#add_to_desktop").bind("tap", function (event, ui) {
+    $("#add_to_desktop").on("tap", function (event, ui) {
         XdgDataBackEnd.put_to_desktop($(this).attr("desktop"));
     });
 
-    $("#add_to_favorites").bind("tap", function (event, ui) {
+    $("#add_to_favorites").on("tap", function (event, ui) {
         Favorites.add($(this).attr("desktop"));
     });
 
-    $("#remove_from_favorites_button").bind("tap", function (event, ui) {
+    $("#remove_from_favorites_button").on("tap", function (event, ui) {
         Favorites.remove($(this).attr("desktop"));
     });
 
@@ -705,20 +727,6 @@ function setupAdditionalStyle() {
     refreshStyle('[data-role="listview"]');
 }
 
-function propagateMouseUp(e) {
-    e.stopPropagation();
-    // simply propagate this to the mouseup handler above
-    $(this).find("a").trigger("mouseup");
-
-}
-
-function propagateMouseDown(e) {
-    e.stopPropagation();
-    // simply propagate this to the mousedown handler above
-    $(this).find("a").trigger("mousedown");
-    console.log($(this).parent().html());
-}
-
 function toggleCollapsible(e) {
     var g = $(this).parent().find(".ui-collapsible-control-group");
     if (g.css('display') == "none") {
@@ -792,6 +800,10 @@ function refreshStyle(e) {
             break;
         }
     }
+
+    e.on("mousedown", ".ui-listview-item", linkHandleMouseDown);
+    e.on("mouseup", ".ui-listview-item", linkHandleMouseUp);
+    e.on("click", ".ui-listview-item", linkHandleClick);
 
     setupBasicStyle();
     // And rewire the mouse event handling for these items
