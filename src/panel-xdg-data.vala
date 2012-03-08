@@ -11,6 +11,8 @@ public class PanelXdgData {
     IconTheme icon;
     static Context* jsContext;
     JSCore.Object* jsObject;
+    uint scheduled = 0;
+    uint64 last_schedule = 0;
 
     public signal void changed ();
 
@@ -21,21 +23,56 @@ public class PanelXdgData {
         monitor();
 
         changed.connect (() => {
-            if (jsContext != null && jsObject != null) {
-
-                var s = new String.with_utf8_c_string ("updateCallback");
-                var v = jsObject->get_property (jsContext, s, null);
-                if (v != null) {
-                    s = v.to_string_copy (jsContext, null);
-            char buffer[1024];
-            s.get_utf8_c_string (buffer, buffer.length);
-            stdout.printf("%s\n", (string) buffer);
-                    jsContext->evaluate_script (s, null, null, 0, null);
-                }
+            if (scheduled > 0) {
+                // It is already scheduled to update
+                return;
             }
+
+            // Not yet scheduled, let's make time
+            schedule_for_kick_js ();
         });
 
     }
+
+    void schedule_for_kick_js () {
+        var d = new DateTime.now_local();
+        if (d.to_unix () - last_schedule > 60) {
+            // Last update was over a minute ago
+            // Let's kick JS now
+            kick_js ();
+        } else  {
+            // It's recently kicked,
+            // if it's not yet scheduled, let's do it
+            // otherwise just skip this request
+            if (scheduled == 0) {
+                // schedule to kick JS in the next minute
+                scheduled = Timeout.add (60000, kick_js);
+            }
+        }
+    }
+
+    bool kick_js () {
+        if (jsContext != null && jsObject != null) {
+
+            var s = new String.with_utf8_c_string ("updateCallback");
+            var v = jsObject->get_property (jsContext, s, null);
+            if (v != null) {
+                s = v.to_string_copy (jsContext, null);
+                char buffer[1024];
+                s.get_utf8_c_string (buffer, buffer.length);
+                jsContext->evaluate_script (s, null, null, 0, null);
+                s = null;
+            }
+        }
+        // Save the time
+        var d = new DateTime.now_local();
+        last_schedule = d.to_unix ();
+        
+        // Say that we're done
+        scheduled = 0;
+        return false;
+    }
+
 
     void monitor () {
         var xdg_menu_dir = File.new_for_path ("/etc/xdg/menus");
@@ -206,9 +243,10 @@ public class PanelXdgData {
         var i = thisObject.get_private() as PanelXdgData;
         if (i != null) {
             i.populate ();
-            var result = i.get_json();
-            var s = new String.with_utf8_c_string (result);
-            return ctx.evaluate_script (s, null, null, 0, null);
+            var s = new String.with_utf8_c_string (i.json.str);
+            var r = ctx.evaluate_script (s, null, null, 0, null);
+            s = null;
+            return r;
         }
         return new JSCore.Value.undefined (ctx);
     }

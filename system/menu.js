@@ -112,6 +112,7 @@ inherit(XdgData, MenuData);
 XdgData.prototype.constructor = XdgData;
 
 XdgData.prototype.update = function() {
+    this.data = null;
     this.dataReady = false;
     this.data = this.backend.update();
     this.emit(DataChanged);
@@ -478,7 +479,6 @@ function linkHandleMouseDown(e) {
             target = $(e.target).parents("a").first();
         }
     }
-    console.log(target.html() + ">" + target.length);
     if (target.length == 0) {
         console.log("No <A> element found");
         return;
@@ -582,7 +582,6 @@ function setup() {
 
 function setupPopupButtons() {
     $("#add_to_desktop").on("tap", function (event, ui) {
-        console.log("XDG");
         XdgDataBackEnd.put_to_desktop($(this).attr("desktop"));
     });
 
