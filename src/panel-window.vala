@@ -452,11 +452,11 @@ public class PanelWindowHost : PanelAbstractWindow {
 
         event_box.button_press_event.connect (() => {
             menu_clicked ();
+            resize (Size.SMALL);
             return false;
         });
 
         clock_event.button_release_event.connect(() => {
-            stdout.printf("xxxx\n");
             var info = new DesktopAppInfo.from_filename ("/usr/share/applications/gnome-datetime-panel.desktop");
             try {
                 info.launch (null, new AppLaunchContext ());
