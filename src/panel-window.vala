@@ -512,7 +512,7 @@ public class PanelWindowHost : PanelAbstractWindow {
         var num_windows = 0;
         foreach (unowned Wnck.Window w in screen.get_windows()) {
             if (!w.is_skip_tasklist () 
-              && (w.get_name() != "blankon-panel")
+              && (w.get_name() != "_manokwari_menu_")
               && w.is_on_workspace (workspace)) {
                 var e = entry_map [w];
                 if (e == null) {

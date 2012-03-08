@@ -64,7 +64,7 @@ public class Favorites {
     }
 
     private static File get_custom_favorites_file () {
-        return File.new_for_path (Environment.get_home_dir () + "/.config/blankon-panel/favorites");
+        return File.new_for_path (Environment.get_home_dir () + "/.config/manokwari/favorites");
     }
 
     public void monitor () {
