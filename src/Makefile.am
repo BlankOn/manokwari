@@ -30,6 +30,8 @@ blankon_panel_SOURCES = panel-item.vala \
     panel-menu-html.vala \
     panel-xdg-data.vala \
     panel-user.vala \
+    panel-desktop.vala \
+    panel-desktop-html.vala \
 	$(NULL)
 
 blankon_panel_VALAFLAGS = \

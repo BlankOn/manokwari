@@ -36,6 +36,10 @@ public class PanelButtonWindow : PanelAbstractWindow {
             }
         });
 
+        // Desktop
+        var d = new PanelDesktop ();
+        d.show ();
+
         // Window 
         var w = new PanelWindowHost ();
         w.show();
@@ -68,6 +72,14 @@ public class PanelButtonWindow : PanelAbstractWindow {
             if (menu_box.visible) {
                 menu_box.try_hide ();
             }
+        });
+
+        d.button_press_event.connect (() => {
+            stdout.printf("xxx\n");
+            if (menu_box.visible) {
+                menu_box.try_hide ();
+            }
+            return false;
         });
 
         w.windows_visible.connect (() => {
