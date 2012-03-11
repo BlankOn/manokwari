@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Manokwari
+Exec=manokwari
+Icon=distributor-logo
+NoDisplay=true
+X-GNOME-Autostart-Phase=Panel
+X-GNOME-Provides=panel
+X-GNOME-Autostart-Notify=true

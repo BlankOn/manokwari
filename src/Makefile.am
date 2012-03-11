@@ -2,15 +2,15 @@ NULL =
 
 AM_CPPFLAGS = \
 	$(WNCK_GMENU_DISCLAIMER) \
-	$(BLANKON_PANEL_CFLAGS) \
+	$(MANOKWARI_CFLAGS) \
 	-include config.h \
 	-DLOCALEDIR=\""$(localedir)"\" \
 	-DPKGDATADIR=\""$(pkgdatadir)"\" \
 	$(NULL)
 
-bin_PROGRAMS = blankon-panel
+bin_PROGRAMS = manokwari
 
-blankon_panel_SOURCES = panel-item.vala \
+manokwari_SOURCES = panel-item.vala \
     main.vala \
     panel-abstract-window.vala \
     panel-window.vala \
@@ -34,14 +34,14 @@ blankon_panel_SOURCES = panel-item.vala \
     panel-desktop-html.vala \
 	$(NULL)
 
-blankon_panel_VALAFLAGS = \
+manokwari_VALAFLAGS = \
     --vapidir ../vapi \
 	--pkg config \
     $(VALA_PACKAGES) \
     $(NULL)
 
-blankon_panel_LDADD = \
-	$(BLANKON_PANEL_LIBS) \
+manokwari_LDADD = \
+	$(MANOKWARI_LIBS) \
 	$(NULL)
 
 EXTRA_DIST = \

@@ -8,8 +8,8 @@ SUBDIRS = \
 	po \
 	$(NULL)
 
-blankon_paneldocdir = ${prefix}/doc/blankon_panel
-blankon_paneldoc_DATA = \
+manokwaridocdir = ${prefix}/doc/manokwari
+manokwaridoc_DATA = \
 	ChangeLog \
 	README \
 	COPYING \
@@ -19,7 +19,7 @@ blankon_paneldoc_DATA = \
 	$(NULL)
 
 EXTRA_DIST = \
-	$(blankon_paneldoc_DATA) \
+	$(manokwaridoc_DATA) \
 	intltool-extract.in \
 	intltool-merge.in \
 	intltool-update.in\
