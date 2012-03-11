@@ -1,9 +1,0 @@
-[Desktop Entry]
-Type=Application
-Name=BlankOn Panel
-Exec=blankon-panel
-Icon=distributor-logo
-NoDisplay=true
-X-GNOME-Autostart-Phase=Panel
-X-GNOME-Provides=panel
-X-GNOME-Autostart-Notify=true
