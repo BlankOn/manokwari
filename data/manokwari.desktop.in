@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Application
-Name=BlankOn Panel
-Exec=blankon-panel
+Name=Manokwari
+Exec=manokwari
 Icon=distributor-logo
 NoDisplay=true
 X-GNOME-Autostart-Phase=Panel
