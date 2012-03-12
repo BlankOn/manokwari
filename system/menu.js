@@ -562,16 +562,8 @@ function linkHandleTapHandler(e) {
     }
 }
 
-function setupLinks() {
-    // all "a" elements are considered as "button"
-    // rewire the tap only for the object
-    // which has data-tap-handler attribute
-    $('a[data-tap-handler]').on("tap", linkHandleTapHandler);
-}
-
 function setup() {
     setupPages();
-    setupLinks();
     setupBasicStyle();
     setupAdditionalStyle();
     setupPopupButtons();
@@ -724,7 +716,6 @@ function setupAdditionalStyle() {
     $('div[data-role="content"]').addClass("ui-content");
 
     $("[data-role='popup']").addClass("ui-popup");
-    refreshStyle('[data-role="listview"]');
 }
 
 function toggleCollapsible(e) {
@@ -806,8 +797,6 @@ function refreshStyle(e) {
     e.on("click", ".ui-listview-item", linkHandleClick);
 
     setupBasicStyle();
-    // And rewire the mouse event handling for these items
-    setupLinks();
 }
 
 // Calls the gettext function defined in backend
