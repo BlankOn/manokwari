@@ -27,6 +27,7 @@ public class Favorites {
                 if (v != null) {
                     s = v.to_string_copy (jsContext, null);
                     jsContext->evaluate_script (s, null, null, 0, null);
+                    s = null;
                 }
             }
         });
@@ -262,9 +263,10 @@ public class Favorites {
 
         var i = thisObject.get_private() as Favorites; 
         if (i != null) {
-            var result = i.get_json();
-            var s = new String.with_utf8_c_string (result);
-            return ctx.evaluate_script (s, null, null, 0, null);
+            var s = new String.with_utf8_c_string (i.json.str);
+            var result = ctx.evaluate_script (s, null, null, 0, null);
+            s = null;
+            return result;
         }
         return new JSCore.Value.undefined (ctx);
     }

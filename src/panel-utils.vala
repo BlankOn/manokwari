@@ -156,7 +156,10 @@ namespace Utils {
             s.get_utf8_c_string (buffer, buffer.length);
 
             s = new String.with_utf8_c_string (_((string) buffer));
-            return new JSCore.Value.string (ctx, s);
+            var result = new JSCore.Value.string (ctx, s);
+            s = null;
+            buffer = null;
+            return result;
         }
 
         return new JSCore.Value.undefined (ctx);
