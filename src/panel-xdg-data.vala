@@ -246,6 +246,7 @@ public class PanelXdgData {
             var s = new String.with_utf8_c_string (i.json.str);
             var r = ctx.evaluate_script (s, null, null, 0, null);
             s = null;
+            i.json.assign ("");
             return r;
         }
         return new JSCore.Value.undefined (ctx);
