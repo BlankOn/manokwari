@@ -1,9 +1,15 @@
 // lastBg is defined initially in the backend
 
-function updateBackground(bg) {
-    $("body").css("background-image", "url(" + bg + ")");
-    lastBg = bg;
-}
+var desktop = (function() {
+    var updateBackground = function(bg) {
+        $("body").css("background-image", "url(" + bg + ")");
+        lastBg = bg;
+    }
+    return {
+        updateBackground: updateBackground
+    }
+})();
+
 $(document).ready(function() {
-    updateBackground(lastBg);
+    desktop.updateBackground(lastBg);
 });

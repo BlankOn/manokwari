@@ -47,7 +47,7 @@ public class PanelDesktopHTML: WebView {
                 lastBgInitialized = true;
             }
 
-            var s = new String.with_utf8_c_string ("updateBackground('%s');".printf(bg));
+            var s = new String.with_utf8_c_string ("desktop.updateBackground('%s');".printf(bg));
 
             context.evaluate_script (s, null, null, 0, null);
         }
