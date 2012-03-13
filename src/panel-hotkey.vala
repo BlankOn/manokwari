@@ -10,7 +10,7 @@ public static void static_handler (string a) {
 
 public class PanelHotkey {
     public signal void triggered (string combination);
-    private X.Display display;
+    private unowned X.Display display;
     private Gdk.Window root_window;
     private X.ID x_id;
 

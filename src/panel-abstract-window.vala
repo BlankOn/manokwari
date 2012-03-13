@@ -68,7 +68,7 @@ public class PanelAbstractWindow : Gtk.Window {
 
 
         stdout.printf("%d %d %d %d %d %d\n", left, right, top, bottom, y, r.height);
-        var display = x11_get_default_xdisplay ();
+        unowned X.Display display = x11_get_default_xdisplay ();
         var xid = X11Window.get_xid (get_window ());
 
         display.change_property (xid, display.intern_atom ("_NET_WM_STRUT_PARTIAL", false), X.XA_CARDINAL, 32, X.PropMode.Replace, (uchar[])struts, 12);
