@@ -5,6 +5,7 @@ NULL =
 SUBDIRS = \
 	data \
 	src \
+	system \
 	po \
 	$(NULL)
 
