@@ -208,7 +208,7 @@ span {
     background-image: -webkit-linear-gradient(#505050 /*{e-bup-background-start}*/, #101010 /*{e-bup-background-end}*/);
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space:nowrap; 
+    white-space: nowrap; 
     cursor: pointer;
 }
 

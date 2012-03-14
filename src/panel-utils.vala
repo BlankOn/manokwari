@@ -207,9 +207,9 @@ namespace Utils {
         g.set_property (context, s, o, PropertyAttribute.None, null);
     }
 
-    public static string get_icon_path (string name) {
+    public static string get_icon_path (string name, int size=24) {
         var icon = IconTheme.get_default ();
-        var i = icon.lookup_icon (name, 24, IconLookupFlags.GENERIC_FALLBACK);
+        var i = icon.lookup_icon (name, size, IconLookupFlags.GENERIC_FALLBACK);
         return i.get_filename();
     }
 

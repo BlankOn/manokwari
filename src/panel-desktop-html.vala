@@ -25,6 +25,7 @@ public class PanelDesktopHTML: WebView {
         });
 
         window_object_cleared.connect ((frame, context) => {
+            PanelDesktopData.setup_js_class ((JSCore.GlobalContext) context);
             this.context = (JSCore.GlobalContext) context;
             set_background(background_image);
         });
