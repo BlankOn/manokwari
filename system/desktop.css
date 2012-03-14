@@ -57,11 +57,19 @@ body {
     text-shadow: 0 2px 2px #000;
 }
 
+
+.ui-bin img {
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .ui-bin {
     display: none;
-    width: 250px;
-    height: 250px;
-    background-color: blue;
+    vertical-align: middle;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100px;
+    height: 100px;
 }
 
 .ui-bin.enter {

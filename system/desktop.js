@@ -33,7 +33,7 @@ var desktop = (function() {
     }
 
     var dragStart = function(e) {
-        $("#bin").css("display", "inherit");
+        $("#bin").css("display", "-webkit-box");
         this.style.opacity = "0.4";
         e.dataTransfer.dropEffect = "move";
         e.dataTransfer.setData("text/plain", $(this).attr("data-desktop"));
@@ -77,6 +77,14 @@ var desktop = (function() {
     var populateLauncher = function(data) {
         var l = $("#launcher");
         l.empty ();
+        var bin = $("<div>").
+                    attr("id", "bin").
+                    attr("class", "ui-bin");
+        var trash = $("<img>").
+                    attr("src", Utils.getIconPath("user-trash", 48));
+        bin.append(trash);
+        console.log(trash.html());
+        l.append(bin);
         for (var i = 0; i < data.length; i ++) {
             var entry = $("<div>").
                             attr("class", "ui-launcher-entry").
@@ -84,7 +92,6 @@ var desktop = (function() {
                             attr("data-desktop", data[i].desktop);
             entry.get(0).addEventListener("dragstart", dragStart);
             entry.get(0).addEventListener("dragend", dragEnd);
-            console.log(entry.get(0));
 
             var img = $("<img>").
                             attr("draggable", "true").
