@@ -165,12 +165,41 @@ namespace Utils {
         return new JSCore.Value.undefined (ctx);
     }
 
+    public static JSCore.Value js_get_icon_path (Context ctx,
+            JSCore.Object function,
+            JSCore.Object thisObject,
+            JSCore.Value[] arguments,
+            out JSCore.Value exception) {
+
+        if (arguments.length > 0) {
+            var s = arguments [0].to_string_copy (ctx, null);
+            char[] buffer = new char[s.get_length() + 1];
+            s.get_utf8_c_string (buffer, buffer.length);
+
+            int size = 24;
+            if (arguments.length > 1) {
+                var size_d = arguments [1].to_number (ctx, null);
+                size = (int) size_d;            
+            }
+
+            s = new String.with_utf8_c_string (get_icon_path((string) buffer, size));
+            var result = new JSCore.Value.string (ctx, s);
+            s = null;
+            buffer = null;
+            return result;
+        }
+
+        return new JSCore.Value.undefined (ctx);
+    }
+
+
 
     static const JSCore.StaticFunction[] js_funcs = {
         { "run_desktop", js_run_desktop, PropertyAttribute.ReadOnly },
         { "open_uri", js_open_uri, PropertyAttribute.ReadOnly },
         { "run_command", js_run_command, PropertyAttribute.ReadOnly },
         { "translate", js_translate, PropertyAttribute.ReadOnly },
+        { "getIconPath", js_get_icon_path, PropertyAttribute.ReadOnly },
         { null, null, 0 }
     };
 
