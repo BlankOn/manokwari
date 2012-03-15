@@ -33,7 +33,7 @@ var desktop = (function() {
     }
 
     var dragStart = function(e) {
-        $("#bin").css("display", "-webkit-box");
+        $("#bin").css("opacity", "0.5");
         this.style.opacity = "0.4";
         e.dataTransfer.dropEffect = "move";
         e.dataTransfer.setData("text/plain", $(this).attr("data-desktop"));
@@ -44,19 +44,22 @@ var desktop = (function() {
     }
     
     var dragEnter = function(e) {
+        $("#bin").css("opacity", "1.0");
         e.preventDefault();
         this.classList.add("enter"); 
+        $(this).children("img").addClass("ui-bin-img-enter");
         console.log("enter");
     }
 
     var dragLeave = function(e) {
         this.classList.remove("enter"); 
+        $(this).children("img").removeClass("ui-bin-img-enter");
         console.log("leave");
     }
 
 
     var dragEnd = function(e) {
-        $("#bin").css("display", "none");
+        $("#bin").css("opacity", "0");
         this.style.opacity = "1.0";
 
     }
@@ -81,10 +84,11 @@ var desktop = (function() {
                     attr("id", "bin").
                     attr("class", "ui-bin");
         var trash = $("<img>").
+                    attr("class", "ui-bin-img").
                     attr("src", Utils.getIconPath("user-trash", 48));
         bin.append(trash);
-        console.log(trash.html());
         l.append(bin);
+        setupTrashDnD();
         for (var i = 0; i < data.length; i ++) {
             var entry = $("<div>").
                             attr("class", "ui-launcher-entry").
@@ -117,7 +121,9 @@ var desktop = (function() {
         desktopData.updateCallback("desktop.refresh()");
         setupLauncher();
         updateBackground(lastBg);
+    }
 
+    var setupTrashDnD = function() {
         var dropZone = $("#bin").get(0);
         dropZone.addEventListener("dragenter", dragEnter);
         dropZone.addEventListener("dragleave", dragLeave);

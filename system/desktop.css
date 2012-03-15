@@ -58,18 +58,39 @@ body {
 }
 
 
-.ui-bin img {
+.ui-bin-img {
     margin-left: auto;
     margin-right: auto;
+    width: 48px;
+    height: 48px;
+    -webkit-transition: all 100ms ease-out;
 }
 
+.ui-bin-img-enter {
+    width: 70px;
+    height: 70px;
+}
+
+.ui-bin:hover {
+    width: 150px;
+    height: 150px;
+} 
+
 .ui-bin {
-    display: none;
-    vertical-align: middle;
+    display: -webkit-box;
+    -webkit-box-pack: center;
+    -webkit-box-align: center;
     margin-left: auto;
     margin-right: auto;
     width: 100px;
     height: 100px;
+    border-radius: 20px;
+    border-style: dashed;
+    border-color: rgba(150, 150, 150, 0.8);
+    opacity: 0;
+    -webkit-transition: all 100ms ease-out;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+    background-color: rgba(0,0,0,0.5);
 }
 
 .ui-bin.enter {
