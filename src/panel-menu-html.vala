@@ -9,6 +9,11 @@ public class PanelMenuHTML: WebView {
         return uri;
     }
 
+    string translate_theme (string old) {
+        var uri = "file://%s".printf(Utils.get_icon_path (old.replace("theme://", "")));
+        return uri;
+    }
+
     public PanelMenuHTML () {
         set_visual (Gdk.Screen.get_default ().get_rgba_visual ());
 
@@ -27,8 +32,12 @@ public class PanelMenuHTML: WebView {
         set_settings(settings);
 
         resource_request_starting.connect((frame, resource, request, response) => {
-            var uri = translate_uri (resource.uri);
-            request.set_uri(uri);
+            if (resource.uri.has_prefix("theme://")) {
+                request.set_uri(translate_theme(resource.uri));
+            } else {
+                var uri = translate_uri (resource.uri);
+                request.set_uri(uri);
+            }
         });
 
         window_object_cleared.connect ((frame, context) => {

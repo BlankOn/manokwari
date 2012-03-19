@@ -150,7 +150,7 @@ span {
 }
 
 .ui-back-button {
-    background-image: url("/usr/share/icons/gnome/24x24/actions/back.png");
+    background-image: url("theme://back");
     background-repeat: no-repeat;
     color: red;
     width: 24px;
@@ -255,7 +255,7 @@ span {
 }
 
 .ui-expandable-icon {
-    background-image: url("/usr/share/icons/gnome/22x22/actions/stock_right.png");
+    background-image: url("theme://stock_right");
     background-repeat: no-repeat;
     width: 22px;
     height: 22px;
@@ -263,5 +263,5 @@ span {
 }
 
 .ui-expandable-icon-expanded {
-    background-image: url("/usr/share/icons/gnome/22x22/actions/stock_down.png");
+    background-image: url("theme://stock_down");
 }
