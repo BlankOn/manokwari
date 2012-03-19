@@ -87,20 +87,6 @@ MenuData.prototype.constructor = MenuData;
 MenuData.prototype.update = function() {
 }
 
-function FavoritesData() {
-    this.backend = new Favorites();
-    this.data = this.backend.update();
-    this.dataReady = true;
-}
-inherit(FavoritesData, MenuData);
-FavoritesData.prototype.constructor = FavoritesData;
-
-FavoritesData.prototype.update = function() {
-    this.dataReady = false;
-    this.data = this.backend.update();
-    this.emit(DataChanged);
-    this.dataReady = true;
-}
 
 function XdgData(name) {
     this.name = name;
@@ -340,8 +326,6 @@ MenuList.prototype.render_collapsible = function() {
 
 var dataApplications = new XdgData("applications.menu");
 dataApplications.backend.updateCallback("dataApplications.update()");
-var dataFavorites = new FavoritesData();
-dataFavorites.backend.updateCallback("dataFavorites.update()");
 
 var dataPlaces = new PlacesData();
 dataPlaces.backend.updateCallback("dataPlaces.update()");
@@ -354,8 +338,6 @@ $(document).ready(function() {
     xdg.type = "collapsible";
     xdg.attach("listApplications");
 
-    var fav = new MenuList(dataFavorites);
-    fav.attach("listFavorites");
 
     var places = new MenuList(dataPlaces);
     places.attach("listPlaces");
@@ -576,15 +558,6 @@ function setupPopupButtons() {
     $("#add_to_desktop").on("tap", function (event, ui) {
         XdgDataBackEnd.put_to_desktop($(this).attr("desktop"));
     });
-
-    $("#add_to_favorites").on("tap", function (event, ui) {
-        Favorites.add($(this).attr("desktop"));
-    });
-
-    $("#remove_from_favorites_button").on("tap", function (event, ui) {
-        Favorites.remove($(this).attr("desktop"));
-    });
-
 }
 
 // Handles Settings button. The function is defined

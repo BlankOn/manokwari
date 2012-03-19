@@ -18,6 +18,7 @@ body {
     width: 100%;
     overflow-x: hidden;
     overflow-y: auto;
+    z-index: 1;
 }
 
 html {
@@ -65,7 +66,7 @@ html {
 }
 
 .ui-listview-item {
-    background-image: -webkit-linear-gradient(#b0b0b0 /*{e-bup-background-start}*/, #a0a0a0 /*{e-bup-background-end}*/);
+    background-image: -webkit-linear-gradient(#c0c0c0 /*{e-bup-background-start}*/, #b0b0b0 /*{e-bup-background-end}*/);
     color: black;
     vertical-align: middle;
     display: block;
@@ -85,6 +86,7 @@ html {
     border-radius: inherit;
     color: white;
     text-align: center;
+    padding: 0px;
     background-image: -webkit-linear-gradient(#505050 /*{e-bup-background-start}*/, #101010 /*{e-bup-background-end}*/);
 
 }
@@ -111,8 +113,8 @@ span {
 }
 
 .ui-collapsible {
-    margin-left: 10px;
-    margin-right: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
 }
 
 .ui-collapsible-header {
@@ -195,15 +197,17 @@ span {
 }
 
 #userAccount {
-    position: absolute;
+    position: fixed;
+    clear: both;
     bottom: 0;
     height: 60px;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
-    width: 300; 
+    width: 290; 
     margin-left: 5px;
     margin-right: 5px;
     padding: 5px;
+    z-index: 100;
 
     background-image: -webkit-linear-gradient(#505050 /*{e-bup-background-start}*/, #101010 /*{e-bup-background-end}*/);
     overflow: hidden;
@@ -232,6 +236,7 @@ span {
 
 #userAccount span {
     font-size: 12px;
+    color: #cccccc;
 }
 
 ::-webkit-scrollbar {

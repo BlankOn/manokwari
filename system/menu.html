@@ -7,36 +7,29 @@
 <script type="text/javascript" src="menu.js"></script>
 </head>                                                                 
 <body>                                                                  
+    <div id="userAccount">
+        <img src="/usr/share/icons/gnome/48x48/status/avatar-default.png"/>
+        <h1>Username</h1>
+        <span translate="no">Hostname</span>
+    </div>
+
+
 <div data-role="page" id="first">
+    <div data-role="header">
+        <span>Applications</span>
+    </div><!-- /header -->
+
     <div data-role="content">   
-    
-   
-    <div data-role="listview" id="listFavorites" data-inset="true"/> </div>
+        <div id="listApplications" data-role="collapsible-set"></div>
     <div data-role="listview" id="listGeneral" data-inset="true" >
-        <a href="#applications" data-transition="slide" id="btn-applications"><span>Applications</span><div class="ui-expandable-icon"></div></a> 
         <a href="#locations" data-transition="slide" id="btn-locations"><span>Locations</span><div class="ui-expandable-icon"></div></a> 
         <a href="#" data-tap-handler="handleSettings"><span>Settings</span></a>
          <a href="#" data-tap-handler="handleLogOut"><span>Log Out</span></a>
         <a href="#" data-visibility="shutdownEnabled" data-tap-handler="handleShutDown"><span>Shut Down</span></a>
     </div>
     </div><!-- /content -->
-
-    <div id="userAccount">
-        <img src="/usr/share/icons/gnome/48x48/status/avatar-default.png"/>
-        <h1>Username</h1>
-        <span translate="no">Hostname</span>
-    </div>
 </div><!-- /page -->
 
-<div data-role="page" id="applications">
-    <div data-role="header" data-add-back-btn="true">
-        <span>Applications</span>
-    </div><!-- /header -->
-
-    <div data-role="content">   
-        <div id="listApplications" data-role="collapsible-set"></div>
-    </div><!-- /content -->
-</div><!-- /page -->
 
 <div data-role="page" id="locations">
     <div data-role="header" data-add-back-btn="true">
@@ -52,7 +45,6 @@
 
 <div id="popup-pool">
 <div data-role="popup" id="add_to_fav_or_desktop">
-        <a id="add_to_favorites" href="#" data-role="button" data-rel="back"><span>Add to Favorites</span></a>
         <a id="add_to_desktop" href="#" data-role="button" data-rel="back"><span>Add to Desktop</span></a>
 </div>
 
