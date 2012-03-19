@@ -23,7 +23,6 @@ manokwari_SOURCES = panel-item.vala \
     panel-clock.vala \
     panel-places.vala \
     panel-screen.vala \
-    panel-menu-favorites.vala \
     panel-utils.vala \
     panel-hotkey.vala \
     panel-session-manager.vala \
