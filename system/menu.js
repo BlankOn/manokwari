@@ -381,6 +381,7 @@ function hidePopup(id) {
 
 function prepareShow() {
     setupUserAccount();
+    $("#first").css("left", "0px");
 }
 
 function prepareHide() {
@@ -391,6 +392,7 @@ function prepareHide() {
     $("#first").addClass("ui-animation-slide");
     var e = $("#userAccount");
     e.css("bottom", -e.height());
+    $("#first").css("left", "-" + window.outerWidth + "px");
 }
 
 
@@ -614,10 +616,7 @@ function changePage(page) {
     if (arguments.length == 2) {
         withAnimation = (arguments[1].transition != "none");
     }
-    var width = $('.ui-mobile-viewport').width();
-    if (typeof width === "undefined") {
-        width = 1000;
-    }
+    var width = window.outerWidth;
 
     if (activePage == null) {
         activePage = $("#first");

@@ -53,26 +53,16 @@ public class PanelMenuHTML: WebView {
         load_uri ("http://system/menu.html");
     }
 
-    public void setPosition (int pos) {
-        unowned JSCore.Context context = get_focused_frame ().get_global_context();
-        var s = new String.with_utf8_c_string ("$('#first').css('left', '" + pos.to_string() + "px');$('.ui-mobile-viewport').css('width', '" + get_window ().get_width ().to_string() + "px');");
-        context.evaluate_script (s, null, null, 0, null);
-    }
-
     public void triggerShowAnimation () {
         unowned JSCore.Context context = get_focused_frame ().get_global_context();
         var s = new String.with_utf8_c_string ("prepareShow()");
         context.evaluate_script (s, null, null, 0, null);
-
-        setPosition (0);
     }
 
     public void triggerHideAnimation () {
         unowned JSCore.Context context = get_focused_frame ().get_global_context();
         var s = new String.with_utf8_c_string ("prepareHide()");
         context.evaluate_script (s, null, null, 0, null);
-
-        setPosition (-1 * get_window ().get_width ());
     }
 
     public bool handleEsc() {
