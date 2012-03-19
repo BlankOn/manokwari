@@ -15,7 +15,6 @@ manokwari_SOURCES = panel-item.vala \
     panel-abstract-window.vala \
     panel-window.vala \
     panel-menu-box.vala \
-    panel-button.vala \
     panel-menu-content.vala \
     panel-tray.vala \
     panel-scrollable-content.vala \
