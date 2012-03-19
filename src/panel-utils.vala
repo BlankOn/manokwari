@@ -74,11 +74,34 @@ namespace Utils {
             JSCore.Value[] arguments,
             out JSCore.Value exception) {
 
-        if (arguments.length == 1) {
+        if (arguments.length > 0) {
+            bool from_desktop = false;
+            // Optional argument takes a boolean value
+            // to indicate whether this should be taken
+            // from user's desktop directory
+            if (arguments.length > 1) {
+                var _from_desktop = arguments [1].to_boolean (ctx);
+                from_desktop = _from_desktop;
+            }
+
             var s = arguments [0].to_string_copy (ctx, null);
-            char buffer[1024];
+            char[] buffer = new char[s.get_length() + 1];
             s.get_utf8_c_string (buffer, buffer.length);
-            var info = new DesktopAppInfo.from_filename ((string) buffer);
+            string path = null;
+
+            // Check whether the desktop has an absolute path or not
+            if (buffer [0] != '/') {
+                // If not, append the correct path
+                if (from_desktop) {
+                    path = Environment.get_user_special_dir (UserDirectory.DESKTOP) + "/" + (string) buffer;
+                } else {
+                    path = "/usr/share/applications/" + (string) buffer;
+                }
+            } else {
+                // Otherwise take it as is
+                path = (string) buffer;
+            }
+            var info = new DesktopAppInfo.from_filename (path);
             try {
                 info.launch (null, new AppLaunchContext ());
             } catch (Error e) {
