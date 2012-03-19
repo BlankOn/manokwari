@@ -214,6 +214,7 @@ span {
     text-overflow: ellipsis;
     white-space: nowrap; 
     cursor: pointer;
+    -webkit-transition: bottom 0.5s ease-out;
 }
 
 #userAccount:hover {

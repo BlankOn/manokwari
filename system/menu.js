@@ -383,12 +383,14 @@ function prepareShow() {
     setupUserAccount();
 }
 
-function reset() {
+function prepareHide() {
     changePage($("#first"), {
         transition: "none"
     });
     hidePopup();
     $("#first").addClass("ui-animation-slide");
+    var e = $("#userAccount");
+    e.css("bottom", -e.height());
 }
 
 
@@ -423,6 +425,7 @@ function setupPages() {
 
 function setupUserAccount() {
     var e = $("#userAccount");
+    e.css("bottom", "0px");
     e.find("img").attr("src", userAccount.getIconFile());
     e.find("h1").text(userAccount.getRealName());
     e.find("span").text(userAccount.getHostName());

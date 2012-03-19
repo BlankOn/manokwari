@@ -69,7 +69,7 @@ public class PanelMenuHTML: WebView {
 
     public void triggerHideAnimation () {
         unowned JSCore.Context context = get_focused_frame ().get_global_context();
-        var s = new String.with_utf8_c_string ("reset()");
+        var s = new String.with_utf8_c_string ("prepareHide()");
         context.evaluate_script (s, null, null, 0, null);
 
         setPosition (-1 * get_window ().get_width ());
