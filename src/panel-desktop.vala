@@ -9,6 +9,8 @@ public class PanelDesktop: PanelAbstractWindow {
     PanelDesktopHTML desktop;
     GLib.Settings settings = null;
 
+    public signal void desktop_clicked();
+
     public PanelDesktop() {
         settings = new GLib.Settings ("org.gnome.desktop.background");
         desktop = new PanelDesktopHTML ();
@@ -30,6 +32,11 @@ public class PanelDesktop: PanelAbstractWindow {
         map_event.connect (() => {
             set_background ();
             return true;
+        });
+
+        desktop.button_press_event.connect (() => {
+            desktop_clicked ();
+            return false;
         });
 
     }

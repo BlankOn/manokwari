@@ -31,6 +31,8 @@ public class PanelMenuBox : PanelAbstractWindow {
         hide ();
 
         button_press_event.connect((event) => {
+
+        stdout.printf("xxx\n");
             // Only dismiss if within the area
             // TODO: multihead
             if (event.x > get_window().get_width ()) {
@@ -44,7 +46,6 @@ public class PanelMenuBox : PanelAbstractWindow {
             PanelScreen.move_window (this, Gdk.Gravity.NORTH_WEST);
             queue_resize ();
         });
-        
 
         map_event.connect (() => {
             shown ();

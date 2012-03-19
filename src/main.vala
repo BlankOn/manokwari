@@ -44,12 +44,10 @@ int main (string[] args) {
         }
     });
 
-    d.button_press_event.connect (() => {
-        stdout.printf("xxx\n");
+    d.desktop_clicked.connect (() => {
         if (menu_box.visible) {
             menu_box.try_hide ();
         }
-        return false;
     });
 
     w.windows_visible.connect (() => {
