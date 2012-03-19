@@ -96,6 +96,9 @@ var desktop = (function() {
                             attr("data-desktop", data[i].desktop);
             entry.get(0).addEventListener("dragstart", dragStart);
             entry.get(0).addEventListener("dragend", dragEnd);
+            entry.click(function() {
+                Utils.run_desktop($(this).attr("data-desktop"), true);
+            });
 
             var img = $("<img>").
                             attr("draggable", "true").
