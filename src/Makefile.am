@@ -31,6 +31,8 @@ manokwari_SOURCES = panel-item.vala \
     panel-desktop.vala \
     panel-desktop-html.vala \
     panel-desktop-data.vala \
+    panel-desktop-idle.vala \
+    panel-desktop-idle-html.vala \
 	$(NULL)
 
 manokwari_VALAFLAGS = \

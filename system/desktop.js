@@ -1,11 +1,8 @@
-// lastBg is defined initially in the backend
-
 var desktop = (function() {
     var desktopData = null;
 
-    var updateBackground = function(bg) {
-        $("body").css("background-image", "url(" + bg + ")");
-        lastBg = bg;
+    var hideLauncher = function() {
+        $("#launcher").css("display", "none");
     }
 
     var addEvent = function () {
@@ -123,7 +120,6 @@ var desktop = (function() {
         desktopData = new DesktopData(); // Defined in the backend
         desktopData.updateCallback("desktop.refresh()");
         setupLauncher();
-        updateBackground(lastBg);
     }
 
     var setupTrashDnD = function() {
@@ -140,8 +136,7 @@ var desktop = (function() {
 
     return {
         init: init,
-        updateBackground: updateBackground,
-        refresh: refresh 
+        refresh: refresh
     }
 })();
 

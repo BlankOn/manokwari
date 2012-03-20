@@ -215,7 +215,37 @@ namespace Utils {
         return new JSCore.Value.undefined (ctx);
     }
 
+    public static JSCore.Value js_get_time (Context ctx,
+            JSCore.Object function,
+            JSCore.Object thisObject,
+            JSCore.Value[] arguments,
+            out JSCore.Value exception) {
 
+		char bufferClock[100];
+		Time t = Time.local (time_t ());
+		t.strftime (bufferClock, _("%H:%M"));
+
+        var s = new String.with_utf8_c_string (_((string) bufferClock));
+        var result = new JSCore.Value.string (ctx, s);
+        s = null;
+        return result;
+    }
+
+    public static JSCore.Value js_get_date (Context ctx,
+            JSCore.Object function,
+            JSCore.Object thisObject,
+            JSCore.Value[] arguments,
+            out JSCore.Value exception) {
+
+		char bufferClock[100];
+		Time t = Time.local (time_t ());
+		t.strftime (bufferClock, _("%A, %B %e %Y"));
+
+        var s = new String.with_utf8_c_string (_((string) bufferClock));
+        var result = new JSCore.Value.string (ctx, s);
+        s = null;
+        return result;
+    }
 
     static const JSCore.StaticFunction[] js_funcs = {
         { "run_desktop", js_run_desktop, PropertyAttribute.ReadOnly },
@@ -223,6 +253,8 @@ namespace Utils {
         { "run_command", js_run_command, PropertyAttribute.ReadOnly },
         { "translate", js_translate, PropertyAttribute.ReadOnly },
         { "getIconPath", js_get_icon_path, PropertyAttribute.ReadOnly },
+        { "getTime", js_get_time, PropertyAttribute.ReadOnly },
+        { "getDate", js_get_date, PropertyAttribute.ReadOnly },
         { null, null, 0 }
     };
 

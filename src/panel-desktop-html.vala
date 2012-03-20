@@ -2,10 +2,16 @@ using Gtk;
 using WebKit;
 using JSCore;
 
+[DBus (name = "org.gnome.ScreenSaver")]
+interface ScreenSaver: GLib.Object {
+    public abstract void simulate_user_activity () throws IOError;
+    public signal void active_changed (bool active);
+}
+
 public class PanelDesktopHTML: WebView {
-    string background_image = "cc";
-    unowned JSCore.GlobalContext context = null;
-    bool lastBgInitialized = false;
+    ScreenSaver screensaver = null;
+
+    public signal void idle_activated();
 
     string translate_uri (string old) {
         var uri = old.replace("http://system", "file://" + Config.SYSTEM_PATH + "/");
@@ -13,9 +19,35 @@ public class PanelDesktopHTML: WebView {
     }
 
     public PanelDesktopHTML () {
+        set_transparent (true);
+
+
+        try {
+            screensaver =  Bus.get_proxy_sync (BusType.SESSION,
+                                           "org.gnome.ScreenSaver", "/org/gnome/ScreenSaver");
+        } catch (Error e) {
+            stderr.printf ("Unable to connect to screen saver\n");
+        }
+
+        if (screensaver != null) {
+            screensaver.active_changed.connect((active) =>  {
+                if (active) {
+                    idle_activated ();
+                    try {
+                        screensaver.simulate_user_activity ();
+                    } catch (Error e) {
+
+                        stderr.printf ("Unable to connect to screen saver: %s\n", e.message);
+                    }
+                }
+            });
+        }
+
         var settings = new WebSettings();
         settings.enable_file_access_from_file_uris = true;
         settings.enable_universal_access_from_file_uris = true;
+        settings.javascript_can_open_windows_automatically = true;
+        settings.enable_default_context_menu = false;
         set_settings(settings);
 
 
@@ -27,33 +59,9 @@ public class PanelDesktopHTML: WebView {
         window_object_cleared.connect ((frame, context) => {
             PanelDesktopData.setup_js_class ((JSCore.GlobalContext) context);
             Utils.setup_js_class ((JSCore.GlobalContext) context);
-            this.context = (JSCore.GlobalContext) context;
-            set_background(background_image);
         });
 
-
         load_uri ("http://system/desktop.html");
-    }
-
-    public void set_background (string? bg) {
-        if (bg == null) {
-            return;
-        }
-        if (context != null) {
-            if (lastBgInitialized == false) {
-                var g = context.get_global_object ();
-                var key = new String.with_utf8_c_string ("lastBg");
-                var value = new String.with_utf8_c_string (bg);
-                var js_value = new JSCore.Value.string (context, value);
-                g.set_property (context, key, js_value, 0, null);
-                lastBgInitialized = true;
-            }
-
-            var s = new String.with_utf8_c_string ("desktop.updateBackground('%s');".printf(bg));
-
-            context.evaluate_script (s, null, null, 0, null);
-        }
-        background_image = bg;
     }
 }
  

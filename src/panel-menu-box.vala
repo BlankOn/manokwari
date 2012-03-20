@@ -24,7 +24,6 @@ public class PanelMenuBox : PanelAbstractWindow {
         override_background_color(StateFlags.NORMAL, c);
         set_app_paintable(true);
 
-
         PanelScreen.move_window (this, Gdk.Gravity.NORTH_WEST);
         view.start();
 

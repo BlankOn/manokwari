@@ -1,0 +1,44 @@
+body {
+    overflow: hidden;
+    -webkit-user-select: none;
+    padding: 0px;
+    margin: 0px;
+    background-color: transparent;
+}
+
+[draggable] {
+      -webkit-user-select: none;
+}
+
+#idleScreen {
+    z-index: 100;    
+    width: 100%;
+    height: 100%;
+    background-color: #838383;
+    margin: 0px;
+    padding: 0px;
+    -webkit-transition: all 500ms ease-out;
+    opacity: 0;
+}
+
+#idleClock h1 {
+    font-size: 80px;
+    margin: 0px;
+    color: white;
+    font-weight: lighter;
+}
+
+#idleClock h2{
+    font-size: 35px;
+    clear: both;
+    color: white;
+    margin: 0px;
+    margin-top: -20px;
+    font-weight: lighter;
+}
+
+#idleClock {
+    position: absolute;
+    bottom: 50px;
+    left: 50px;
+}
