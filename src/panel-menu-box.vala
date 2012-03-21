@@ -9,6 +9,15 @@ public class PanelMenuBox : PanelAbstractWindow {
     PanelMenuHTML view;
 
     public PanelMenuBox () {
+        var bus = Bus.get_sync (GLib.BusType.SESSION);
+        bus.signal_subscribe (null,
+                "org.gtk.gio.DesktopAppInfo",
+                "Launched",
+                "/org/gtk/gio/DesktopAppInfo",
+                null,
+                0,
+                dismiss);
+
         view = new PanelMenuHTML ();
         view.show_all ();
         add (view);
