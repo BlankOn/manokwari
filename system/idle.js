@@ -29,7 +29,6 @@ var idle = (function() {
     }
 
     var setBackground = function(bg) {
-        console.log(bg);
         $("#idleScreen").css("background-image", "url(" + bg + ")");
     }
 

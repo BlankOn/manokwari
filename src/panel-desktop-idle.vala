@@ -2,6 +2,7 @@ using Gtk;
 
 public class PanelDesktopIdle: PanelAbstractWindow {
 
+    string background_path = "";
     PanelDesktopIdleView idle;
 
     public PanelDesktopIdle() {
@@ -31,13 +32,12 @@ public class PanelDesktopIdle: PanelAbstractWindow {
             return false;
         });
 
-        var path = Environment.get_home_dir () + "/.config/manokwari/idle-background";
-        idle.set_background (path);        
-        var background = File.new_for_path (path);
+        background_path = Environment.get_home_dir () + "/.config/manokwari/idle-background";
+        var background = File.new_for_path (background_path);
         try {
             var background_monitor = background.monitor (FileMonitorFlags.NONE, null);
             background_monitor.changed.connect(() => {
-                idle.set_background (path);        
+                idle.set_background (background_path);        
             });
         } catch (Error e) {
             stdout.printf ("Can't monitor idle background file: %s\n", e.message);
@@ -45,6 +45,7 @@ public class PanelDesktopIdle: PanelAbstractWindow {
     }
 
     public void activate () {
+        idle.set_background (background_path);        
         show_all ();
         idle.triggerShowAnimation();
         fullscreen ();

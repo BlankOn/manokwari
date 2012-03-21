@@ -27,6 +27,7 @@ body {
     margin: 0px;
     color: white;
     font-weight: lighter;
+    text-shadow: 0 1px 1px #222;
 }
 
 #idleClock h2{
@@ -36,6 +37,7 @@ body {
     margin: 0px;
     margin-top: -20px;
     font-weight: lighter;
+    text-shadow: 0 1px 1px #222;
 }
 
 #idleClock {

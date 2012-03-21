@@ -45,7 +45,7 @@ public class PanelDesktopIdleView: WebView {
 
     public void set_background (string bg) {
         unowned JSCore.Context context = get_main_frame ().get_global_context();
-        var s = new String.with_utf8_c_string ("idle.setBackground(" + bg + ")");
+        var s = new String.with_utf8_c_string ("idle.setBackground('" + bg + "')");
         context.evaluate_script (s, null, null, 0, null);
     }
 
