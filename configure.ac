@@ -1,4 +1,4 @@
-AC_INIT([blankon-panel], [0.1.0], [], [blankon-panel])
+AC_INIT([manokwari], [0.1.0], [], [manokwari])
 AC_CONFIG_SRCDIR([Makefile.am])
 AC_CONFIG_HEADERS(config.h)
 AM_INIT_AUTOMAKE([dist-bzip2])
@@ -16,13 +16,13 @@ if test $USE_DEVEL = yes ; then
 AC_DEFINE_UNQUOTED(SYSTEM_PATH, "$PWD/system", [Location of the JS scripts])
 AC_SUBST(SYSTEM_PATH)
 else
-AC_DEFINE(SYSTEM_PATH, "/usr/lib/blankon-panel/system", [Location of the JS scripts])
+AC_DEFINE(SYSTEM_PATH, "/usr/lib/manokwari/system", [Location of the JS scripts])
 AC_SUBST(SYSTEM_PATH)
 fi
 
 
 AH_TEMPLATE([GETTEXT_PACKAGE], [Package name for gettext])
-GETTEXT_PACKAGE=blankon-panel
+GETTEXT_PACKAGE=manokwari
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE")
 AC_SUBST(GETTEXT_PACKAGE)
 AM_GLIB_GNU_GETTEXT
@@ -43,15 +43,15 @@ UNIQUE_REQUIRED=3.0.0
 WEBKIT_REQUIRED=1.3.0
 
 
-PKG_CHECK_MODULES(BLANKON_PANEL, glib-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED gtk+-3.0 >= $GTK_REQUIRED atk >= $ATK_REQUIRED gee-1.0 >= $GEE_REQUIRED cairo >= $CAIRO_REQUIRED libgnome-menu >= $LIBGNOME_MENU_REQUIRED libwnck-3.0 >= $LIBWNCK_REQUIRED unique-3.0 >= $UNIQUE_REQUIRED webkitgtk-3.0 >= $WEBKIT_REQUIRED)
+PKG_CHECK_MODULES(MANOKWARI, glib-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED gtk+-3.0 >= $GTK_REQUIRED atk >= $ATK_REQUIRED gee-1.0 >= $GEE_REQUIRED cairo >= $CAIRO_REQUIRED libgnome-menu >= $LIBGNOME_MENU_REQUIRED libwnck-3.0 >= $LIBWNCK_REQUIRED unique-3.0 >= $UNIQUE_REQUIRED webkitgtk-3.0 >= $WEBKIT_REQUIRED)
 
 WNCK_GMENU_DISCLAIMER='-DGMENU_I_KNOW_THIS_IS_UNSTABLE -DWNCK_I_KNOW_THIS_IS_UNSTABLE'
 
 AC_SUBST(WNCK_GMENU_DISCLAIMER)
-AC_SUBST(BLANKON_PANEL_CFLAGS)
-AC_SUBST(BLANKON_PANEL_LIBS)
+AC_SUBST(MANOKWARI_CFLAGS)
+AC_SUBST(MANOKWARI_LIBS)
 
-VALA_PACKAGES="--pkg atk --pkg gdk-x11-3.0 --pkg gee-1.0 --pkg cairo --pkg gtk+-3.0 --pkg gio-unix-2.0 --pkg libgnome-menu --pkg gdk-3.0 --pkg libwnck-3.0 --pkg unique-3.0 --pkg webkit-1.0 --pkg javascriptcore"
+VALA_PACKAGES="--pkg atk --pkg gdk-x11-3.0 --pkg gee-1.0 --pkg cairo --pkg gtk+-3.0 --pkg gio-unix-2.0 --pkg libgnome-menu --pkg gdk-3.0 --pkg libwnck-3.0 --pkg unique-3.0 --pkg webkit-1.0 --pkg javascriptcore --pkg libsoup-2.4"
 
 AC_SUBST(VALA_PACKAGES)
 
@@ -59,8 +59,9 @@ AC_PREFIX_DEFAULT("/usr")
 
 AC_CONFIG_FILES([Makefile
 	data/Makefile
-	data/blankon-panel.desktop
+	data/manokwari.desktop
 	src/Makefile
+	system/Makefile
 	po/Makefile.in])
 
 AC_OUTPUT

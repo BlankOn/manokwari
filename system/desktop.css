@@ -1,0 +1,121 @@
+body {
+    overflow: hidden;
+    -webkit-user-select: none;
+    padding: 0px;
+    margin: 0px;
+    background-color: transparent;
+}
+
+[draggable] {
+      -webkit-user-select: none;
+}
+
+#launcher {
+    overflow: hidden;
+    overflow-y: auto;
+    max-height: 500px;
+    position: absolute;
+    bottom: 0px;
+    z-index: 1;
+    -webkit-transition: all 500ms ease-out;
+}
+
+.ui-launcher-entry {
+    display: inline-block;
+    vertical-align: top;
+    width: 120px;
+    max-height: 100px;
+    cursor: pointer;
+    text-align: center;
+    z-index: inherit;
+}
+
+.ui-launcher-entry:hover {
+}
+
+.ui-launcher-entry span {
+    word-wrap: break-word;
+    display: block;
+    text-align: center;
+    color: white;
+    text-shadow: 0 1px 1px #000;
+    width: inherit;
+    height: inherit;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.ui-launcher-entry img {
+    width: 48px;
+    height: 48px;
+    -webkit-transition: all 100ms ease-out;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.ui-launcher-entry img:hover {
+    width: 60;
+    height: 60;
+
+}
+
+.ui-launcher-entry span:hover {
+    text-shadow: 0 2px 2px #000;
+}
+
+
+.ui-bin-img {
+    margin-left: auto;
+    margin-right: auto;
+    width: 48px;
+    height: 48px;
+    -webkit-transition: all 100ms ease-out;
+}
+
+.ui-bin-img-enter {
+    width: 70px;
+    height: 70px;
+}
+
+.ui-bin:hover {
+    width: 150px;
+    height: 150px;
+} 
+
+.ui-bin {
+    display: -webkit-box;
+    -webkit-box-pack: center;
+    -webkit-box-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100px;
+    height: 100px;
+    border-radius: 20px;
+    border-style: dashed;
+    border-color: rgba(150, 150, 150, 0.8);
+    opacity: 0;
+    -webkit-transition: all 100ms ease-out;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+    background-color: rgba(0,0,0,0.5);
+}
+
+.ui-bin.enter {
+    background-color: red;
+}
+
+::-webkit-scrollbar {
+    width: 12px;
+    }
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: rgba(128,128,128,0.8); 
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+}
+
+

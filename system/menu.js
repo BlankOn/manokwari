@@ -87,20 +87,6 @@ MenuData.prototype.constructor = MenuData;
 MenuData.prototype.update = function() {
 }
 
-function FavoritesData() {
-    this.backend = new Favorites();
-    this.data = this.backend.update();
-    this.dataReady = true;
-}
-inherit(FavoritesData, MenuData);
-FavoritesData.prototype.constructor = FavoritesData;
-
-FavoritesData.prototype.update = function() {
-    this.dataReady = false;
-    this.data = this.backend.update();
-    this.emit(DataChanged);
-    this.dataReady = true;
-}
 
 function XdgData(name) {
     this.name = name;
@@ -340,8 +326,6 @@ MenuList.prototype.render_collapsible = function() {
 
 var dataApplications = new XdgData("applications.menu");
 dataApplications.backend.updateCallback("dataApplications.update()");
-var dataFavorites = new FavoritesData();
-dataFavorites.backend.updateCallback("dataFavorites.update()");
 
 var dataPlaces = new PlacesData();
 dataPlaces.backend.updateCallback("dataPlaces.update()");
@@ -354,8 +338,6 @@ $(document).ready(function() {
     xdg.type = "collapsible";
     xdg.attach("listApplications");
 
-    var fav = new MenuList(dataFavorites);
-    fav.attach("listFavorites");
 
     var places = new MenuList(dataPlaces);
     places.attach("listPlaces");
@@ -399,14 +381,18 @@ function hidePopup(id) {
 
 function prepareShow() {
     setupUserAccount();
+    $("#first").css("left", "0px");
 }
 
-function reset() {
+function prepareHide() {
     changePage($("#first"), {
         transition: "none"
     });
     hidePopup();
     $("#first").addClass("ui-animation-slide");
+    var e = $("#userAccount");
+    e.css("bottom", -e.height());
+    $("#first").css("left", "-" + window.outerWidth + "px");
 }
 
 
@@ -441,6 +427,7 @@ function setupPages() {
 
 function setupUserAccount() {
     var e = $("#userAccount");
+    e.css("bottom", "0px");
     e.find("img").attr("src", userAccount.getIconFile());
     e.find("h1").text(userAccount.getRealName());
     e.find("span").text(userAccount.getHostName());
@@ -562,16 +549,8 @@ function linkHandleTapHandler(e) {
     }
 }
 
-function setupLinks() {
-    // all "a" elements are considered as "button"
-    // rewire the tap only for the object
-    // which has data-tap-handler attribute
-    $('a[data-tap-handler]').on("tap", linkHandleTapHandler);
-}
-
 function setup() {
     setupPages();
-    setupLinks();
     setupBasicStyle();
     setupAdditionalStyle();
     setupPopupButtons();
@@ -584,15 +563,6 @@ function setupPopupButtons() {
     $("#add_to_desktop").on("tap", function (event, ui) {
         XdgDataBackEnd.put_to_desktop($(this).attr("desktop"));
     });
-
-    $("#add_to_favorites").on("tap", function (event, ui) {
-        Favorites.add($(this).attr("desktop"));
-    });
-
-    $("#remove_from_favorites_button").on("tap", function (event, ui) {
-        Favorites.remove($(this).attr("desktop"));
-    });
-
 }
 
 // Handles Settings button. The function is defined
@@ -646,10 +616,7 @@ function changePage(page) {
     if (arguments.length == 2) {
         withAnimation = (arguments[1].transition != "none");
     }
-    var width = $('.ui-mobile-viewport').width();
-    if (typeof width === "undefined") {
-        width = 1000;
-    }
+    var width = window.outerWidth;
 
     if (activePage == null) {
         activePage = $("#first");
@@ -724,7 +691,6 @@ function setupAdditionalStyle() {
     $('div[data-role="content"]').addClass("ui-content");
 
     $("[data-role='popup']").addClass("ui-popup");
-    refreshStyle('[data-role="listview"]');
 }
 
 function toggleCollapsible(e) {
@@ -806,8 +772,6 @@ function refreshStyle(e) {
     e.on("click", ".ui-listview-item", linkHandleClick);
 
     setupBasicStyle();
-    // And rewire the mouse event handling for these items
-    setupLinks();
 }
 
 // Calls the gettext function defined in backend
@@ -855,3 +819,5 @@ function handleEsc(e) {
     }
     return false; // Not handled
 }
+
+

@@ -19,8 +19,42 @@ int main (string[] args) {
     }
 
 
-    var m = new PanelButtonWindow();
-    m.show_all();
+    // Desktop
+    var d = new PanelDesktop ();
+    d.show ();
+
+    // Window 
+    var w = new PanelWindowHost ();
+    w.show();
+
+    var menu_box = new PanelMenuBox();
+    // SIGNALS
+    w.menu_clicked.connect (() => {
+        if (menu_box.visible) {
+            menu_box.try_hide ();
+        } else {
+            // Otherwise we want to show it
+            menu_box.show ();
+        }
+    });
+
+    w.dialog_opened.connect (() => {
+        if (menu_box.visible) {
+            menu_box.try_hide ();
+        }
+    });
+
+    d.desktop_clicked.connect (() => {
+        if (menu_box.visible) {
+            menu_box.try_hide ();
+        }
+    });
+
+    w.windows_visible.connect (() => {
+        if (menu_box.visible) {
+            menu_box.try_hide ();
+        }
+    });
 
     try {
         XDGDBus session =  Bus.get_proxy_sync (BusType.SESSION, 

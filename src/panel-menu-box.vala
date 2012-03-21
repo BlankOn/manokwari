@@ -9,6 +9,15 @@ public class PanelMenuBox : PanelAbstractWindow {
     PanelMenuHTML view;
 
     public PanelMenuBox () {
+        var bus = Bus.get_sync (GLib.BusType.SESSION);
+        bus.signal_subscribe (null,
+                "org.gtk.gio.DesktopAppInfo",
+                "Launched",
+                "/org/gtk/gio/DesktopAppInfo",
+                null,
+                0,
+                dismiss);
+
         view = new PanelMenuHTML ();
         view.show_all ();
         add (view);
@@ -24,13 +33,14 @@ public class PanelMenuBox : PanelAbstractWindow {
         override_background_color(StateFlags.NORMAL, c);
         set_app_paintable(true);
 
-
         PanelScreen.move_window (this, Gdk.Gravity.NORTH_WEST);
         view.start();
 
         hide ();
 
         button_press_event.connect((event) => {
+
+        stdout.printf("xxx\n");
             // Only dismiss if within the area
             // TODO: multihead
             if (event.x > get_window().get_width ()) {
@@ -44,7 +54,6 @@ public class PanelMenuBox : PanelAbstractWindow {
             PanelScreen.move_window (this, Gdk.Gravity.NORTH_WEST);
             queue_resize ();
         });
-        
 
         map_event.connect (() => {
             shown ();

@@ -9,6 +9,11 @@ public class PanelMenuHTML: WebView {
         return uri;
     }
 
+    string translate_theme (string old) {
+        var uri = "file://%s".printf(Utils.get_icon_path (old.replace("theme://", "")));
+        return uri;
+    }
+
     public PanelMenuHTML () {
         set_visual (Gdk.Screen.get_default ().get_rgba_visual ());
 
@@ -27,14 +32,17 @@ public class PanelMenuHTML: WebView {
         set_settings(settings);
 
         resource_request_starting.connect((frame, resource, request, response) => {
-            var uri = translate_uri (resource.uri);
-            request.set_uri(uri);
+            if (resource.uri.has_prefix("theme://")) {
+                request.set_uri(translate_theme(resource.uri));
+            } else {
+                var uri = translate_uri (resource.uri);
+                request.set_uri(uri);
+            }
         });
 
         window_object_cleared.connect ((frame, context) => {
             PanelXdgData.setup_js_class ((JSCore.GlobalContext) context);
             Utils.setup_js_class ((JSCore.GlobalContext) context);
-            Favorites.setup_js_class ((JSCore.GlobalContext) context);
             PanelPlaces.setup_js_class ((JSCore.GlobalContext) context);
             PanelSessionManager.setup_js_class ((JSCore.GlobalContext) context);
             PanelUser.setup_js_class ((JSCore.GlobalContext) context);
@@ -45,26 +53,16 @@ public class PanelMenuHTML: WebView {
         load_uri ("http://system/menu.html");
     }
 
-    public void setPosition (int pos) {
-        unowned JSCore.Context context = get_focused_frame ().get_global_context();
-        var s = new String.with_utf8_c_string ("$('#first').css('left', '" + pos.to_string() + "px');$('.ui-mobile-viewport').css('width', '" + get_window ().get_width ().to_string() + "px');");
-        context.evaluate_script (s, null, null, 0, null);
-    }
-
     public void triggerShowAnimation () {
         unowned JSCore.Context context = get_focused_frame ().get_global_context();
         var s = new String.with_utf8_c_string ("prepareShow()");
         context.evaluate_script (s, null, null, 0, null);
-
-        setPosition (0);
     }
 
     public void triggerHideAnimation () {
         unowned JSCore.Context context = get_focused_frame ().get_global_context();
-        var s = new String.with_utf8_c_string ("reset()");
+        var s = new String.with_utf8_c_string ("prepareHide()");
         context.evaluate_script (s, null, null, 0, null);
-
-        setPosition (-1 * get_window ().get_width ());
     }
 
     public bool handleEsc() {

@@ -40,7 +40,7 @@ public class PanelTray : HBox {
     }
 
     private FilterReturn event_filter (Gdk.XEvent xev, Gdk.Event event) {
-        var display = x11_get_default_xdisplay ();
+        unowned X.Display display = x11_get_default_xdisplay ();
         Gdk.FilterReturn return_value = Gdk.FilterReturn.CONTINUE;
         
         void* pointer = &xev;
@@ -61,7 +61,7 @@ public class PanelTray : HBox {
     }
 
     private bool setup_selection () {
-        var display = x11_get_default_xdisplay ();
+        unowned X.Display display = x11_get_default_xdisplay ();
         var screen = get_screen();
         var atom = Gdk.Atom.intern ("_NET_SYSTEM_TRAY_S%d".printf(screen.get_number()), false);
 

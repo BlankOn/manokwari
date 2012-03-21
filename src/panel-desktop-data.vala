@@ -3,23 +3,21 @@ using GLib;
 using JSCore;
 using Gtk;
 
-// This class opens an xdg menu and populates it
-public class PanelXdgData {
+// This class prepares data in desktop 
+public class PanelDesktopData {
 
-    string catalog;
     StringBuilder json; // use StringBuilder to avoid appending immutable strings
-    IconTheme icon;
     static Context* jsContext;
     JSCore.Object* jsObject;
     uint scheduled = 0;
     uint64 last_schedule = 0;
+    string path;
 
     public signal void changed ();
 
-    public PanelXdgData (string catalog) {
+    public PanelDesktopData () {
+        path = Environment.get_user_special_dir (UserDirectory.DESKTOP);
         json = new StringBuilder ();
-        this.catalog = catalog;
-        icon = IconTheme.get_default ();
         monitor();
 
         changed.connect (() => {
@@ -75,121 +73,61 @@ public class PanelXdgData {
 
 
     void monitor () {
-        var xdg_menu_dir = File.new_for_path ("/etc/xdg/menus");
+        var desktop_dir = File.new_for_path (path);
         try {
-            var xdg_menu_monitor = xdg_menu_dir.monitor (FileMonitorFlags.NONE, null);
-            xdg_menu_monitor.changed.connect (() => {
+            var desktop_monitor = desktop_dir.monitor (FileMonitorFlags.NONE, null);
+            desktop_monitor.changed.connect (() => {
                 changed();
             });
         } catch (Error e) {
-            stdout.printf ("Can't monitor /etc/xdg/menus directory: %s\n", e.message);
+            stdout.printf ("Can't monitor desktop directory: %s\n", e.message);
         }
-        var apps_dir = File.new_for_path ("/usr/share/applications");
-        try {
-            var apps_monitor = apps_dir.monitor (FileMonitorFlags.NONE, null);
-            apps_monitor.changed.connect (() => {
-                changed();
-            });
-        } catch (Error e) {
-            stdout.printf ("Can't monitor applications directory: %s\n", e.message);
-        }
-
     }
 
-    void update_tree (TreeDirectory root) {
-        foreach (TreeItem item in root.get_contents ()) {
-            switch (item.get_type()) {
-            case TreeItemType.DIRECTORY:
-                var i = (TreeDirectory) item;
-
-                var s = "{icon: '%s', name: '%s',".printf(
-                            Utils.get_icon_path(i.get_icon ().replace(".svg", "").replace(".png", "").replace(".xpm","")),
-                            i.get_name ()
-                        );
-                json.append (s);
-                json.append ("children:[");
-                update_tree (i);
-                if (json.str [json.len - 1] == ',') {
-                    json.erase (json.len - 1, 1); // Remove trailing comma
+    void update_tree () {
+        try {
+            var dir = Dir.open (path, 0);
+            while (true) {
+                var name = dir.read_name ();
+                if (name == null) {
+                    break;
                 }
-                json.append ("]"); // children
-                json.append("},"); // {
-                break;
-
-            case TreeItemType.ENTRY:
-                var i = (TreeEntry) item;
-               
-                var s = "{icon: '%s', name: '%s', desktop: '%s'},".printf(
-                            Utils.get_icon_path(i.get_icon ().replace(".svg", "").replace(".png", "").replace(".xpm","")),
-                            i.get_display_name (),
-                            i.get_desktop_file_path ()
-                        );
-                json.append (s);
-                break;
+                if (name.has_suffix (".desktop")) {
+                    var info = new DesktopAppInfo.from_filename (path + "/" + name);
+                    var s = "{icon: '%s', name: '%s', desktop: '%s'},".printf(
+                                Utils.get_icon_path(info.get_icon ().to_string (), 48),
+                                info.get_name (),
+                                name
+                            );
+                    json.append (s);
+                }
             }
+        } catch (FileError e) {
+            stdout.printf ("Unable to open desktop directory: %s\n", e.message);
+        } catch (Error e) {
+            stdout.printf ("Unable to open desktop directory: %s\n", e.message);
         }
     }
 
     void populate () { 
-        var tree = GMenu.Tree.lookup (catalog, TreeFlags.NONE);
-        var root = tree.get_root_directory ();
-
         json.assign("[");
-        update_tree (root);
+        update_tree ();
         if (json.str [json.len - 1] == ',') {
             json.erase (json.len - 1, 1); // Remove trailing comma
         }
         json.append("]");
     }
 
-    string get_json () {
-        return json.str;
-    }
 
-    static void put_to_desktop (string filename) {
-        var input_file = File.new_for_path (filename);
-        var path = Environment.get_user_special_dir (UserDirectory.DESKTOP) + "/" + input_file.get_basename ();
+    static void remove_from_desktop (string filename) {
+        var path = Environment.get_user_special_dir (UserDirectory.DESKTOP) + "/" + filename;
         var file = File.new_for_path (path);
         if (file.query_exists ()) {
-            show_dialog (_("Shortcut %s already exists in %s").printf (input_file.get_basename (), path));
-            return;
-        }
-
-        DataInputStream input;
-        DataOutputStream output;
-        
-        try {
-            input = new DataInputStream (input_file.read ());
-        } catch (Error e) {
-            show_dialog (_("Unable to read %s: %s").printf (filename, e.message));
-            return;
-        }
-
-        try {
-            output = new DataOutputStream (file.create (FileCreateFlags.PRIVATE, null)); 
-            var value = true;
-        } catch (Error e) {
-            show_dialog (_("Unable to create %s shortcut in %s: %s").printf (input_file.get_basename (), path, e.message));
-            input.close ();
-            return;
-        }
-
-        try {
-            output.put_string ("#!/usr/bin/env xdg-open\n\n");
-            string line;
-            while ((line = input.read_line (null)) != null) {
-                output.put_string (line + "\n");
+            try {
+                file.delete ();
+            } catch (Error e) {
             }
-            output.close ();
-            input.close ();
-            GLib.FileUtils.chmod (path, 0700);
-        } catch (Error e) {
-            show_dialog (_("Unable to write %s shortcut in %s: %s").printf (input_file.get_basename (), path, e.message));
-            input.close ();
-            output.close ();
-            return;
-        }
-
+        };
     }
 
     public static JSCore.Object js_constructor (Context ctx,
@@ -206,14 +144,9 @@ public class PanelXdgData {
         f = new JSCore.Object.function_with_callback (ctx, s, js_set_update_callback);
         o.set_property (ctx, s, f, 0, null);
 
-        if (arguments.length == 1) {
-            s = arguments [0].to_string_copy (ctx, null);
-            char buffer[1024];
-            s.get_utf8_c_string (buffer, buffer.length);
-            PanelXdgData* i = new PanelXdgData ((string) buffer);
-            o.set_private (i);
-            i->jsObject = o;
-        }
+        PanelDesktopData* i = new PanelDesktopData ();
+        o.set_private (i);
+        i->jsObject = o;
         return o;
     }
 
@@ -224,7 +157,7 @@ public class PanelXdgData {
 
             out JSCore.Value exception) {
 
-        var i = thisObject.get_private() as PanelXdgData; 
+        var i = thisObject.get_private() as PanelDesktopData; 
         if (i != null && arguments.length == 1) {
             var s = new String.with_utf8_c_string ("updateCallback");
             thisObject.set_property (ctx, s, arguments[0], 0, null);
@@ -240,7 +173,7 @@ public class PanelXdgData {
 
             out JSCore.Value exception) {
 
-        var i = thisObject.get_private() as PanelXdgData;
+        var i = thisObject.get_private() as PanelDesktopData;
         if (i != null) {
             i.populate ();
             var s = new String.with_utf8_c_string (i.json.str);
@@ -252,7 +185,7 @@ public class PanelXdgData {
         return new JSCore.Value.undefined (ctx);
     }
 
-    public static JSCore.Value js_put_to_desktop (Context ctx,
+    public static JSCore.Value js_remove_from_desktop (Context ctx,
             JSCore.Object function,
             JSCore.Object thisObject,
             JSCore.Value[] arguments,
@@ -262,21 +195,21 @@ public class PanelXdgData {
             var s = arguments [0].to_string_copy (ctx, null);
             char buffer[1024];
             s.get_utf8_c_string (buffer, buffer.length);
-            put_to_desktop ((string) buffer);
+            remove_from_desktop ((string) buffer);
         }
 
         return new JSCore.Value.undefined (ctx);
     }
 
     static const JSCore.StaticFunction[] js_funcs = {
-        { "put_to_desktop", js_put_to_desktop, PropertyAttribute.ReadOnly },
+        { "removeFromDesktop", js_remove_from_desktop, PropertyAttribute.ReadOnly },
         { null, null, 0 }
     };
 
     static const ClassDefinition js_class = {
         0,
         ClassAttribute.None,
-        "XdgDataBackEnd",
+        "DesktopData",
         null,
 
         null,
@@ -303,16 +236,8 @@ public class PanelXdgData {
         var c = new Class (js_class);
         var o = new JSCore.Object (context, c, context);
         var g = context.get_global_object ();
-        var s = new String.with_utf8_c_string ("XdgDataBackEnd");
+        var s = new String.with_utf8_c_string ("DesktopData");
         g.set_property (context, s, o, PropertyAttribute.None, null);
-    }
-
-    static void show_dialog (string message) {
-        var dialog = new MessageDialog (null, DialogFlags.DESTROY_WITH_PARENT, MessageType.ERROR, ButtonsType.CLOSE, "%s", message);
-        dialog.response.connect (() => {
-            dialog.destroy ();
-        });
-        dialog.show ();
     }
 
 }
