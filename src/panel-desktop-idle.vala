@@ -32,6 +32,12 @@ public class PanelDesktopIdle: PanelAbstractWindow {
             return false;
         });
 
+        idle.button_press_event.connect (() => {
+            deactivate ();
+            return false;
+        });
+
+
         background_path = Environment.get_home_dir () + "/.config/manokwari/idle-background";
         var background = File.new_for_path (background_path);
         try {

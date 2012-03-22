@@ -324,6 +324,7 @@ public class PanelWindowHost : PanelAbstractWindow {
 
     public signal void activated (); // Emitted when the window host is activated (the size is getting bigger)
 
+    public signal void resized (int size); // Emitted when the window is resized
     enum Size {
         SMALL = 22,
         BIG = 34
@@ -367,6 +368,14 @@ public class PanelWindowHost : PanelAbstractWindow {
         var clock_event = new EventBox ();
         clock_event.show_all ();
         clock_event.add (a);
+
+
+        var calendar = new PanelCalendar ();
+        calendar.hide ();
+
+        resized.connect((size) => {
+            calendar.update_position (size);
+        });
 
         outer_box.pack_end (pager_entry, false, false, 1);
         outer_box.pack_end (clock_event, false, false, 0);
@@ -457,15 +466,10 @@ public class PanelWindowHost : PanelAbstractWindow {
         });
 
         clock_event.button_release_event.connect(() => {
-            var info = new DesktopAppInfo.from_filename ("/usr/share/applications/gnome-datetime-panel.desktop");
-            try {
-                info.launch (null, new AppLaunchContext ());
-            } catch (Error e) {
-                var dialog = new MessageDialog (null, DialogFlags.DESTROY_WITH_PARENT, MessageType.ERROR, ButtonsType.CLOSE, _("Unable to launch date-time applet: %s"), e.message);
-                dialog.response.connect (() => {
-                            dialog.destroy ();
-                        });
-                dialog.show ();
+            if (calendar.visible) {
+                calendar.hide ();
+            } else {
+                calendar.show_all ();
             }
 
             return true;
@@ -487,6 +491,7 @@ public class PanelWindowHost : PanelAbstractWindow {
         }
         image.set_pixel_size (size);
         reposition();
+        resized (size);
     }
 
     public override void get_preferred_width (out int min, out int max) {
