@@ -115,6 +115,7 @@ span {
 .ui-collapsible {
     margin-left: 5px;
     margin-right: 5px;
+    width: 300px;
 }
 
 .ui-collapsible-header {
@@ -203,7 +204,7 @@ span {
     height: 60px;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
-    width: 290; 
+    width: 300; 
     margin-left: 5px;
     margin-right: 5px;
     padding: 5px;
