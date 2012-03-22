@@ -5274,7 +5274,7 @@ namespace Gtk {
 		public virtual void get_preferred_height (out int minimum_height, out int natural_height);
 		public virtual void get_preferred_height_for_width (int width, out int minimum_height, out int natural_height);
 		public void get_preferred_size (out Gtk.Requisition minimum_size, out Gtk.Requisition natural_size);
-		public virtual void get_preferred_width (out int minimum_width, int natural_width);
+		public virtual void get_preferred_width (out int minimum_width, out int natural_width);
 		public virtual void get_preferred_width_for_height (int height, out int minimum_width, out int natural_width);
 		public bool get_realized ();
 		public bool get_receives_default ();

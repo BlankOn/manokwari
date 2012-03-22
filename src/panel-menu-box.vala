@@ -88,9 +88,11 @@ public class PanelMenuBox : PanelAbstractWindow {
     }
 
     private void dismiss () {
-        stdout.printf("Menu box dismissed \n");
-        Utils.ungrab (this);
-        try_hide ();
+        if (visible) {
+            stdout.printf("Menu box dismissed \n");
+            Utils.ungrab (this);
+            try_hide ();
+        }
     }
 
     bool real_hide () {
