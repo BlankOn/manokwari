@@ -452,6 +452,17 @@ function linkHandleClick(e) {
     // just ignore clicks
     e.preventDefault();
     e.stopPropagation();
+
+    var f = $(this).attr("data-tap-handler");
+    if (typeof f === "undefined") {
+        var f = $(this).children().attr("data-tap-handler");
+
+        // only call the function if it is a function
+        if (typeof window[f] === "function") {
+            window[f]();
+        }
+    }
+
 }
 
 function linkHandleMouseDown(e) {
@@ -536,16 +547,6 @@ function linkHandleMouseUp(e) {
         // reset the "down" state after finishing
         // meaning that the button's job is "done"
         target.attr("mouse-is-down", false);
-    }
-}
-
-// Call the handler function defined in
-// the data-tap-handler attribute
-function linkHandleTapHandler(e) {
-    var f = $(this).attr("data-tap-handler");
-    // only call the function if it is a function
-    if (typeof window[f] === "function") {
-        window[f]();
     }
 }
 
