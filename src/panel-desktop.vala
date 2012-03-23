@@ -42,7 +42,7 @@ public class PanelDesktop: PanelAbstractWindow {
         });
 
         desktop.idle_activated.connect (() => {
-            idle.activate();
+            idle.startIdling();
         });
     }
 

@@ -50,7 +50,7 @@ public class PanelDesktopIdle: PanelAbstractWindow {
         }
     }
 
-    public void activate () {
+    public void startIdling () {
         idle.set_background (background_path);        
         show_all ();
         idle.triggerShowAnimation();

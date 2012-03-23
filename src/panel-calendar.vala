@@ -53,12 +53,6 @@ public class PanelCalendar : PanelAbstractWindow {
         max += h2 + PADDING;
     }
 
-    private void dismiss () {
-        stdout.printf("Calendar box dismissed \n");
-        Utils.ungrab (this);
-        try_hide ();
-    }
-
     bool real_hide () {
         hide ();
         return false;

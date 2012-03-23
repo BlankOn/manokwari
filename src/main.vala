@@ -12,9 +12,10 @@ int main (string[] args) {
 
     Gtk.init (ref args);
 
-    var app = new Unique.App ("id.or.blankonlinux.Panel", null);
+    var id = GLib.Environment.get_variable("DESKTOP_AUTOSTART_ID");
+    var app = new Unique.App ("id.or.blankonlinux.Manokwari", id);
     if (app.is_running ()) {
-        stdout.printf ("BlankOn Panel is already running.\n");
+        stdout.printf ("Manokwari is already running.\n");
         return 0;    
     }
 

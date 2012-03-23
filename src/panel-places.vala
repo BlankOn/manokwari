@@ -181,6 +181,7 @@ public class PanelPlaces {
             JSCore.Value[] arguments,
             out JSCore.Value exception) {
 
+        exception = null;
         var c = new Class (js_class);
         var o = new JSCore.Object (ctx, c, null);
         var s = new String.with_utf8_c_string ("updateCallback");
@@ -205,6 +206,7 @@ public class PanelPlaces {
 
             out JSCore.Value exception) {
 
+        exception = null;
         var i = thisObject.get_private() as PanelPlaces; 
         if (i != null && arguments.length == 1) {
             var s = new String.with_utf8_c_string ("updateCallback");
@@ -221,6 +223,7 @@ public class PanelPlaces {
 
             out JSCore.Value exception) {
 
+        exception = null;
         var i = thisObject.get_private() as PanelPlaces; 
         if (i != null) {
             var result = i.get_json();

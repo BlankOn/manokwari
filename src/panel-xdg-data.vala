@@ -142,10 +142,6 @@ public class PanelXdgData {
         json.append("]");
     }
 
-    string get_json () {
-        return json.str;
-    }
-
     static void put_to_desktop (string filename) {
         var input_file = File.new_for_path (filename);
         var path = Environment.get_user_special_dir (UserDirectory.DESKTOP) + "/" + input_file.get_basename ();
@@ -156,7 +152,7 @@ public class PanelXdgData {
         }
 
         DataInputStream input;
-        DataOutputStream output;
+        DataOutputStream output = null;
         
         try {
             input = new DataInputStream (input_file.read ());
@@ -167,11 +163,15 @@ public class PanelXdgData {
 
         try {
             output = new DataOutputStream (file.create (FileCreateFlags.PRIVATE, null)); 
-            var value = true;
         } catch (Error e) {
             show_dialog (_("Unable to create %s shortcut in %s: %s").printf (input_file.get_basename (), path, e.message));
-            input.close ();
+            try {
+                input.close ();
+            } catch (Error e) {
+                // Ignore
+            }
             return;
+        } finally {
         }
 
         try {
@@ -185,8 +185,12 @@ public class PanelXdgData {
             GLib.FileUtils.chmod (path, 0700);
         } catch (Error e) {
             show_dialog (_("Unable to write %s shortcut in %s: %s").printf (input_file.get_basename (), path, e.message));
-            input.close ();
-            output.close ();
+            try {
+                input.close ();
+                output.close ();
+            } catch (Error e) {
+                // Ignore
+            }
             return;
         }
 
@@ -197,6 +201,7 @@ public class PanelXdgData {
             JSCore.Value[] arguments,
             out JSCore.Value exception) {
 
+        exception = null;
         var c = new Class (js_class);
         var o = new JSCore.Object (ctx, c, null);
         var s = new String.with_utf8_c_string ("update");
@@ -224,6 +229,7 @@ public class PanelXdgData {
 
             out JSCore.Value exception) {
 
+        exception = null;
         var i = thisObject.get_private() as PanelXdgData; 
         if (i != null && arguments.length == 1) {
             var s = new String.with_utf8_c_string ("updateCallback");
@@ -240,6 +246,7 @@ public class PanelXdgData {
 
             out JSCore.Value exception) {
 
+        exception = null;
         var i = thisObject.get_private() as PanelXdgData;
         if (i != null) {
             i.populate ();
@@ -258,6 +265,7 @@ public class PanelXdgData {
             JSCore.Value[] arguments,
             out JSCore.Value exception) {
 
+        exception = null;
         if (arguments.length == 1) {
             var s = arguments [0].to_string_copy (ctx, null);
             char buffer[1024];

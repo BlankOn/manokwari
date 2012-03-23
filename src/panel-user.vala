@@ -66,8 +66,12 @@ public class PanelUser {
         if (user_path == null) {
             return;
         }
-        user =  Bus.get_proxy_sync (BusType.SYSTEM,
+        try {
+            user =  Bus.get_proxy_sync (BusType.SYSTEM,
                                            "org.freedesktop.Accounts", user_path);
+        } catch (Error e) {
+            stderr.printf ("Unable to connect to user account manager: %s\n", e.message);
+        }
     }
 
     public static JSCore.Object js_constructor (Context ctx,
@@ -75,6 +79,7 @@ public class PanelUser {
             JSCore.Value[] arguments,
             out JSCore.Value exception) {
 
+        exception = null;
         var c = new Class (js_class);
         var o = new JSCore.Object (ctx, c, null);
         PanelUser* i = new PanelUser ();
@@ -101,6 +106,7 @@ public class PanelUser {
 
             out JSCore.Value exception) {
 
+        exception = null;
         var i = thisObject.get_private() as PanelUser;
         if (i != null) {
             i.update ();
@@ -117,6 +123,7 @@ public class PanelUser {
 
             out JSCore.Value exception) {
 
+        exception = null;
         var i = thisObject.get_private() as PanelUser;
         if (i != null) {
             var s = new String.with_utf8_c_string (GLib.Environment.get_host_name ());
@@ -132,6 +139,7 @@ public class PanelUser {
 
             out JSCore.Value exception) {
 
+        exception = null;
         var i = thisObject.get_private() as PanelUser;
         if (i != null) {
             i.update ();
