@@ -4,9 +4,7 @@ using GMenu;
 
 
 public class PanelDesktop: PanelAbstractWindow {
-
     PanelDesktopHTML desktop;
-    PanelDesktopIdle idle;
 
     public signal void desktop_clicked();
 
@@ -24,8 +22,6 @@ public class PanelDesktop: PanelAbstractWindow {
         desktop = new PanelDesktopHTML ();
         desktop.show ();
 
-        idle = new PanelDesktopIdle ();
-
         set_type_hint (Gdk.WindowTypeHint.DESKTOP);
         
         var screen = Gdk.Screen.get_default ();
@@ -39,10 +35,6 @@ public class PanelDesktop: PanelAbstractWindow {
         desktop.button_press_event.connect (() => {
             desktop_clicked ();
             return false;
-        });
-
-        desktop.idle_activated.connect (() => {
-            idle.startIdling();
         });
     }
 
