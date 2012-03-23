@@ -17,9 +17,12 @@ public class PanelTray : HBox {
 
         // Skips already added clients
         foreach (unowned Widget w in get_children ()) {
-            long id = (long) ((Gtk.Socket) w).get_id ();
-            if (id == xid)
-                return;
+            unowned Gtk.Socket socket = w as Gtk.Socket;
+            if (socket != null) {
+                long id = (long) socket.get_id ();
+                if (id == xid)
+                    return;
+                }
         }
 
         var w = new Gtk.Socket();
@@ -48,8 +51,8 @@ public class PanelTray : HBox {
                  
         if(xevent->type == X.EventType.ClientMessage) {
             if (xevent->xclient.message_type == display.intern_atom ("_NET_SYSTEM_TRAY_OPCODE", false)) {
-                if (xevent->xclient.data.l [1] == Message.REQUEST_DOCK) {
-                    add_client (xevent->xclient.data.l [2]);
+                if (xevent->xclient.data_l [1] == Message.REQUEST_DOCK) {
+                    add_client (xevent->xclient.data_l [2]);
                     return Gdk.FilterReturn.REMOVE;
                 }
             } else {
@@ -76,18 +79,17 @@ public class PanelTray : HBox {
             return false;
         }
         var xid = (long) X11Window.get_xid (invisible.get_window ());
-        var event = ClientMessageEvent ();
+        var event = ClientMessageEvent();
         event.type          = X.EventType.ClientMessage;
         event.window        = display.root_window (screen.get_number ()); 
         event.message_type  = display.intern_atom ("MANAGER", false);
         event.format        = 32;
-        event.data.l [0]    = Gdk.CURRENT_TIME;
-        event.data.l [1]    = (long) display.intern_atom ("_NET_SYSTEM_TRAY_S%d".printf(screen.get_number()), false);
-        event.data.l [2]    = xid;
-        event.data.l [3]    = 0;
-        event.data.l [4]    = 0;
-        X.Event e = (X.Event) event;
-        display.send_event (display.root_window (screen.get_number ()), false, X.EventMask.StructureNotifyMask, ref e);
+        event.data_l [0]    = Gdk.CURRENT_TIME;
+        event.data_l [1]    = (long) display.intern_atom ("_NET_SYSTEM_TRAY_S%d".printf(screen.get_number()), false);
+        event.data_l [2]    = xid;
+        event.data_l [3]    = 0;
+        event.data_l [4]    = 0;
+        display.send_client_event (display.root_window (screen.get_number ()), false, X.EventMask.StructureNotifyMask, ref event);
 
         ulong data[1] = {0};
         display.change_property (xid, display.intern_atom ("_NET_SYSTEM_TRAY_ORIENTATION,", false), X.XA_CARDINAL, 32, X.PropMode.Replace, (uchar[])data, 1);

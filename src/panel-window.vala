@@ -5,7 +5,6 @@ using Gee;
 
 public class PanelWindowPager : PanelAbstractWindow {
     public signal void hidden ();
-    private bool _cancel_hiding;
     private ToggleButton desktop;
 
     public void reset_show_desktop () {
@@ -307,7 +306,6 @@ public class PanelWindowEntry : DrawingArea {
 
 public class PanelWindowHost : PanelAbstractWindow {
     private Image image;
-    private PanelClock clock;
     private bool active;
     private HBox box;
     private PanelTray tray;

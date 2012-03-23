@@ -9,6 +9,7 @@ public class PanelMenuBox : PanelAbstractWindow {
     PanelMenuHTML view;
 
     public PanelMenuBox () {
+        try {
         var bus = Bus.get_sync (GLib.BusType.SESSION);
         bus.signal_subscribe (null,
                 "org.gtk.gio.DesktopAppInfo",
@@ -17,6 +18,9 @@ public class PanelMenuBox : PanelAbstractWindow {
                 null,
                 0,
                 dismiss);
+        } catch (Error e) {
+            stderr.printf ("Unable to subscribe to desktop launcher's \"Launched\" signal: %s\n", e.message);
+        }
 
         view = new PanelMenuHTML ();
         view.show_all ();

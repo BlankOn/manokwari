@@ -43,16 +43,26 @@ public class PanelSessionManager {
                     client =  Bus.get_proxy_sync (BusType.SESSION,
                                                    "org.gnome.SessionManager", session_id);
                     client.end_session.connect((flags)=> {
-                        client.end_session_response(true, "");
+                        send_end_response ();
                         Gtk.main_quit();
                     });
                     client.query_end_session.connect((flags)=> {
-                        client.end_session_response(true, "");
+                        send_end_response ();
                     });
 
                 }
             } catch (Error e) {
-                throw e;
+                stderr.printf ("Unable to register session: %s\n", e.message);
+            }
+        }
+    }
+
+    void send_end_response () {
+        if (client != null) {
+            try {
+                client.end_session_response(true, "");
+            } catch (IOError e) {
+                stderr.printf ("Unable to send data to session manager: %s\n", e.message);
             }
         }
     }
@@ -62,7 +72,7 @@ public class PanelSessionManager {
             try {
                 session.logout (0);
             } catch (Error e) {
-                throw e;
+                stderr.printf("Unable to logout: %s\n", e.message);
             }
         }
     }
@@ -72,7 +82,7 @@ public class PanelSessionManager {
             try {
                 session.shutdown ();
             } catch (Error e) {
-                throw e;
+                stderr.printf("Unable to shutdown: %s\n", e.message);
             }
         }
     }
@@ -92,6 +102,7 @@ public class PanelSessionManager {
             JSCore.Value[] arguments,
             out JSCore.Value exception) {
 
+        exception = null;
         var c = new Class (js_class);
         var o = new JSCore.Object (ctx, c, null);
         var s = new String.with_utf8_c_string ("canShutdown");
@@ -116,6 +127,7 @@ public class PanelSessionManager {
 
             out JSCore.Value exception) {
 
+        exception = null;
         var i = thisObject.get_private() as PanelSessionManager; 
         if (i != null) {
             return new JSCore.Value.boolean (ctx, i.can_shutdown()); 
@@ -130,6 +142,7 @@ public class PanelSessionManager {
 
             out JSCore.Value exception) {
 
+        exception = null;
         var i = thisObject.get_private() as PanelSessionManager; 
         if (i != null) {
             i.shutdown(); 
@@ -144,6 +157,7 @@ public class PanelSessionManager {
 
             out JSCore.Value exception) {
 
+        exception = null;
         var i = thisObject.get_private() as PanelSessionManager; 
         if (i != null) {
             i.logout(); 

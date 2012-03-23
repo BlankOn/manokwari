@@ -104,8 +104,6 @@ public class PanelDesktopData {
             }
         } catch (FileError e) {
             stdout.printf ("Unable to open desktop directory: %s\n", e.message);
-        } catch (Error e) {
-            stdout.printf ("Unable to open desktop directory: %s\n", e.message);
         }
     }
 
@@ -135,6 +133,7 @@ public class PanelDesktopData {
             JSCore.Value[] arguments,
             out JSCore.Value exception) {
 
+        exception = null;
         var c = new Class (js_class);
         var o = new JSCore.Object (ctx, c, null);
         var s = new String.with_utf8_c_string ("update");
@@ -157,6 +156,7 @@ public class PanelDesktopData {
 
             out JSCore.Value exception) {
 
+        exception = null;
         var i = thisObject.get_private() as PanelDesktopData; 
         if (i != null && arguments.length == 1) {
             var s = new String.with_utf8_c_string ("updateCallback");
@@ -173,6 +173,7 @@ public class PanelDesktopData {
 
             out JSCore.Value exception) {
 
+        exception = null;
         var i = thisObject.get_private() as PanelDesktopData;
         if (i != null) {
             i.populate ();
@@ -191,6 +192,7 @@ public class PanelDesktopData {
             JSCore.Value[] arguments,
             out JSCore.Value exception) {
 
+        exception = null;
         if (arguments.length == 1) {
             var s = arguments [0].to_string_copy (ctx, null);
             char buffer[1024];

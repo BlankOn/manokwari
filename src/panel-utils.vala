@@ -74,6 +74,7 @@ namespace Utils {
             JSCore.Value[] arguments,
             out JSCore.Value exception) {
 
+        exception = null;
         if (arguments.length > 0) {
             bool from_desktop = false;
             // Optional argument takes a boolean value
@@ -122,6 +123,7 @@ namespace Utils {
             JSCore.Value[] arguments,
             out JSCore.Value exception) {
 
+        exception = null;
         if (arguments.length == 1) {
             var s = arguments [0].to_string_copy (ctx, null);
             char buffer[1024];
@@ -147,11 +149,11 @@ namespace Utils {
             JSCore.Value[] arguments,
             out JSCore.Value exception) {
 
+        exception = null;
         if (arguments.length == 1) {
             var s = arguments [0].to_string_copy (ctx, null);
             char buffer[1024];
             s.get_utf8_c_string (buffer, buffer.length);
-            var f = File.new_for_path ((string) buffer);
             try {
                 var app = AppInfo.create_from_commandline ((string) buffer, (string) buffer, AppInfoCreateFlags.NONE);
                 app.launch (null, null);
@@ -173,6 +175,7 @@ namespace Utils {
             JSCore.Value[] arguments,
             out JSCore.Value exception) {
 
+        exception = null;
         if (arguments.length == 1) {
             var s = arguments [0].to_string_copy (ctx, null);
             char[] buffer = new char[s.get_length() + 1];
@@ -194,6 +197,7 @@ namespace Utils {
             JSCore.Value[] arguments,
             out JSCore.Value exception) {
 
+        exception = null;
         if (arguments.length > 0) {
             var s = arguments [0].to_string_copy (ctx, null);
             char[] buffer = new char[s.get_length() + 1];
@@ -221,6 +225,7 @@ namespace Utils {
             JSCore.Value[] arguments,
             out JSCore.Value exception) {
 
+        exception = null;
 		char bufferClock[100];
 		Time t = Time.local (time_t ());
 		t.strftime (bufferClock, _("%H:%M"));
@@ -237,6 +242,7 @@ namespace Utils {
             JSCore.Value[] arguments,
             out JSCore.Value exception) {
 
+        exception = null;
 		char bufferClock[100];
 		Time t = Time.local (time_t ());
 		t.strftime (bufferClock, _("%A, %B %e %Y"));
@@ -294,7 +300,11 @@ namespace Utils {
     public static string get_icon_path (string name, int size=24) {
         var icon = IconTheme.get_default ();
         var i = icon.lookup_icon (name, size, IconLookupFlags.GENERIC_FALLBACK);
-        return i.get_filename();
+        if (i != null) {
+            return i.get_filename();
+        } else {
+            return name;
+        }
     }
 
 
