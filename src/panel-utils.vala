@@ -300,7 +300,11 @@ namespace Utils {
     public static string get_icon_path (string name, int size=24) {
         var icon = IconTheme.get_default ();
         var i = icon.lookup_icon (name, size, IconLookupFlags.GENERIC_FALLBACK);
-        return i.get_filename();
+        if (i != null) {
+            return i.get_filename();
+        } else {
+            return name;
+        }
     }
 
 

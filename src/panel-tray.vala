@@ -17,9 +17,12 @@ public class PanelTray : HBox {
 
         // Skips already added clients
         foreach (unowned Widget w in get_children ()) {
-            long id = (long) ((Gtk.Socket) w).get_id ();
-            if (id == xid)
-                return;
+            unowned Gtk.Socket socket = w as Gtk.Socket;
+            if (socket != null) {
+                long id = (long) socket.get_id ();
+                if (id == xid)
+                    return;
+                }
         }
 
         var w = new Gtk.Socket();
