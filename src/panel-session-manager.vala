@@ -21,8 +21,17 @@ public class PanelSessionManager {
     static ObjectPath session_id = null;
     private SessionManager session = null;
     private ClientPrivate client = null;
+    static PanelSessionManager instance = null;
 
-    public PanelSessionManager () {
+    public static PanelSessionManager getInstance () {
+        if (instance == null) {
+            instance = new PanelSessionManager ();
+        }
+
+        return instance;
+    }
+
+    private PanelSessionManager () {
         try {
             session =  Bus.get_proxy_sync (BusType.SESSION,
                                            "org.gnome.SessionManager", "/org/gnome/SessionManager");
@@ -115,7 +124,7 @@ public class PanelSessionManager {
         f = new JSCore.Object.function_with_callback (ctx, s, js_shutdown);
         o.set_property (ctx, s, f, 0, null);
 
-        PanelSessionManager* i = new PanelSessionManager ();
+        PanelSessionManager* i = PanelSessionManager.getInstance ();
         o.set_private (i);
         return o;
     }
