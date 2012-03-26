@@ -34,8 +34,8 @@ public class PanelDesktopData {
 
     void schedule_for_kick_js () {
         var d = new DateTime.now_local();
-        if (d.to_unix () - last_schedule > 60) {
-            // Last update was over a minute ago
+        if (d.to_unix () - last_schedule > 1) {
+            // Last update was over a second ago
             // Let's kick JS now
             kick_js ();
         } else  {
@@ -43,8 +43,8 @@ public class PanelDesktopData {
             // if it's not yet scheduled, let's do it
             // otherwise just skip this request
             if (scheduled == 0) {
-                // schedule to kick JS in the next minute
-                scheduled = Timeout.add (60000, kick_js);
+                // schedule to kick JS in the next second 
+                scheduled = Timeout.add (1000, kick_js);
             }
         }
     }
