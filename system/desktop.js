@@ -75,16 +75,9 @@ var desktop = (function() {
 
 
     var populateLauncher = function(data) {
+
         var l = $("#launcher");
         l.empty ();
-        var bin = $("<div>").
-                    attr("id", "bin").
-                    attr("class", "ui-bin");
-        var trash = $("<img>").
-                    attr("class", "ui-bin-img").
-                    attr("src", Utils.getIconPath("user-trash", 48));
-        bin.append(trash);
-        l.append(bin);
         setupTrashDnD();
         for (var i = 0; i < data.length; i ++) {
             var entry = $("<div>").
@@ -119,6 +112,15 @@ var desktop = (function() {
     var init = function() {
         desktopData = new DesktopData(); // Defined in the backend
         desktopData.updateCallback("desktop.refresh()");
+        var l = $("#base");
+        var bin = $("<div>").
+                    attr("id", "bin").
+                    attr("class", "ui-bin");
+        var trash = $("<img>").
+                    attr("class", "ui-bin-img").
+                    attr("src", Utils.getIconPath("user-trash", 48));
+        bin.append(trash);
+        l.prepend(bin);
         setupLauncher();
     }
 
