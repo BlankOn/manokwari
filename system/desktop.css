@@ -11,7 +11,16 @@ body {
 }
 
 #launcher {
+    display: -webkit-box;
+    -webkit-box-orient: horizontal;
+    -webkit-box-pack: center;
+    -webkit-box-align: center;
+
+    -webkit-box-orient: horizontal;
     background: rgba(20, 20, 20, 0.6);
+    border-color: #102030;
+    border-style: solid;
+    border-width: 2px;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
     padding-top: 20px;
