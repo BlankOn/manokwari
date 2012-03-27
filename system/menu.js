@@ -302,6 +302,7 @@ MenuList.prototype.render_collapsible = function() {
                             });
 
                 a.on("taphold", { "text": a.text(), "uri": uri, "desktop": desktop, "command": command }, MenuList.prototype.handle_tap_hold_applications);
+                a.on("right-click", { "text": a.text(), "uri": uri, "desktop": desktop, "command": command }, MenuList.prototype.handle_tap_hold_applications);
                 a.on("tap", { "uri": uri, "desktop": desktop, "command": command }, MenuList.prototype.handle_tap);
 
                 var img = $("<img/>", {
@@ -538,8 +539,13 @@ function linkHandleMouseUp(e) {
                 if (target.attr("href") != "#") {
                     changePage($(target.attr("href")));
                 } else {
-                // or emit the "tap" signal
-                    target.trigger("tap");
+                // or emit the "tap" or "right-click" signal
+                // depending on the click button source
+                    if (e.which == 3) {
+                        target.trigger("right-click");
+                    } else {
+                        target.trigger("tap");
+                    }
                 }
             }
 
