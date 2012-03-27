@@ -95,7 +95,7 @@ public class PanelDesktopData {
                 if (name.has_suffix (".desktop")) {
                     var info = new DesktopAppInfo.from_filename (path + "/" + name);
                     var s = "{icon: '%s', name: '%s', desktop: '%s'},".printf(
-                                Utils.get_icon_path(info.get_icon ().to_string (), 48),
+                                Utils.get_icon_path(info.get_icon ().to_string (), 120),
                                 info.get_name (),
                                 name
                             );
