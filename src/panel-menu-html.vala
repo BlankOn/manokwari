@@ -56,19 +56,19 @@ public class PanelMenuHTML: WebView {
 
     public void triggerShowAnimation () {
         unowned JSCore.Context context = get_focused_frame ().get_global_context();
-        var s = new String.with_utf8_c_string ("prepareShow()");
+        var s = new String.with_utf8_c_string ("menu.prepareShow()");
         context.evaluate_script (s, null, null, 0, null);
     }
 
     public void triggerHideAnimation () {
         unowned JSCore.Context context = get_focused_frame ().get_global_context();
-        var s = new String.with_utf8_c_string ("prepareHide()");
+        var s = new String.with_utf8_c_string ("menu.prepareHide()");
         context.evaluate_script (s, null, null, 0, null);
     }
 
     public bool handleEsc() {
         unowned JSCore.Context context = get_focused_frame ().get_global_context();
-        var s = new String.with_utf8_c_string ("handleEsc()");
+        var s = new String.with_utf8_c_string ("menu.handleEsc()");
         var r = context.evaluate_script (s, null, null, 0, null);
         if (r.is_boolean (context)) {
             return r.to_boolean (context);
