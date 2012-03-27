@@ -459,9 +459,9 @@ var menu = (function() {
         if (typeof f === "undefined") {
             var f = $(this).children().attr("data-tap-handler");
 
-            // only call the function if it is a function
-            if (typeof window[f] === "function") {
-                window[f]();
+            // only call the function if it is a _public_ function
+            if (typeof window.menu[f] === "function") {
+                window.menu[f]();
             }
         }
 
@@ -831,6 +831,9 @@ var menu = (function() {
     return {
         init: init,
         handleEsc: handleEsc,
+        handleSettings: handleSettings,
+        handleLogOut: handleLogOut,
+        handleShutDown: handleShutDown,
         prepareHide: prepareHide,
         prepareShow: prepareShow
     }
