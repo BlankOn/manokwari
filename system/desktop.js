@@ -80,27 +80,36 @@ var desktop = (function() {
         l.empty ();
         setupTrashDnD();
         for (var i = 0; i < data.length; i ++) {
+            var entry_wrapper = $("<div>").
+                            attr("class", "ui-launcher-entry-wrapper");
+
             var entry = $("<div>").
                             attr("class", "ui-launcher-entry").
                             attr("draggable", "true").
                             attr("data-desktop", data[i].desktop);
+            entry_wrapper.append(entry);
             entry.get(0).addEventListener("dragstart", dragStart);
             entry.get(0).addEventListener("dragend", dragEnd);
             entry.click(function() {
                 Utils.run_desktop($(this).attr("data-desktop"), true);
             });
 
+            var img_div = $("<div>").
+                            attr("class", "ui-launcher-entry-img-holder").
+                            attr("draggable", "true");
+
             var img = $("<img>").
                             attr("draggable", "true").
                             attr("src", data[i].icon);
+            img_div.append(img);
             var text = $("<span>").
                             attr("translate", "no").
                             attr("title", data[i].name).
                             text(data[i].name);
 
-            entry.append(img);
+            entry.append(img_div);
             entry.append(text);
-            l.append(entry);
+            l.append(entry_wrapper);
         }
     }
 

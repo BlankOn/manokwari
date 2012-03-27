@@ -11,32 +11,33 @@ body {
 }
 
 #launcher {
-    display: -webkit-box;
-    -webkit-box-orient: horizontal;
-    -webkit-box-pack: center;
-    -webkit-box-align: center;
-
-    -webkit-box-orient: horizontal;
     background: rgba(20, 20, 20, 0.6);
     border-color: #102030;
     border-style: solid;
     border-width: 2px;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
-    padding-top: 20px;
+    max-height: 400px;
     overflow: hidden;
     overflow-y: auto;
-    max-height: 500px;
     width: 95%;
     z-index: 1;
     -webkit-transition: max-height 5s ease-out;
 }
 
-.ui-launcher-entry {
-    display: inline-block;
-    vertical-align: top;
+.ui-launcher-entry-wrapper {
+    display: inline-block; 
     width: 120px;
-    max-height: 100px;
+    max-height: 120px;
+    vertical-align: top;
+}
+
+.ui-launcher-entry {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-box-pack: start;
+    -webkit-box-align: center;
+
     cursor: pointer;
     text-align: center;
     z-index: inherit;
@@ -57,17 +58,30 @@ body {
     margin-right: auto;
 }
 
+
+.ui-launcher-entry-img-holder {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-box-pack: end;
+    -webkit-box-align: center;
+
+    margin-top: 0px;
+    width: 70px;
+    height: 70px;
+}
+
 .ui-launcher-entry img {
     width: 48px;
     height: 48px;
     -webkit-transition: all 100ms ease-out;
     margin-left: auto;
     margin-right: auto;
+    z-index: 10;
 }
 
 .ui-launcher-entry img:hover {
-    width: 60;
-    height: 60;
+    width: 70;
+    height: 70;
 
 }
 
