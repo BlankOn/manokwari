@@ -1,4 +1,25 @@
 [encoding: UTF-8]
 # List of source files which contain translatable strings.
+src/main.vala
+src/panel-abstract-window.vala
+src/panel-animated-adjustment.vala
+src/panel-calendar.vala
+src/panel-clock.vala
+src/panel-desktop-data.vala
+src/panel-desktop-html.vala
+src/panel-desktop.vala
+src/panel-hotkey.vala
+src/panel-item.vala
 src/panel-menu-box.vala
+src/panel-menu-content.vala
+src/panel-menu-html.vala
 src/panel-places.vala
+src/panel-screen.vala
+src/panel-scrollable-content.vala
+src/panel-session-manager.vala
+src/panel-tray.vala
+src/panel-user.vala
+src/panel-utils.vala
+src/panel-window.vala
+src/panel-xdg-data.vala
+
