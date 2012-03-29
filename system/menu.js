@@ -1,3 +1,49 @@
+var UserAccount = UserAccount || (function() {
+    return {
+        getIconFile: function() { return "user-icon.png" },
+        getRealName: function() { return "Atias Wanggai" },
+        getHostName: function() { return "manokwari" }
+    }
+});
+
+var XdgDataBackEnd = XdgDataBackEnd || (function() {
+    return {
+        update: function() {
+            return {
+
+            }
+        },
+        updateCallback: function() {}
+    }
+});
+
+var Places = Places || (function() {
+    return {
+        update: function() {
+            return {
+
+            }
+        },
+        updateCallback: function() {}
+    }
+});
+
+var Utils = Utils || (function () {
+    return {
+        getIconPath: function() {},
+        translate: function(e) { return e }
+    }
+})();
+
+
+var SessionManager = SessionManager || (function() {
+    return {
+        canShutdown: function() { return false },
+        logout: function() { return false },
+        shutdown: function() { return false },
+    }
+});
+
 var inherit = function() {
     var superclasses = [];
 

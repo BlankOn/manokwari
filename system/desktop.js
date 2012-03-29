@@ -1,3 +1,26 @@
+var DesktopData = DesktopData || (function () {
+    return {
+        updateCallback: function() {
+        },
+        update: function() {
+        return ([
+            {   desktop: "",
+                icon: "icon",
+                name: "Test"
+            }
+        ]);
+
+        }
+    }
+});
+
+var Utils = Utils || (function () {
+    return {
+        getIconPath: function() {}
+    }
+})();
+
+
 var desktop = (function() {
     var desktopData = null;
 

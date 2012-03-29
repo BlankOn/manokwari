@@ -24,10 +24,8 @@ public class PanelDesktop: PanelAbstractWindow {
 
         set_type_hint (Gdk.WindowTypeHint.DESKTOP);
         
-        var screen = Gdk.Screen.get_default ();
-        var root = screen.get_root_window ();
-        set_size_request (root.get_width (), root.get_height ());
         add (desktop);
+        queue_resize ();
 
         move (0, 0);
         show_all ();
@@ -36,7 +34,35 @@ public class PanelDesktop: PanelAbstractWindow {
             desktop_clicked ();
             return false;
         });
+
+        screen.size_changed.connect (() =>  {
+            resize_geometry ();
+        });
+
+        screen.monitors_changed.connect (() =>  {
+            resize_geometry ();
+        });
+
     }
+
+    void resize_geometry() {
+        PanelScreen.move_window (this, Gdk.Gravity.NORTH_EAST);
+
+        queue_resize ();
+        desktop.updateSize();
+        stderr.printf("iii %d %d <--\n", screen.width(), screen.height());
+    }
+
+    public override void get_preferred_width (out int min, out int max) {
+        var r = PanelScreen.get_primary_monitor_geometry ().width;
+        min = max = r;
+    }
+
+    public override void get_preferred_height (out int min, out int max) {
+        var r = PanelScreen.get_primary_monitor_geometry ().height;
+        min = max = r;
+    }
+
 
 }
 
