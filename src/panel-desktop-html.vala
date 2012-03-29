@@ -34,5 +34,11 @@ public class PanelDesktopHTML: WebView {
 
         load_uri ("http://system/desktop.html");
     }
+
+    public void updateSize () {
+        var attributes = get_viewport_attributes ();
+        stderr.printf("iii -->\n");
+        attributes.recompute ();
+    }
 }
  
