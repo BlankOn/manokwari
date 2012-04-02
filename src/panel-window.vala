@@ -281,22 +281,41 @@ public class PanelWindowEntry : DrawingArea {
 public class PanelWindowEntryDescriptions : PanelAbstractWindow {
     ArrayList <PanelWindowEntry> stack;
     unowned HashMap <Wnck.Window, unowned PanelWindowEntry> entry_map;
-    unowned PanelWindowEntry activeEntry = null;
+    HashMap <unowned PanelWindowEntry, int> position_map;
+    unowned PanelWindowEntry active_entry = null;
+    unowned PanelWindowEntry old_entry = null;
     private Pango.Layout pango;
     int margin; 
     bool hiding = false;
+    AnimatedProperty anim;
+
+    public double offset {
+        get; set; default = 0;
+    }
 
     public PanelWindowEntryDescriptions (HashMap <Wnck.Window, PanelWindowEntry> entry_map) {
         pango = new Pango.Layout (get_pango_context ());
         stack = new ArrayList<PanelWindowEntry>();
+        position_map = new HashMap<PanelWindowEntry, int> ();
         this.entry_map = entry_map;
         set_type_hint (Gdk.WindowTypeHint.DOCK);
 
         set_app_paintable(true);
         
         margin = 0;
-        show_all ();
+        hide ();
         PanelScreen.move_window (this, Gdk.Gravity.WEST);
+
+        anim = new AnimatedProperty (this);
+        anim.set_property ("offset");
+        
+        anim.frame.connect (() => {
+            queue_draw ();
+        });
+    }
+
+    public void clear_entry (PanelWindowEntry e) {
+        position_map.unset (e);
     }
 
     public override void get_preferred_height (out int min, out int max) {
@@ -311,6 +330,7 @@ public class PanelWindowEntryDescriptions : PanelAbstractWindow {
         var dir = get_direction ();
         int icon_x = 0, icon_y = 0, icon_width = 0;
 
+        style.set_state (get_state_flags ());
         if (icon != null) {
             icon_width = icon.get_width ();
         }
@@ -341,10 +361,15 @@ public class PanelWindowEntryDescriptions : PanelAbstractWindow {
         }
 
         if (icon != null) {
-            Gdk.cairo_set_source_pixbuf (cr, icon, icon_x, 0);
+            Gdk.cairo_set_source_pixbuf (cr, icon, icon_x + offset, 0);
         }
-        Gtk.render_layout (style, cr, text_x, text_y, pango);
-        cr.paint ();
+        Gtk.render_layout (style, cr, text_x + offset, text_y, pango);
+
+        if (state == StateFlags.NORMAL) {
+            cr.paint_with_alpha (0.5);
+        } else {
+            cr.paint ();
+        }
 
         var occupied = icon_margin * 3 + text_w + start + icon_width;
         if (backward) {
@@ -358,27 +383,31 @@ public class PanelWindowEntryDescriptions : PanelAbstractWindow {
         StyleContext style = get_style_context ();
 
         stack.clear ();
+        style.set_state (get_state_flags ());
         Gtk.render_background (style, cr, 0, 0, get_allocated_width (), get_allocated_height ()); 
         cr.paint ();
 
-        if (activeEntry != null)  {
+        if (active_entry != null)  {
             var start_x = -1;
             var pushing = true;
             var backward_start = -1;
 
-            var state = StateFlags.INSENSITIVE;
+            var state = StateFlags.NORMAL;
             foreach (unowned PanelWindowEntry e in entry_map.values) {
 
-                if (e == activeEntry) {
-                    state = StateFlags.NORMAL;
+                if (e.is_on_current_workspace () == false) {
+                    continue;
+                }
+                if (e == active_entry) {
+                    state = StateFlags.PRELIGHT;
                     int x, y;
                     e.get_window ().get_position (out x, out y);
 
-                    stderr.printf("++-Z%s\n", e.window_info.get_name ());
                     start_x = x;
                     pushing = false;
                     backward_start = x;
                 } else {
+                    state = StateFlags.NORMAL;
                     if (pushing) {
                         stack.add (e);
                     }
@@ -386,12 +415,13 @@ public class PanelWindowEntryDescriptions : PanelAbstractWindow {
 
                 if (pushing == false) {
                     var icon = e.window_info.get_icon ();
+                    position_map [e] = start_x;
                     start_x = drawInfo (cr, style, state, icon, e.window_info.get_name (), start_x);
                 }
             }
 
             start_x = backward_start;
-            state = StateFlags.INSENSITIVE;
+            state = StateFlags.NORMAL;
             while (stack.size > 0) {
                 PanelWindowEntry? e = stack.remove_at (stack.size - 1);
                 if (e == null) {
@@ -399,8 +429,8 @@ public class PanelWindowEntryDescriptions : PanelAbstractWindow {
                 }
 
                 var icon = e.window_info.get_icon ();
-                stdout.printf ("xxx%s %d\n", e.window_info.get_name (), start_x);
                 start_x = drawInfo (cr, style, state, icon, e.window_info.get_name (), start_x, true);
+                position_map [e] = start_x;
                 if (start_x < 0) {
                     break;
                 }
@@ -410,17 +440,27 @@ public class PanelWindowEntryDescriptions : PanelAbstractWindow {
         return true;
     }
 
-    public new void activate (unowned PanelWindowEntry e) {
+    public new void activate (PanelWindowEntry e) {
         hiding = false;
-        if (e != null) {
-            stderr.printf("---Z%s\n", e.window_info.get_name ());
-        }
+        old_entry = active_entry;
+        active_entry = e;
         if (get_visible () == false) {
-            activeEntry = e;
             show_all ();
         } else {
             queue_draw ();
         }
+
+        int start = position_map [e];
+        int end = 0;
+
+        offset = 0;
+        if (old_entry != null) {
+            end = position_map [old_entry];
+            offset = start - end;
+        }
+
+        anim.set_final_value (0);
+        anim.start ();
     }
 
     public void deactivate () {
@@ -555,8 +595,10 @@ public class PanelWindowHost : PanelAbstractWindow {
         screen.window_closed.connect ((w) => {
             var e = entry_map [w];
             if (e != null) {
+                descriptions.clear_entry (e);
                 e.destroy ();
                 entry_map.unset (w);
+                update (false);
             }
         });
 
