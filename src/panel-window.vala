@@ -123,13 +123,19 @@ public class PanelWindowPagerEntry : DrawingArea {
 }
 
 public class PanelWindowEntry : DrawingArea {
-    private Wnck.Window window_info;
+    unowned Gdk.Pixbuf icon;
+    public unowned Wnck.Window window_info;
     private Wnck.WindowState last_state;
     private Gtk.StateFlags state;
     private bool popup_shown = false;
     private Pango.Layout pango;
     private int Margin = 5;
     private bool oversize = false;
+    int iconWidth = 24;
+
+
+    public signal void entered ();
+    public signal void left ();
 
     const TargetEntry[] target_list = {
         { "STRING",     0, 0 }
@@ -164,6 +170,7 @@ public class PanelWindowEntry : DrawingArea {
             | Gdk.EventMask.LEAVE_NOTIFY_MASK);
 
         window_info = info;
+        icon = window_info.get_mini_icon ();
         last_state = info.get_state ();
         sync_window_states ();
 
@@ -187,6 +194,7 @@ public class PanelWindowEntry : DrawingArea {
 
         leave_notify_event.connect ((event) => {
             sync_window_states ();
+            left ();
             return false;
         });
         enter_notify_event.connect ((event) => {
@@ -196,6 +204,7 @@ public class PanelWindowEntry : DrawingArea {
                 set_tooltip_text (window_info.get_name ());
             else
                 set_tooltip_text ("");
+            entered ();
             return false; 
         });
 
@@ -226,12 +235,15 @@ public class PanelWindowEntry : DrawingArea {
 
     public override void get_preferred_height (out int min, out int max) {
         // TODO
-        min = max = Margin * 2 + 100; 
+        if (icon != null) {
+            min = max = icon.get_width () + Margin * 2; 
+        } else {
+            min = max = Margin; 
+        }
     }
 
     public override void get_preferred_width (out int min, out int max) {
-        max = PanelScreen.get_primary_monitor_geometry ().width;
-        min = Margin * 2;
+        get_preferred_height (out min, out max); 
     }
 
     public override bool draw (Context cr) {
@@ -239,50 +251,12 @@ public class PanelWindowEntry : DrawingArea {
         style.set_state (state);
 
         Gtk.render_background (style, cr, 0, 0, get_allocated_width (), get_allocated_height ()); 
-        if (draw_info) {
-            var dir = get_direction ();
-            int icon_x = 0, icon_y = 0;
-            int text_start = 0;
-            unowned Gdk.Pixbuf icon = window_info.get_icon ();
-            var w = get_window ().get_width ();
-            var h = get_window ().get_height ();
-            int icon_margin = Margin;
-            if (icon != null) {
-                icon_margin = h / 2 - icon.get_height () / 2;
-                if (icon_margin < 0)
-                    icon_margin = Margin;
-                if (dir == TextDirection.LTR) {
-                    icon_x = icon_margin;
-                    icon_y = icon_margin;
-                    text_start = icon_x + icon.get_width () + icon_margin;
-                } else {
-                    icon_x = w - icon.get_width () - icon_margin;
-                    icon_y = icon_margin;
-                    text_start = icon_x - icon_margin;
-                }
-                Gdk.cairo_set_source_pixbuf (cr, window_info.get_icon (), icon_x, icon_y);
-            }
-            pango.set_font_description (style.get_font (state));
-            pango.set_markup ("<big>" + window_info.get_name () + "</big>", -1);
-            int text_x, text_y, text_w, text_h;
-            pango.get_pixel_size (out text_w, out text_h);
-            text_y = h / 2 - text_h / 2; 
-            oversize = false;
-            if (dir == TextDirection.LTR) {
-                text_x = text_start; 
-                if (text_x + text_w > w)
-                    oversize = true;
-            } else {
-                text_x = text_start - text_w; 
-                if (text_x < 0) {
-                    text_x = Margin;
-                    oversize = true;
-                }
-            }
-            Gtk.render_layout (style, cr, text_x, text_y, pango);
 
-            cr.paint ();
+        if (icon != null) {
+            Gdk.cairo_set_source_pixbuf (cr, icon, Margin, Margin);
         }
+
+        cr.paint ();
         return true;
     }
 
@@ -304,15 +278,226 @@ public class PanelWindowEntry : DrawingArea {
 
 }
 
+public class PanelWindowEntryDescriptions : PanelAbstractWindow {
+    ArrayList <PanelWindowEntry> stack;
+    unowned HashMap <Wnck.Window, unowned PanelWindowEntry> entry_map;
+    HashMap <unowned PanelWindowEntry, int> position_map;
+    unowned PanelWindowEntry active_entry = null;
+    unowned PanelWindowEntry old_entry = null;
+    private Pango.Layout pango;
+    int margin; 
+    bool hiding = false;
+    AnimatedProperty anim;
+
+    public double offset {
+        get; set; default = 0;
+    }
+
+    public PanelWindowEntryDescriptions (HashMap <Wnck.Window, PanelWindowEntry> entry_map) {
+        pango = new Pango.Layout (get_pango_context ());
+        stack = new ArrayList<PanelWindowEntry>();
+        position_map = new HashMap<PanelWindowEntry, int> ();
+        this.entry_map = entry_map;
+        set_type_hint (Gdk.WindowTypeHint.DOCK);
+
+        set_app_paintable(true);
+        
+        margin = 0;
+        hide ();
+        PanelScreen.move_window (this, Gdk.Gravity.WEST);
+
+        anim = new AnimatedProperty (this);
+        anim.set_property ("offset");
+        
+        anim.frame.connect (() => {
+            queue_draw ();
+        });
+    }
+
+    public void clear_entry (PanelWindowEntry e) {
+        position_map.unset (e);
+    }
+
+    public override void get_preferred_height (out int min, out int max) {
+        min = max = 34; 
+    }
+
+    public override void get_preferred_width (out int min, out int max) {
+        min = max = PanelScreen.get_primary_monitor_geometry ().width;
+    }
+
+    int drawInfo (Context cr, StyleContext style, Gtk.StateFlags state, Gdk.Pixbuf? icon, string text, int start, bool backward = false) {
+        var dir = get_direction ();
+        int icon_x = 0, icon_y = 0, icon_width = 0;
+
+        style.set_state (state);
+        if (icon != null) {
+            icon_width = icon.get_width ();
+        }
+        pango.set_font_description (style.get_font (state));
+        pango.set_markup ("<big>%s</big>".printf (text), -1);
+      
+        var h = get_window ().get_height (); 
+        var icon_margin = 5;
+
+        int text_x, text_y, text_w, text_h;
+        pango.get_pixel_size (out text_w, out text_h);
+        text_y = h / 2 - text_h / 2; 
+
+        if (backward) {
+            icon_x = start - (icon_margin * 2 + icon_width + text_w);
+            if (dir == TextDirection.LTR) {
+                text_x = start - (icon_margin + text_w);
+            } else {
+                text_x = start; 
+            }
+        } else {
+            icon_x = start;
+            if (dir == TextDirection.LTR) {
+                text_x = start + icon_width + icon_margin;
+            } else {
+                text_x = start; 
+            }
+        }
+
+        var occupied = icon_margin * 3 + text_w + icon_width;
+        Gtk.render_background (style, cr, icon_x + offset - icon_margin, 0, occupied, get_allocated_height ()); 
+        if (icon != null) {
+            Gdk.cairo_set_source_pixbuf (cr, icon, icon_x + offset, 0);
+        }
+        Gtk.render_layout (style, cr, text_x + offset, text_y, pango);
+
+        if (state == StateFlags.NORMAL) {
+            cr.paint_with_alpha (0.5);
+        } else {
+            cr.paint ();
+        }
+
+        var new_start = occupied + start;
+        if (backward) {
+            return start - new_start;
+        } else {
+            return new_start;
+        }
+    }
+
+    public override bool draw (Context cr) {
+        StyleContext style = get_style_context ();
+
+        stack.clear ();
+        var state = StateFlags.NORMAL;
+        style.set_state (state);
+        Gtk.render_background (style, cr, 0, 0, get_allocated_width (), get_allocated_height ()); 
+        cr.paint ();
+
+        if (active_entry != null)  {
+            var start_x = -1;
+            var pushing = true;
+            var backward_start = -1;
+
+            foreach (unowned PanelWindowEntry e in entry_map.values) {
+
+                if (e.is_on_current_workspace () == false) {
+                    continue;
+                }
+                if (e == active_entry) {
+                    state = StateFlags.PRELIGHT;
+                    int x, y;
+                    e.get_window ().get_position (out x, out y);
+
+                    start_x = x;
+                    pushing = false;
+                    backward_start = x;
+                } else {
+                    state = StateFlags.NORMAL;
+                    if (pushing) {
+                        stack.add (e);
+                    }
+                }
+
+                if (pushing == false) {
+                    var icon = e.window_info.get_icon ();
+                    position_map [e] = start_x;
+                    start_x = drawInfo (cr, style, state, icon, e.window_info.get_name (), start_x);
+                }
+            }
+
+            start_x = backward_start;
+            state = StateFlags.NORMAL;
+            while (stack.size > 0) {
+                PanelWindowEntry? e = stack.remove_at (stack.size - 1);
+                if (e == null) {
+                    break;
+                }
+
+                var icon = e.window_info.get_icon ();
+                start_x = drawInfo (cr, style, state, icon, e.window_info.get_name (), start_x, true);
+                position_map [e] = start_x;
+            }
+        }
+
+        return true;
+    }
+
+    public new void activate (PanelWindowEntry e) {
+        hiding = false;
+        old_entry = active_entry;
+        active_entry = e;
+        if (get_visible () == false) {
+            show_all ();
+        } else {
+            queue_draw ();
+        }
+
+        int start = position_map [e];
+        int end = 0;
+
+        offset = 0;
+        if (old_entry != null) {
+            end = position_map [old_entry];
+            offset = start - end;
+        }
+
+        anim.set_final_value (0);
+        anim.start ();
+    }
+
+    public void deactivate () {
+        try_hide ();
+    }
+
+    public void try_hide () {
+        GLib.Timeout.add (250, real_hide);
+        hiding = true;
+    }
+
+    bool real_hide () {
+        if (hiding == true) {
+            hide ();
+        }
+        return false;
+    }
+
+
+    public void update_position (int y) {
+        int pos_x, pos_y;
+
+        get_position (out pos_x, out pos_y);
+        move (pos_x, y);
+    }
+
+}
+
 public class PanelWindowHost : PanelAbstractWindow {
-    private Image image;
+    private Image logo;
     private bool active;
     private HBox box;
     private PanelTray tray;
     private new Wnck.Screen screen;
     private int num_visible_windows = 0;
-    private HashMap <Wnck.Window, PanelWindowEntry> entry_map ;
-    private int height = 12;
+    private HashMap <unowned Wnck.Window, unowned PanelWindowEntry> entry_map ;
+    private int height = 22;
+    PanelWindowEntryDescriptions descriptions;
 
     public signal void windows_gone (); // Emitted when all windows have gone, either closed or minimized
     public signal void windows_visible (); // Emitted when there is at least one window visible
@@ -322,22 +507,18 @@ public class PanelWindowHost : PanelAbstractWindow {
 
     public signal void activated (); // Emitted when the window host is activated (the size is getting bigger)
 
-    public signal void resized (int size); // Emitted when the window is resized
-    enum Size {
-        SMALL = 22,
-        BIG = 34
-    }
-
     public bool no_windows_around () {
         update (false);
         return (num_visible_windows == 0);
     }
 
     public PanelWindowHost () {
-        image = new Image.from_icon_name("distributor-logo", IconSize.LARGE_TOOLBAR);
+        logo = new Image.from_icon_name("distributor-logo", IconSize.LARGE_TOOLBAR);
         var event_box = new EventBox();
-        event_box.add (image);
+        event_box.add (logo);
         event_box.show_all ();
+
+        logo.set_pixel_size (height);
 
         entry_map = new HashMap <Wnck.Window, PanelWindowEntry> (); 
 
@@ -356,6 +537,9 @@ public class PanelWindowHost : PanelAbstractWindow {
         pager_entry.set_name ("PAGER");
         pager_entry.show ();
 
+        descriptions = new PanelWindowEntryDescriptions (entry_map);
+        descriptions.update_position (height);
+
         var clock = new PanelClock ();
         clock.show ();
 
@@ -367,19 +551,15 @@ public class PanelWindowHost : PanelAbstractWindow {
         clock_event.show_all ();
         clock_event.add (a);
 
-
         var calendar = new PanelCalendar ();
+        calendar.update_position (height);
         calendar.hide ();
-
-        resized.connect((size) => {
-            calendar.update_position (size);
-        });
 
         outer_box.pack_end (pager_entry, false, false, 1);
         outer_box.pack_end (clock_event, false, false, 0);
         outer_box.pack_end (tray, false, false, 0);
         outer_box.pack_start (event_box, false, false, 0);
-        outer_box.pack_start (box, true, true, 0);
+        outer_box.pack_start (box, false, false, 0);
         outer_box.show ();
         box.show();
 
@@ -410,8 +590,10 @@ public class PanelWindowHost : PanelAbstractWindow {
         screen.window_closed.connect ((w) => {
             var e = entry_map [w];
             if (e != null) {
+                descriptions.clear_entry (e);
                 e.destroy ();
                 entry_map.unset (w);
+                update (false);
             }
         });
 
@@ -431,18 +613,7 @@ public class PanelWindowHost : PanelAbstractWindow {
         });
 
         enter_notify_event.connect (() => {
-            resize (Size.BIG);
             activated ();
-            return false;
-        });
-
-        leave_notify_event.connect ((e) => {
-            int x, y;
-            get_window ().get_position (out x, out y);
-            // If e.y is negative then it's outside the area
-            if (e.y > height) {
-                resize (Size.SMALL);
-            }
             return false;
         });
 
@@ -451,15 +622,12 @@ public class PanelWindowHost : PanelAbstractWindow {
         });
 
         configure_event.connect (() => {
-            if (get_window ().get_height () == Size.SMALL) {
-                set_struts(); 
-            }
+            set_struts(); 
             return false;
         });
 
         event_box.button_press_event.connect (() => {
             menu_clicked ();
-            resize (Size.SMALL);
             return false;
         });
 
@@ -474,22 +642,6 @@ public class PanelWindowHost : PanelAbstractWindow {
         });
 
 
-    }
-
-    private new void resize (Size size) {
-        height = size;
-        queue_resize ();
-        set_size_request (PanelScreen.get_primary_monitor_geometry ().width, size);
-        var draw_info = false;
-        if (size == Size.BIG) {
-            draw_info = true;
-        }
-        foreach (PanelWindowEntry e in entry_map.values) {
-            e.draw_info = draw_info;
-        }
-        image.set_pixel_size (size);
-        reposition();
-        resized (size);
     }
 
     public override void get_preferred_width (out int min, out int max) {
@@ -521,6 +673,13 @@ public class PanelWindowHost : PanelAbstractWindow {
                 if (e == null) {
                     e = new PanelWindowEntry (w);
                     entry_map.set (w, e);
+                    e.entered.connect(() => {
+                        descriptions.activate(e);
+                    });
+
+                    e.left.connect(() => {
+                        descriptions.deactivate();
+                    });
                 }
                 if (!w.is_minimized ())
                     num_windows ++;
@@ -529,12 +688,9 @@ public class PanelWindowHost : PanelAbstractWindow {
         }
 
         foreach (PanelWindowEntry e in entry_map.values) {
-            if (height == Size.BIG) {
-                e.draw_info = true;
-            }
             if (e.is_on_current_workspace ()) {
                 e.show ();
-                box.pack_start (e, true, true, 1);
+                box.pack_start (e, true, true, 0);
             }
         }
         if (emit_change_signals) {
@@ -543,7 +699,6 @@ public class PanelWindowHost : PanelAbstractWindow {
             } else {
                 windows_visible ();
             }
-            resize (Size.SMALL); 
 
             if (num_windows == num_total_windows)
                 all_windows_visible ();
@@ -554,13 +709,5 @@ public class PanelWindowHost : PanelAbstractWindow {
     public new void reposition () {
         PanelScreen.move_window (this, Gdk.Gravity.NORTH_WEST);
         set_keep_above(false);
-    }
-
-    public void dismiss () {
-        resize (Size.SMALL);
-    }
-
-    public new void activate () {
-        resize (Size.BIG);
     }
 }
