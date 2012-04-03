@@ -433,9 +433,6 @@ public class PanelWindowEntryDescriptions : PanelAbstractWindow {
                 var icon = e.window_info.get_icon ();
                 start_x = drawInfo (cr, style, state, icon, e.window_info.get_name (), start_x, true);
                 position_map [e] = start_x;
-                if (start_x < 0) {
-                    break;
-                }
             }
         }
 
