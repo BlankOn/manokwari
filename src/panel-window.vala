@@ -330,7 +330,7 @@ public class PanelWindowEntryDescriptions : PanelAbstractWindow {
         var dir = get_direction ();
         int icon_x = 0, icon_y = 0, icon_width = 0;
 
-        style.set_state (get_state_flags ());
+        style.set_state (state);
         if (icon != null) {
             icon_width = icon.get_width ();
         }
@@ -360,6 +360,8 @@ public class PanelWindowEntryDescriptions : PanelAbstractWindow {
             }
         }
 
+        var occupied = icon_margin * 3 + text_w + icon_width;
+        Gtk.render_background (style, cr, icon_x + offset - icon_margin, 0, occupied, get_allocated_height ()); 
         if (icon != null) {
             Gdk.cairo_set_source_pixbuf (cr, icon, icon_x + offset, 0);
         }
@@ -371,11 +373,11 @@ public class PanelWindowEntryDescriptions : PanelAbstractWindow {
             cr.paint ();
         }
 
-        var occupied = icon_margin * 3 + text_w + start + icon_width;
+        var new_start = occupied + start;
         if (backward) {
-            return start - occupied;
+            return start - new_start;
         } else {
-            return occupied;
+            return new_start;
         }
     }
 
@@ -383,7 +385,8 @@ public class PanelWindowEntryDescriptions : PanelAbstractWindow {
         StyleContext style = get_style_context ();
 
         stack.clear ();
-        style.set_state (get_state_flags ());
+        var state = StateFlags.NORMAL;
+        style.set_state (state);
         Gtk.render_background (style, cr, 0, 0, get_allocated_width (), get_allocated_height ()); 
         cr.paint ();
 
@@ -392,7 +395,6 @@ public class PanelWindowEntryDescriptions : PanelAbstractWindow {
             var pushing = true;
             var backward_start = -1;
 
-            var state = StateFlags.NORMAL;
             foreach (unowned PanelWindowEntry e in entry_map.values) {
 
                 if (e.is_on_current_workspace () == false) {
