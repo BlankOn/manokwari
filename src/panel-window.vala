@@ -490,7 +490,7 @@ public class PanelWindowEntryDescriptions : PanelAbstractWindow {
 }
 
 public class PanelWindowHost : PanelAbstractWindow {
-    private Image image;
+    private Image logo;
     private bool active;
     private HBox box;
     private PanelTray tray;
@@ -508,22 +508,18 @@ public class PanelWindowHost : PanelAbstractWindow {
 
     public signal void activated (); // Emitted when the window host is activated (the size is getting bigger)
 
-    public signal void resized (int size); // Emitted when the window is resized
-    enum Size {
-        SMALL = 22,
-        BIG = 34
-    }
-
     public bool no_windows_around () {
         update (false);
         return (num_visible_windows == 0);
     }
 
     public PanelWindowHost () {
-        image = new Image.from_icon_name("distributor-logo", IconSize.LARGE_TOOLBAR);
+        logo = new Image.from_icon_name("distributor-logo", IconSize.LARGE_TOOLBAR);
         var event_box = new EventBox();
-        event_box.add (image);
+        event_box.add (logo);
         event_box.show_all ();
+
+        logo.set_pixel_size (height);
 
         entry_map = new HashMap <Wnck.Window, PanelWindowEntry> (); 
 
@@ -618,18 +614,7 @@ public class PanelWindowHost : PanelAbstractWindow {
         });
 
         enter_notify_event.connect (() => {
-            //resize (Size.BIG);
             activated ();
-            return false;
-        });
-
-        leave_notify_event.connect ((e) => {
-            int x, y;
-            get_window ().get_position (out x, out y);
-            // If e.y is negative then it's outside the area
-            if (e.y > height) {
-                resize (Size.SMALL);
-            }
             return false;
         });
 
@@ -638,15 +623,12 @@ public class PanelWindowHost : PanelAbstractWindow {
         });
 
         configure_event.connect (() => {
-            if (get_window ().get_height () == Size.SMALL) {
-                set_struts(); 
-            }
+            set_struts(); 
             return false;
         });
 
         event_box.button_press_event.connect (() => {
             menu_clicked ();
-            resize (Size.SMALL);
             return false;
         });
 
@@ -661,22 +643,6 @@ public class PanelWindowHost : PanelAbstractWindow {
         });
 
 
-    }
-
-    private new void resize (Size size) {
-        height = size;
-        queue_resize ();
-        set_size_request (PanelScreen.get_primary_monitor_geometry ().width, size);
-        var draw_info = false;
-        if (size == Size.BIG) {
-            draw_info = true;
-        }
-        foreach (PanelWindowEntry e in entry_map.values) {
-            e.draw_info = draw_info;
-        }
-        image.set_pixel_size (size);
-        reposition();
-        resized (size);
     }
 
     public override void get_preferred_width (out int min, out int max) {
@@ -723,9 +689,6 @@ public class PanelWindowHost : PanelAbstractWindow {
         }
 
         foreach (PanelWindowEntry e in entry_map.values) {
-            if (height == Size.BIG) {
-                e.draw_info = true;
-            }
             if (e.is_on_current_workspace ()) {
                 e.show ();
                 box.pack_start (e, true, true, 0);
@@ -737,7 +700,6 @@ public class PanelWindowHost : PanelAbstractWindow {
             } else {
                 windows_visible ();
             }
-            resize (Size.SMALL); 
 
             if (num_windows == num_total_windows)
                 all_windows_visible ();
@@ -748,13 +710,5 @@ public class PanelWindowHost : PanelAbstractWindow {
     public new void reposition () {
         PanelScreen.move_window (this, Gdk.Gravity.NORTH_WEST);
         set_keep_above(false);
-    }
-
-    public void dismiss () {
-        resize (Size.SMALL);
-    }
-
-    public new void activate () {
-        //resize (Size.BIG);
     }
 }
