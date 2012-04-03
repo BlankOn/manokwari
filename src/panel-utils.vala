@@ -104,7 +104,7 @@ namespace Utils {
             }
             var info = new DesktopAppInfo.from_filename (path);
             try {
-                info.launch (null, new AppLaunchContext ());
+                info.launch (null, Gdk.Display.get_default ().get_app_launch_context ());
             } catch (Error e) {
                 var dialog = new MessageDialog (null, DialogFlags.DESTROY_WITH_PARENT, MessageType.ERROR, ButtonsType.CLOSE, _("Error opening menu item %s: %s"), info.get_display_name (), e.message);
                 dialog.response.connect (() => {
