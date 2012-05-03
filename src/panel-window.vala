@@ -123,7 +123,7 @@ public class PanelWindowPagerEntry : DrawingArea {
 }
 
 public class PanelWindowEntry : DrawingArea {
-    unowned Gdk.Pixbuf icon;
+    unowned Gdk.Pixbuf icon = null;
     public unowned Wnck.Window window_info;
     private Wnck.WindowState last_state;
     private Gtk.StateFlags state;
@@ -170,7 +170,6 @@ public class PanelWindowEntry : DrawingArea {
             | Gdk.EventMask.LEAVE_NOTIFY_MASK);
 
         window_info = info;
-        icon = window_info.get_mini_icon ();
         last_state = info.get_state ();
         sync_window_states ();
 
@@ -233,7 +232,15 @@ public class PanelWindowEntry : DrawingArea {
         });
     }
 
+    void update_icon () {
+        icon = window_info.get_mini_icon ();
+        if (icon == null) {
+            icon = window_info.get_icon ();
+        }
+    }
+ 
     public override void get_preferred_height (out int min, out int max) {
+        update_icon ();
         // TODO
         if (icon != null) {
             min = max = icon.get_width () + Margin * 2; 
@@ -251,6 +258,8 @@ public class PanelWindowEntry : DrawingArea {
         style.set_state (state);
 
         Gtk.render_background (style, cr, 0, 0, get_allocated_width (), get_allocated_height ()); 
+
+        update_icon ();
 
         if (icon != null) {
             Gdk.cairo_set_source_pixbuf (cr, icon, Margin, Margin);
