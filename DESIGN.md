@@ -26,6 +26,8 @@ Manokwari has a set of goals:
 Manokwari at its currrent state considers as non-goals:
  * Window manager
  * Compositing manager
+
+
 However this may change in the future
 
 ### Logical view
@@ -36,6 +38,7 @@ PanelCalendar is a calendar widget displayed in a window. It contains:
  * A month view calendar (Gtk+ stock widget)
  * List of calendar activity [NOT YET IMPLEMENTED]
  * A button, which when pressed will invoke GNOME's date/time control panel applet
+
 
     PanelCalendar
 
@@ -53,6 +56,8 @@ It sets several window management hints including:
  * Accept on focus
  * Sticky on all workspaces
  * Non-visible in task switcher
+
+
 
     PanelAbstractWindow
 
@@ -88,6 +93,8 @@ will come from the web view it hosts.
 PanelMenuBox listens to the following keys:
  * Escape to close menu
  * PrintScreen to take screen shot [FIXME/TODO] Not working?
+
+
 
     PanelMenuBox
 
@@ -201,6 +208,8 @@ This window hosts following objects:
  * PanelTray
  * PanelClock
  * PanelCalendar
+
+
 
 [TODO] This object could be refactored/renamed and moved to separate file.
 
