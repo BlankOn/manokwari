@@ -48,6 +48,7 @@ html {
 
 .ui-content {
     margin: 5px;
+    margin-bottom: 80px;
 }
 
 .ui-listview-item-icon {
