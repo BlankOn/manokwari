@@ -19,6 +19,7 @@ body {
     overflow-x: hidden;
     overflow-y: auto;
     z-index: 1;
+    background: url(texture.jpg);
 }
 
 html {

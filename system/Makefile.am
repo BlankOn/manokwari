@@ -8,6 +8,7 @@ system_DATA = \
 	menu.html \
 	menu.js \
 	style.css \
+	texture.jpg \
 	$(NULL)
 
 CLEANFILES = \
