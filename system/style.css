@@ -63,12 +63,15 @@ html {
 .ui-listview-item:hover {
     color: white;
     text-shadow: 0 1px 1px #222;
-    background-image: -webkit-linear-gradient(#b0b0b0 /*{e-bup-background-start}*/, #909090 /*{e-bup-background-end}*/);
+    background-color: rgba(100,100,100,0.6);
 }
 
 .ui-listview-item {
-    background-image: -webkit-linear-gradient(#c0c0c0 /*{e-bup-background-start}*/, #b0b0b0 /*{e-bup-background-end}*/);
-    color: black;
+    background-color: rgba(100,100,100,0.3);
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-bottom-color: rgba(192,192,192,0.1);
+    color: white;
     vertical-align: middle;
     display: block;
     min-height: 30px;
@@ -123,16 +126,21 @@ span {
     margin: 0px;
     padding: 10px;
     display: block;
-    color: black;
-    background-image: -webkit-linear-gradient(#d0d0d0 /*{e-bup-background-start}*/, #b0b0b0 /*{e-bup-background-end}*/);
+    color: white;
     cursor: pointer;
+    background-color: rgba(100,100,100,0.3);
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-bottom-color: rgba(192,192,192,0.1);
+    font-weight: bold;
+ 
 }
 
 
 .ui-collapsible-header:hover {
     color: white;
     text-shadow: 0 1px 1px #222;
-    background-image: -webkit-linear-gradient(#c0c0c0 /*{e-bup-background-start}*/, #b0b0b0 /*{e-bup-background-end}*/);
+    background-color: rgba(100,100,100,0.6);
 }
 
 .ui-collapsible-header-top {
@@ -165,6 +173,7 @@ span {
 .ui-header {
     color: white;
     font-size: 20px;
+    font-weight: bold;
     margin-left: 20px;
 }
 
@@ -205,13 +214,18 @@ span {
     height: 60px;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
+    border-color: #505050;
+    border-top-style: dashed;
+    border-left-style: dashed;
+    border-right-style: dashed;
+    border-width: 1px; 
     width: 300; 
     margin-left: 5px;
     margin-right: 5px;
     padding: 5px;
     z-index: 100;
 
-    background-image: -webkit-linear-gradient(#505050 /*{e-bup-background-start}*/, #101010 /*{e-bup-background-end}*/);
+    background-image: -webkit-linear-gradient(rgba(32,32,32,0.4)/*{e-bup-background-start}*/, #101010 /*{e-bup-background-end}*/);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap; 
@@ -220,7 +234,7 @@ span {
 }
 
 #userAccount:hover {
-    background-image: -webkit-linear-gradient(#707070 /*{e-bup-background-start}*/, #101010 /*{e-bup-background-end}*/);
+    background-image: -webkit-linear-gradient(rgba(32,32,32,0.2)/*{e-bup-background-start}*/, #303030 /*{e-bup-background-end}*/);
 }
 
 #userAccount img {
