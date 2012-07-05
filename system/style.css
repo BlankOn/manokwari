@@ -7,7 +7,6 @@ body {
 
 .ui-page, .ui-content {
     color: #aaaaaa;
-    background-color: #101010;
     margin: 0px;
     padding: 0px;
 }
@@ -19,6 +18,7 @@ body {
     overflow-x: hidden;
     overflow-y: auto;
     z-index: 1;
+    background-color: #101010;
     background: url(texture.jpg);
 }
 
