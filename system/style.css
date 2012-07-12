@@ -3,6 +3,7 @@ body {
     padding: 0px;
     background-color: transparent;
     font-family: Cantarell, sans-serif;
+    font-size: 14px;
 }
 
 .ui-page, .ui-content {
