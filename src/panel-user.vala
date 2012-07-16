@@ -25,19 +25,26 @@ public class PanelUser {
 
     public string icon_file {
         owned get {
-            if (user != null) {
-                return user.icon_file;
+            if (user == null || 
+                user.icon_file == null ||
+                user.icon_file == "") {
+                return Utils.get_icon_path("avatar-default");
             }
-            return "";
+            var f = File.new_for_path(user.icon_file);
+            if (f.query_exists()) {
+                return user.icon_file;
+            } else {
+                return Utils.get_icon_path("avatar-default");
+            }
         }
     }
 
     public string real_name {
         owned get {
-            if (user != null) {
-                return user.real_name;
+            if (user == null || user.real_name == null || user.real_name == "") {
+                return GLib.Environment.get_user_name ();
             }
-            return GLib.Environment.get_user_name ();
+            return user.real_name;
         }
     }
 
