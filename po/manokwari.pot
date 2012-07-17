@@ -151,3 +151,9 @@ msgstr ""
 #, no-wrap
 msgid "Remove from Favorites"
 msgstr ""
+
+#. type: span
+#: FIXME:0
+#, no-wrap
+msgid "Lock Screen"
+msgstr ""
