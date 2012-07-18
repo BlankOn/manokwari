@@ -625,6 +625,12 @@ var menu = (function() {
         Utils.run_command("gnome-control-center");
     }
 
+// Handles Lock Screen button. The function is defined
+    // in data-handler attribute of the button
+    var handleLockScreen = function() {
+        Utils.run_command("gnome-screensaver-command -l");
+    }
+
     // Handles LogOut button. The function is defined
     // in data-handler attribute of the button
     var handleLogOut = function() {
@@ -878,6 +884,7 @@ var menu = (function() {
         init: init,
         handleEsc: handleEsc,
         handleSettings: handleSettings,
+        handleLockScreen: handleLockScreen,
         handleLogOut: handleLogOut,
         handleShutDown: handleShutDown,
         prepareHide: prepareHide,
