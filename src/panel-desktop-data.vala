@@ -6,6 +6,7 @@ using Gtk;
 // This class prepares data in desktop 
 public class PanelDesktopData {
 
+    FileMonitor desktop_monitor = null;
     StringBuilder json; // use StringBuilder to avoid appending immutable strings
     static Context* jsContext;
     JSCore.Object* jsObject;
@@ -75,7 +76,7 @@ public class PanelDesktopData {
     void monitor () {
         var desktop_dir = File.new_for_path (path);
         try {
-            var desktop_monitor = desktop_dir.monitor (FileMonitorFlags.NONE, null);
+            desktop_monitor = desktop_dir.monitor (FileMonitorFlags.NONE, null);
             desktop_monitor.changed.connect (() => {
                 changed();
             });

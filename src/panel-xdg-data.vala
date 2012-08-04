@@ -6,6 +6,7 @@ using Gtk;
 // This class opens an xdg menu and populates it
 public class PanelXdgData {
 
+    FileMonitor xdg_menu_monitor = null;
     string catalog;
     StringBuilder json; // use StringBuilder to avoid appending immutable strings
     IconTheme icon;
@@ -77,7 +78,7 @@ public class PanelXdgData {
     void monitor () {
         var xdg_menu_dir = File.new_for_path ("/etc/xdg/menus");
         try {
-            var xdg_menu_monitor = xdg_menu_dir.monitor (FileMonitorFlags.NONE, null);
+            xdg_menu_monitor = xdg_menu_dir.monitor (FileMonitorFlags.NONE, null);
             xdg_menu_monitor.changed.connect (() => {
                 changed();
             });
