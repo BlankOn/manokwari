@@ -7,6 +7,8 @@ using Gtk;
 public class PanelXdgData {
 
     FileMonitor xdg_menu_monitor = null;
+    FileMonitor apps_monitor = null;
+
     string catalog;
     StringBuilder json; // use StringBuilder to avoid appending immutable strings
     IconTheme icon;
@@ -87,7 +89,7 @@ public class PanelXdgData {
         }
         var apps_dir = File.new_for_path ("/usr/share/applications");
         try {
-            var apps_monitor = apps_dir.monitor (FileMonitorFlags.NONE, null);
+            apps_monitor = apps_dir.monitor (FileMonitorFlags.NONE, null);
             apps_monitor.changed.connect (() => {
                 changed();
             });
