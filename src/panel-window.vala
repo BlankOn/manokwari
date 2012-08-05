@@ -313,7 +313,7 @@ public class PanelWindowEntryDescriptions : PanelAbstractWindow {
         
         margin = 0;
         hide ();
-        PanelScreen.move_window (this, Gdk.Gravity.WEST);
+        PanelScreen.move_window (this, Gdk.Gravity.NORTH_WEST);
 
         anim = new AnimatedProperty (this);
         anim.set_property ("offset");
@@ -489,10 +489,9 @@ public class PanelWindowEntryDescriptions : PanelAbstractWindow {
 
 
     public void update_position (int y) {
-        int pos_x, pos_y;
-
-        get_position (out pos_x, out pos_y);
-        move (pos_x, y);
+        queue_resize ();
+        var g = PanelScreen.get_primary_monitor_geometry ();
+        move (g.x, g.y + y);
     }
 
 }
@@ -507,6 +506,7 @@ public class PanelWindowHost : PanelAbstractWindow {
     private HashMap <unowned Wnck.Window, unowned PanelWindowEntry> entry_map ;
     private int height = 22;
     PanelWindowEntryDescriptions descriptions;
+    PanelCalendar calendar;
 
     public signal void windows_gone (); // Emitted when all windows have gone, either closed or minimized
     public signal void windows_visible (); // Emitted when there is at least one window visible
@@ -560,7 +560,7 @@ public class PanelWindowHost : PanelAbstractWindow {
         clock_event.show_all ();
         clock_event.add (a);
 
-        var calendar = new PanelCalendar ();
+        calendar = new PanelCalendar ();
         calendar.update_position (height);
         calendar.hide ();
 
@@ -717,6 +717,8 @@ public class PanelWindowHost : PanelAbstractWindow {
 
     public new void reposition () {
         PanelScreen.move_window (this, Gdk.Gravity.NORTH_WEST);
+        descriptions.update_position (height);
+        calendar.update_position (height);
         set_keep_above(false);
     }
 }

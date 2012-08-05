@@ -64,9 +64,10 @@ public class PanelCalendar : PanelAbstractWindow {
     }
 
     public void update_position (int y) {
-        int pos_x, pos_y;
-
-        get_position (out pos_x, out pos_y);
-        move (pos_x, y);
+        var g = PanelScreen.get_primary_monitor_geometry ();
+        int min, max;
+        calendar.get_preferred_width (out min, out max); 
+        queue_resize();
+        move(g.x + (g.width - max), g.y + y);
     }
 }
