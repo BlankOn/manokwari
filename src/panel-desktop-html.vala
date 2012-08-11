@@ -18,7 +18,9 @@ public class PanelDesktopHTML: WebView {
         settings.enable_file_access_from_file_uris = true;
         settings.enable_universal_access_from_file_uris = true;
         settings.javascript_can_open_windows_automatically = true;
-        settings.enable_default_context_menu = false;
+        if (Environment.get_variable("MANOKWARI_DEBUG") == null) {
+            settings.enable_default_context_menu = false;
+        }
         set_settings(settings);
 
 
