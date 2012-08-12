@@ -1,3 +1,5 @@
+
+var userAccountIsSetup = false;
 var UserAccount = UserAccount || (function() {
     return {
         getIconFile: function() { return "user-icon.png" },
@@ -474,14 +476,20 @@ var menu = (function() {
     }
 
     var setupUserAccount = function() {
+
         var e = $("#userAccount");
         e.css("bottom", "0px");
         e.find("img").attr("src", userAccount.getIconFile());
         e.find("h1").text(userAccount.getRealName());
         e.find("span").text(userAccount.getHostName());
-        e.click(function() {
+
+        if (userAccountIsSetup) 
+            return;
+
+        e.on("click", function() {
             Utils.run_desktop("/usr/share/applications/gnome-user-accounts-panel.desktop");
         });
+        userAccountIsSetup = true;
     }
 
     var linkHandleTapHold = function(e, target) {
