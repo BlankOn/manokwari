@@ -276,9 +276,14 @@ span {
 .ui-expandable-icon {
     background-image: url("theme://stock_right");
     background-repeat: no-repeat;
-    width: 22px;
-    height: 22px;
+    width: 24px;
+    height: 24px;
     float: right;
+    opacity: 0.1;
+}
+
+.ui-expandable-icon:hover {
+    opacity: 1;
 }
 
 .ui-expandable-icon-expanded {
