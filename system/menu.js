@@ -1,4 +1,3 @@
-
 var userAccountIsSetup = false;
 var UserAccount = UserAccount || (function() {
     return {
@@ -116,7 +115,7 @@ EventClass.prototype.emit = function(event) {
 
 var menu = (function() {
     var DataChanged = 1;
-    var activePage = null;
+	 var activePage = null;
     var activePopup = null;
     var userAccount = new UserAccount();
 
@@ -439,10 +438,13 @@ var menu = (function() {
             transition: "none"
         });
         hidePopup();
+        $("#searchresult").hide();
         $("#first").addClass("ui-animation-slide");
+        
         var e = $("#userAccount");
         e.css("bottom", -e.height());
         $("#first").css("left", "-" + window.outerWidth + "px");
+        
     }
 
 
@@ -888,8 +890,27 @@ var menu = (function() {
         return false; // Not handled
     }
 
+	 // Wirama part
+	 var do_search = function() {
+		  var searchinput = $('#searchbox').attr('value');
+		  var searchregexp = new RegExp(searchinput);
+		 
+	     $('#app_container').html('');
+	     $("div[data-role='collapsible']").each(function() {
+		   	$(this).find('a').each(function() {
+		   		
+		   		if(searchregexp.test($(this).children('span').html())) {
+		   			$(this).parent().clone().appendTo('#app_container')
+		 			}
+					
+				});
+		  });
+}
+	 
     return {
+    	  do_search: do_search,
         init: init,
+        changePage: changePage,
         handleEsc: handleEsc,
         handleSettings: handleSettings,
         handleLockScreen: handleLockScreen,
@@ -902,4 +923,20 @@ var menu = (function() {
 
 $(document).ready(function() {
     menu.init ();
+    $('#searchbox').keyup(function() {
+		var searchinput = $('#searchbox').attr('value');
+		menu.do_search();
+	});
 });
+
+
+$(document).keydown(function(event) {
+	if($('#searchresult').css('display')=="none" && event.keyCode != 27) {
+		$('#searchresult').fadeIn(500);	
+		$('#searchbox').focus();
+		
+	}
+	
+	
+});
+

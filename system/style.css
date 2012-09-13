@@ -156,9 +156,11 @@ span {
 }
 
 .ui-collapsible-control-group {
-    overflow: hidden;
+    /* overflow: hidden;
     margin: 10px;
     -webkit-transition: height 0.2s ease-out;
+	*/
+	height: auto;
 }
 
 .ui-back-button {
@@ -283,4 +285,34 @@ span {
 
 .ui-expandable-icon-expanded {
     background-image: url("theme://stock_down");
+}
+
+#searchbox
+{
+    border-radius: 1px;
+    border-width: 1px; 
+    width: 300px; 
+    margin-left: 5px;
+    margin-right: 5px;
+    padding: 5px;
+  
+}
+
+#searchresult
+{
+	color: white;
+	background-color: black;
+   opacity: 0.9;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	z-index: 1000;
+	display: none;
+		
+}
+.hidden
+{
+	display: none;	
 }
