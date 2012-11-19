@@ -380,7 +380,7 @@ var menu = (function() {
 
 
     var dataApplications = new XdgData("applications.menu");
-    dataApplications.backend.updateCallback("dataApplications.update()");
+    dataApplications.backend.updateCallback("menu.update()");
 
     var dataPlaces = new PlacesData();
     dataPlaces.backend.updateCallback("dataPlaces.update()");
@@ -888,6 +888,10 @@ var menu = (function() {
         return false; // Not handled
     }
 
+    var update = function() {
+        dataApplications.update();
+    }
+
     return {
         init: init,
         handleEsc: handleEsc,
@@ -896,7 +900,8 @@ var menu = (function() {
         handleLogOut: handleLogOut,
         handleShutDown: handleShutDown,
         prepareHide: prepareHide,
-        prepareShow: prepareShow
+        prepareShow: prepareShow,
+        update: update
     }
 })();
 
