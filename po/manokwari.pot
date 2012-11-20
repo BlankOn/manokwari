@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-29 11:11+0300\n"
+"POT-Creation-Date: 2012-11-20 07:13+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -84,76 +84,22 @@ msgstr ""
 msgid "Click here to hide all windows and show desktop"
 msgstr ""
 
-#: ../src/panel-xdg-data.vala:150
+#: ../src/xdg-data.vala:153
 #, c-format
 msgid "Shortcut %s already exists in %s"
 msgstr ""
 
-#: ../src/panel-xdg-data.vala:160
+#: ../src/xdg-data.vala:163
 #, c-format
 msgid "Unable to read %s: %s"
 msgstr ""
 
-#: ../src/panel-xdg-data.vala:167
+#: ../src/xdg-data.vala:170
 #, c-format
 msgid "Unable to create %s shortcut in %s: %s"
 msgstr ""
 
-#: ../src/panel-xdg-data.vala:187
+#: ../src/xdg-data.vala:190
 #, c-format
 msgid "Unable to write %s shortcut in %s: %s"
-msgstr ""
-
-#. type: span
-#: FIXME:0
-#, no-wrap
-msgid "Applications"
-msgstr ""
-
-#. type: span
-#: FIXME:0
-#, no-wrap
-msgid "Locations"
-msgstr ""
-
-#. type: span
-#: FIXME:0
-#, no-wrap
-msgid "Settings"
-msgstr ""
-
-#. type: span
-#: FIXME:0
-#, no-wrap
-msgid "Log Out"
-msgstr ""
-
-#. type: span
-#: FIXME:0
-#, no-wrap
-msgid "Shut Down"
-msgstr ""
-
-#. type: span
-#: FIXME:0
-#, no-wrap
-msgid "Places"
-msgstr ""
-
-#. type: span
-#: FIXME:0
-#, no-wrap
-msgid "Add to Desktop"
-msgstr ""
-
-#. type: span
-#: FIXME:0
-#, no-wrap
-msgid "Remove from Favorites"
-msgstr ""
-
-#. type: span
-#: FIXME:0
-#, no-wrap
-msgid "Lock Screen"
 msgstr ""

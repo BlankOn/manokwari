@@ -62,6 +62,7 @@ AC_CONFIG_FILES([Makefile
 	data/manokwari.desktop
 	src/Makefile
 	system/Makefile
+    tests/Makefile
 	po/Makefile.in])
 
 AC_OUTPUT
