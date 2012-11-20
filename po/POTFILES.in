@@ -19,7 +19,7 @@ src/panel-scrollable-content.vala
 src/panel-session-manager.vala
 src/panel-tray.vala
 src/panel-user.vala
-src/panel-utils.vala
+src/utils.vala
 src/panel-window.vala
-src/panel-xdg-data.vala
+src/xdg-data.vala
 

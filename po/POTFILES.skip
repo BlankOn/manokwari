@@ -1,0 +1,8 @@
+src/panel-calendar.c
+src/panel-clock.c
+src/panel-places.c
+src/panel-utils.c
+src/panel-window.c
+src/panel-xdg-data.c
+src/xdg-data.c
+src/utils.c

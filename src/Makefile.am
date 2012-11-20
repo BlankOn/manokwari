@@ -22,11 +22,11 @@ manokwari_SOURCES = panel-item.vala \
     panel-clock.vala \
     panel-places.vala \
     panel-screen.vala \
-    panel-utils.vala \
+    utils.vala \
     panel-hotkey.vala \
     panel-session-manager.vala \
     panel-menu-html.vala \
-    panel-xdg-data.vala \
+    xdg-data.vala \
     panel-user.vala \
     panel-desktop.vala \
     panel-desktop-html.vala \
