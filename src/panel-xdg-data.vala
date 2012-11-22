@@ -39,17 +39,17 @@ public class PanelXdgData {
 
     void schedule_for_kick_js () {
         var d = new DateTime.now_local();
-        if (d.to_unix () - last_schedule > 60) {
+        if (d.to_unix () - last_schedule > 5) {
             // Last update was over a minute ago
             // Let's kick JS now
-            kick_js ();
+            scheduled = Timeout.add (5000, kick_js);
         } else  {
             // It's recently kicked,
             // if it's not yet scheduled, let's do it
             // otherwise just skip this request
             if (scheduled == 0) {
-                // schedule to kick JS in the next minute
-                scheduled = Timeout.add (60000, kick_js);
+                // schedule to kick JS in the next 5 seconds
+                scheduled = Timeout.add (5000, kick_js);
             }
         }
     }
