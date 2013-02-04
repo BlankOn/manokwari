@@ -20,6 +20,32 @@ AC_DEFINE(SYSTEM_PATH, "/usr/lib/manokwari/system", [Location of the JS scripts]
 AC_SUBST(SYSTEM_PATH)
 fi
 
+AC_ARG_ENABLE([devel], AC_HELP_STRING([--enable-devel],[Enable development mode with sessions dir in current directory]), USE_DEVEL="$enableval", USE_DEVEL="no")
+if test $USE_DEVEL = yes ; then
+AC_DEFINE_UNQUOTED(SESSIONS_PATH, "$PWD/files/sessions", [Location of the Sessions scripts])
+AC_SUBST(SESSIONS_PATH)
+else
+AC_DEFINE(SESSIONS_PATH, "/usr/share/gnome-session/sessions", [Location of the Sessions scripts])
+AC_SUBST(SESSIONS_PATH)
+fi
+
+AC_ARG_ENABLE([devel], AC_HELP_STRING([--enable-devel],[Enable development mode with xsessions dir in current directory]), USE_DEVEL="$enableval", USE_DEVEL="no")
+if test $USE_DEVEL = yes ; then
+AC_DEFINE_UNQUOTED(XSESSIONS_PATH, "$PWD/files/xsessions", [Location of the Xsessions scripts])
+AC_SUBST(XSESSIONS_PATH)
+else
+AC_DEFINE(XSESSIONS_PATH, "/usr/share/xsessions", [Location of the Xsessions scripts])
+AC_SUBST(XSESSIONS_PATH)
+fi
+
+AC_ARG_ENABLE([devel], AC_HELP_STRING([--enable-devel],[Enable development mode with bin dir in current directory]), USE_DEVEL="$enableval", USE_DEVEL="no")
+if test $USE_DEVEL = yes ; then
+AC_DEFINE_UNQUOTED(BIN_PATH, "$PWD/files/bin", [Location of the Session scripts])
+AC_SUBST(BIN_PATH)
+else
+AC_DEFINE(BIN_PATH, "/usr/bin", [Location of the Session scripts])
+AC_SUBST(BIN_PATH)
+fi
 
 AH_TEMPLATE([GETTEXT_PACKAGE], [Package name for gettext])
 GETTEXT_PACKAGE=manokwari
@@ -62,6 +88,10 @@ AC_CONFIG_FILES([Makefile
 	data/manokwari.desktop
 	src/Makefile
 	system/Makefile
-	po/Makefile.in])
+	po/Makefile.in
+	files/bin/Makefile
+	files/sessions/Makefile
+	files/xsessions/Makefile
+	files/menus/Makefile])
 
 AC_OUTPUT
