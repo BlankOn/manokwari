@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=BlankOn
+Comment=This session logs you into BlankOn
+Exec=gnome-session-blankon
+TryExec=/usr/bin/manokwari
+Icon=
+Type=Application
+
