@@ -379,7 +379,7 @@ var menu = (function() {
 
 
 
-    var dataApplications = new XdgData("applications.menu");
+    var dataApplications = new XdgData("manokwari-applications.menu");
     dataApplications.backend.updateCallback("menu.update()");
 
     var dataPlaces = new PlacesData();
