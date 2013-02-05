@@ -1,0 +1,4 @@
+[GNOME Session]
+Name=BlankOn fallback (Safe Mode)
+RequiredComponents=manokwari;gnome-wm;
+DesktopName=GNOME

@@ -7,7 +7,10 @@ SUBDIRS = \
 	src \
 	system \
 	po \
-    tests \
+	files/bin \
+	files/sessions \
+	files/xsessions \
+	files/menus \
 	$(NULL)
 
 manokwaridocdir = ${prefix}/doc/manokwari
