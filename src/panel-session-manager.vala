@@ -12,8 +12,8 @@ interface SessionManager : GLib.Object {
 [DBus (name = "org.gnome.SessionManager.ClientPrivate")]
 interface ClientPrivate: GLib.Object {
     public abstract void end_session_response(bool ok, string reason) throws IOError;
-    public signal void query_end_session(int flags);
-    public signal void end_session(int flags);
+    public signal void query_end_session(uint flags);
+    public signal void end_session(uint flags);
 }
 
 
