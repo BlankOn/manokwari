@@ -26,6 +26,9 @@ int main (string[] args) {
         }
     );
 
+    // Shell
+    var shell = new PanelShell();
+
     // Desktop
     var d = new PanelDesktop ();
     d.show ();
