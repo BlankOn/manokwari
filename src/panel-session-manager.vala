@@ -4,8 +4,8 @@ using JSCore;
 [DBus (name = "org.gnome.SessionManager")]
 interface SessionManager : GLib.Object {
     public abstract void register_client (string app_id, string startup_id, out ObjectPath path) throws IOError;
-    public abstract void shutdown () throws IOError;
-    public abstract void logout (uint32 mode) throws IOError;
+    public abstract async void shutdown () throws IOError;
+    public abstract async void logout (uint32 mode) throws IOError;
     public abstract bool can_shutdown () throws IOError;
 }
 
@@ -76,7 +76,7 @@ public class PanelSessionManager {
         }
     }
 
-    public void logout () {
+    public async void logout () {
         if (session != null) {
             try {
                 session.logout (0);
@@ -86,7 +86,7 @@ public class PanelSessionManager {
         }
     }
 
-    public void shutdown () {
+    public async void shutdown () {
         if (session != null) {
             try {
                 session.shutdown ();
