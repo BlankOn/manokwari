@@ -1,9 +1,4 @@
 using Gtk;
-[DBus (name = "org.freedesktop.DBus")]
-interface XDGDBus : Object {
-    public abstract uint32 request_name (string name, uint32 flags) throws IOError;
-}
-
 int main (string[] args) {
 
     Intl.bindtextdomain( Config.GETTEXT_PACKAGE, Config.LOCALEDIR );
@@ -20,23 +15,16 @@ int main (string[] args) {
     }
 
     PanelSessionManager.getInstance ();
-    try {
-        XDGDBus session =  Bus.get_proxy_sync (BusType.SESSION, 
-            "org.freedesktop.DBus", "/org/freedesktop/DBus");
-
-        if (session != null) {
-            var r = session.request_name ("org.gnome.Panel", 
-                BusNameOwnerFlags.ALLOW_REPLACEMENT | BusNameOwnerFlags.REPLACE);
-
-            if (r != 1 || // DBus.RequestNameReply.PRIMARY_OWNER
-                r != 4) { // DBus.RequestNameReply.ALREADYY_OWNER
-                stdout.printf ("Panel registration failed: %d\n", (int) r);
-            }
+    Bus.own_name(
+        BusType.SESSION,
+        "org.gnome.Panel",
+        0,
+        () => {},
+        () => {},
+        () => {
+          stderr.printf ("Unable to claim Panel from gnome-session");
         }
-    } catch (Error e) {
-        stdout.printf ("Unable to claim Panel to gnome-session");
-    }
-
+    );
 
     // Desktop
     var d = new PanelDesktop ();
