@@ -33,6 +33,7 @@ manokwari_SOURCES = panel-item.vala \
     panel-desktop-data.vala \
     panel-calendar.vala \
     animated-property.vala \
+		panel-shell.vala \
 	$(NULL)
 
 manokwari_VALAFLAGS = \
