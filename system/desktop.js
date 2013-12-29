@@ -168,9 +168,15 @@ var desktop = (function() {
         setupLauncher();
     }
 
-    return {
-        init: init,
-        refresh: refresh
+    var setBackground = function(file) { 
+        $("body").css("background-image", "url(" + file + ")");
+        return true;
+    }
+    
+    return { 
+        init: init, 
+        refresh: refresh, 
+        setBackground: setBackground 
     }
 })();
 
