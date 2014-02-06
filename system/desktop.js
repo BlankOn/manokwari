@@ -168,9 +168,23 @@ var desktop = (function() {
         setupLauncher();
     }
 
-    return {
-        init: init,
-        refresh: refresh
+    var setBackground = function(file) { 
+        if (file) {
+          if (file.split(".").pop() == "xml") {
+            var xml = XmlBackground(file);
+          } else {
+              $("body").css("background-image", "url(" + file + ")");
+          }
+          return true;
+        } else {
+          return false;
+        }
+    }
+    
+    return { 
+        init: init, 
+        refresh: refresh, 
+        setBackground: setBackground 
     }
 })();
 
