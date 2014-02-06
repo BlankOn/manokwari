@@ -29,7 +29,7 @@ XmlBackground.prototype.load = function() {
   $.ajax({
     url: self.file
   }).done(function(data) {
-    self.$data = $(data).children();
+    self.$data = $(data);
     self.run();
   });
 };
@@ -45,12 +45,12 @@ XmlBackground.prototype.getItem = function() {
   var self = this;
 
   while (i > 0) {
-    
+
     var item = this.$data.children()[i];
 
     if (item.nodeName.toLowerCase() != "starttime" && delta >= item.delta ) {
-      
-      // handle item
+
+      console.log(item.nodeName.toLowerCase());
       self.handleItem (item);
 
       var hasNext = i < (this.$data.children().length - 1);
@@ -63,23 +63,18 @@ XmlBackground.prototype.getItem = function() {
         when = Math.ceil(nextItem.delta - delta);
       } 
 
-      // set handler
       if (nextItem && when) {
-
-        self.debugCount = when;
 
         if (window.handle.timeout) {
           clearTimeout(window.handle.timeout);  
         }
         
-        // get next state, self.timeout is handler for getting next item
         window.handle.timeout = setTimeout(function(){
           self.getItem();
         }, when * 1000);
 
         if (item.nodeName.toLowerCase() == "transition") {
-          
-          // when
+
           self.transitionDuration = when;
           self.transitionCounter = when;
 
@@ -88,14 +83,6 @@ XmlBackground.prototype.getItem = function() {
           }
 
           window.handle.transition = setInterval (function (){
-
-          if (self.transition) {
-            clearInterval(self.transition);
-          }
-
-          self.transition = setInterval (function (){
-            
-            // percentage 
             var percentage = (self.transitionCounter + 0.0) / self.transitionDuration;
 
             // set opacity
@@ -107,15 +94,9 @@ XmlBackground.prototype.getItem = function() {
           }, 1000);
 
         }
-      } else {
-        self.debugCount = 0;
       }
+    }
 
-      if (self.counter) {
-        clearInterval(self.counter);  
-      }
-      break;
-    } 
     i--;
   }
 }
@@ -164,6 +145,7 @@ XmlBackground.prototype.run = function() {
   this.startTime.setHours($startTime.find("hour").text());
   this.startTime.setMinutes($startTime.find("minute").text());
   this.startTime.setSeconds($startTime.find("second").text());
+
 
   var acc = 0;
   /* Populate deltas of each item */
