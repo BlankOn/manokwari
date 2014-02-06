@@ -23,6 +23,7 @@ var Utils = Utils || (function () {
 
 var desktop = (function() {
     var desktopData = null;
+    var xml = new XmlBackground();
 
     var hideLauncher = function() {
         $("#launcher").css("display", "none");
@@ -170,10 +171,16 @@ var desktop = (function() {
 
     var setBackground = function(file) { 
         if (file) {
+          console.log(file.split(".").pop()) ;
+          xml.reset();
           if (file.split(".").pop() == "xml") {
-            var xml = XmlBackground(file);
+console.log("handleItem1");
+            xml.setFile(file);
           } else {
-              $("body").css("background-image", "url(" + file + ")");
+console.log("handleItem2");
+            $("#bg").css("background-image", "url(" + file + ")");
+  $("#overlay").css("display", "block");
+
           }
           return true;
         } else {
