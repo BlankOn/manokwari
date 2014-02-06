@@ -9,6 +9,7 @@ system_DATA = \
 	menu.js \
 	style.css \
 	texture.jpg \
+	xml-background.js \
 	$(NULL)
 
 CLEANFILES = \
