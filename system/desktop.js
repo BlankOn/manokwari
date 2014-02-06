@@ -208,5 +208,5 @@ $(document).ready(function() {
     desktop.init();
 
     // testing using local file
-    desktop.setBackground("file:///Users/diorahman/Experiments/projects/blankon/dir/temp/themes/Adwaita/backgrounds/adwaita-timed.xml");
+    // desktop.setBackground("file:///Users/diorahman/Experiments/projects/blankon/dir/temp/themes/Adwaita/backgrounds/adwaita-timed.xml");
 });
