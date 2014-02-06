@@ -173,9 +173,7 @@ var desktop = (function() {
 
     var setBackground = function(file) { 
         if (file) {
-
           xml.reset();
-
           if (file.split(".").pop() == "xml") {
             xml.setFile(file);
           } else {

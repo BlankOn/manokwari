@@ -20,7 +20,7 @@ body {
 
   background-color: transparent;
   background-size: cover; 
-  /*-webkit-transition: opacity 0.5s linear;*/
+  -webkit-transition: opacity 0.5s linear;
 }
 
 #bg {
@@ -30,10 +30,10 @@ body {
   width: 0px;
   width: 100%;
   height: 100%;
+  background-color: transparent;
+  background-size: cover; 
+  -webkit-transition: opacity 0.5s linear;
 
-    background-color: transparent;
-    background-size: cover; 
-  /*-webkit-transition: opacity 0.5s linear;*/
 }
 
 #base {
@@ -50,7 +50,7 @@ body {
 }
 
 [draggable] {
-      -webkit-user-select: none;
+    -webkit-user-select: none;
 }
 
 #launcher {

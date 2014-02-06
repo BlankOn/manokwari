@@ -1,9 +1,11 @@
+
+// handlers
 window.handle = {
   transition : null,
   timeout : null
 }
 
-XmlBackground = function() {
+var XmlBackground = function() {
   /*
    * Use singleton pattern to maintain a single background sequence items handler object
    */
@@ -23,7 +25,7 @@ XmlBackground.prototype.load = function() {
     return;
   }
   var self = this;
-  
+
   $.ajax({
     url: self.file
   }).done(function(data) {
@@ -81,11 +83,17 @@ XmlBackground.prototype.getItem = function() {
           self.transitionDuration = when;
           self.transitionCounter = when;
 
-          if (window.transitionHandle) {
-            clearInterval(window.transitionHandle);
+          if (window.handle.transition) {
+            clearInterval(window.handle.transition);
           }
 
           window.handle.transition = setInterval (function (){
+
+          if (self.transition) {
+            clearInterval(self.transition);
+          }
+
+          self.transition = setInterval (function (){
             
             // percentage 
             var percentage = (self.transitionCounter + 0.0) / self.transitionDuration;
@@ -103,6 +111,9 @@ XmlBackground.prototype.getItem = function() {
         self.debugCount = 0;
       }
 
+      if (self.counter) {
+        clearInterval(self.counter);  
+      }
       break;
     } 
     i--;
@@ -110,12 +121,16 @@ XmlBackground.prototype.getItem = function() {
 }
 
 XmlBackground.prototype.handleItem = function(item) {
+  
   var file;
-  $("#overlay").css("display", "block");
+
   if (item.nodeName.toLowerCase() == "static") {
+
     file = item.querySelector("file").textContent;
     $("#bg").css("background-image", "url(" + file + ")");
+
   } else {
+    
     overlay = item.querySelector("from").textContent;
     file = item.querySelector("to").textContent;
 
@@ -124,6 +139,7 @@ XmlBackground.prototype.handleItem = function(item) {
 
     $("#overlay").css("opacity", 1.0);
     $("#overlay").css("background-image", "url(" + overlay + ")");
+
   }
 }
 
@@ -139,6 +155,7 @@ XmlBackground.prototype.reset = function() {
 
   $("#overlay").css("opacity", 0.0);
   $("#bg").css("opacity", 1.0);
+
 }
 
 XmlBackground.prototype.run = function() {
@@ -154,9 +171,9 @@ XmlBackground.prototype.run = function() {
     var item = this.$data.children()[i];
     item.delta = item.delta || 0;
     item.i = i;
+
     if (item.nodeName.toLowerCase() != "starttime") {
       item.duration = parseInt(item.querySelector("duration").textContent); 
-
       item.delta += (acc + item.duration);
       acc = item.delta;
     }
@@ -164,5 +181,3 @@ XmlBackground.prototype.run = function() {
 
   this.getItem();
 };
-
-
