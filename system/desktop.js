@@ -25,6 +25,8 @@ var desktop = (function() {
     var desktopData = null;
     var xml = new XmlBackground();
 
+    window.xml = xml;
+
     var hideLauncher = function() {
         $("#launcher").css("display", "none");
     }
@@ -171,16 +173,13 @@ var desktop = (function() {
 
     var setBackground = function(file) { 
         if (file) {
-          console.log(file.split(".").pop()) ;
+
           xml.reset();
+
           if (file.split(".").pop() == "xml") {
-console.log("handleItem1");
             xml.setFile(file);
           } else {
-console.log("handleItem2");
             $("#bg").css("background-image", "url(" + file + ")");
-  $("#overlay").css("display", "block");
-
           }
           return true;
         } else {
