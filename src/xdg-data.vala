@@ -11,6 +11,7 @@ public class PanelXdgData {
 
     string catalog;
     StringBuilder json; // use StringBuilder to avoid appending immutable strings
+    int depth = 0;
     IconTheme icon;
     static Context* jsContext;
     JSCore.Object* jsObject;
@@ -103,6 +104,9 @@ public class PanelXdgData {
         foreach (TreeItem item in root.get_contents ()) {
             switch (item.get_type()) {
             case TreeItemType.DIRECTORY:
+                if (depth > 0) {
+                  break;
+                }
                 var i = (TreeDirectory) item;
 
                 var s = "{icon: '%s', name: '%s',".printf(
@@ -111,7 +115,9 @@ public class PanelXdgData {
                         );
                 json.append (s);
                 json.append ("children:[");
+                depth ++;
                 update_tree (i);
+                depth --;
                 if (json.str [json.len - 1] == ',') {
                     json.erase (json.len - 1, 1); // Remove trailing comma
                 }
