@@ -169,8 +169,16 @@ var desktop = (function() {
     }
 
     var setBackground = function(file) { 
-        $("body").css("background-image", "url(" + file + ")");
-        return true;
+        if (file) {
+          if (file.split(".").pop() == "xml") {
+            var xml = XmlBackground(file);
+          } else {
+              $("body").css("background-image", "url(" + file + ")");
+          }
+          return true;
+        } else {
+          return false;
+        }
     }
     
     return { 
