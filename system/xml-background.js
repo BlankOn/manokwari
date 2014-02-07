@@ -81,7 +81,7 @@ XmlBg.prototype.where = function(){
     var frame = timeline[i];
     if (frame.span <= delta) {
       // we got the frame here;
-      this.handle(frame, frame.duration - (delta - frame.span));
+      this.handle(frame, parseInt(frame.duration) - (delta - frame.span));
       break;
     }
   }
@@ -101,7 +101,7 @@ XmlBg.prototype.handle = function (frame, next){
 
     // do css animation
     $("#overlay").css("background-image", "url(" + frame.from + ")");
-    $("#bg").css("background-image", "url(" + frame.to.replace("bright-day", "good-night") + ")");
+    $("#bg").css("background-image", "url(" + frame.to + ")");
 
     var initialOpacity = next/frame.duration;
 
@@ -131,8 +131,6 @@ XmlBg.prototype.handle = function (frame, next){
   window.handle.timeout = setTimeout(function(){
     self.where();
   }, next * 1000);
-
-  console.log("handle");
 }
 
 XmlBg.prototype.reset = function (){
