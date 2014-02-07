@@ -23,10 +23,6 @@ var Utils = Utils || (function () {
 
 var desktop = (function() {
     var desktopData = null;
-    var xml = new XmlBackground();
-
-    window.xml = xml;
-
     var hideLauncher = function() {
         $("#launcher").css("display", "none");
     }
@@ -172,17 +168,29 @@ var desktop = (function() {
     }
 
     var setBackground = function(file) { 
-        if (file) {
-          xml.reset();
-          if (file.split(".").pop() == "xml") {
-            xml.setFile(file);
-          } else {
-            $("#bg").css("background-image", "url(" + file + ")");
-          }
-          return true;
+      if (file) {
+        // reset 
+        xmlBg.reset();
+
+        // ends with
+        if (file.split(".").pop() == "xml") {
+
+          // set xml file
+          xmlBg.load(file);
+
         } else {
-          return false;
+
+          // set background url
+          $("#bg").css("background-image", "url(" + file + ")");
+
         }
+        return true;
+
+      } else {
+
+        //
+        return false;
+      }
     }
     
     return { 
@@ -194,4 +202,14 @@ var desktop = (function() {
 
 $(document).ready(function() {
     desktop.init();
+
+    // to do testing using local file, we can do following test:
+    //
+    //
+    desktop.setBackground("file:///Users/diorahman/Experiments/projects/blankon/dir/temp/themes/Adwaita/backgrounds/adwaita-timed.xml");
+
+    // setTimeout(function(){
+    //    desktop.setBackground("file:///Users/diorahman/Experiments/projects/blankon/dir/temp/themes/Adwaita/backgrounds/good-night.jpg");
+    // }, 1000);
+
 });

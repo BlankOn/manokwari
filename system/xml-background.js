@@ -1,165 +1,155 @@
+// starttime | state1 | transition | state2 | transition | state3 | transition
+// 07.00     | 1      | 2          | 1      | 2          | 1      | 2
+//           | 0      | 1          | 3      | 4          | 6      | 7
 
-// handlers
-window.handle = {
-  transition : null,
+var handle = {
   timeout : null
 }
 
-var XmlBackground = function() {
-  /*
-   * Use singleton pattern to maintain a single background sequence items handler object
-   */
-  if (XmlBackground.prototype.instance) {
-    return XmlBackground.prototype.instance;
-  }
-  XmlBackground.prototype.instance = this;
-};
-
-XmlBackground.prototype.setFile = function(file) {
-  this.file = file;
-  this.load();
-};
-
-XmlBackground.prototype.load = function() {
-  if (!this.file) {
-    return;
-  }
+var XmlBg = function(){};
+XmlBg.prototype.load = function(file){
   var self = this;
 
   $.ajax({
-    url: self.file
-  }).done(function(data) {
-    self.$data = $(data);
-    self.run();
+    url: file,
+    cache: false,
+    dataType : "text",
+    processData : false,
+  })
+  .done( function (data) {
+    self.parse (data);
   });
-};
+}
 
-XmlBackground.prototype.getItem = function() {
+XmlBg.prototype.parse = function (data) {
+  var seq = $.xml2json(data);
 
-  // get current date
+  if (seq.hasOwnProperty("background")) {
+    var bg = seq.background;
+
+    var startTime = bg.starttime;
+
+    this.startTick = new Date();
+    this.startTick.setHours(startTime.hour);
+    this.startTick.setMinutes(startTime.minute);
+    this.startTick.setSeconds(startTime.second);
+
+    var timeline = [];
+
+    for (var i = 0; i < bg.static.length; i++) {
+      bg.static[i].type = "static";
+      bg.transition[i].type = "transition";
+      timeline.push(bg.static[i]);
+      timeline.push(bg.transition[i]);
+    }
+
+    for (var i = 0; i < timeline.length; i++) {
+      if (i == 0) {
+        timeline[i].span = 0;
+      }
+      else {
+        timeline[i].span = timeline[i - 1].span + parseInt(timeline[i - 1].duration);  
+      }
+      
+    }
+
+    this.timeline = timeline;
+    this.where();
+  }
+}
+
+//"00.00 - 23"
+//"07.00 - 06.00"
+//
+// where are we? (search for a time-frame inside the timeline)
+// 
+XmlBg.prototype.where = function(){
+
   var now = new Date();
-  var acc = 0;
-  var i = this.$data.children().length - 1;
-  var delta = (now - this.startTime) / 1000;
+  var delta = (now - this.startTick).valueOf()/1000;
+  var frame;
+
+  if (delta < 0) {
+    delta = 24 + (delta / 3600);
+    delta *= 3600;
+  }
+
+  var timeline = this.timeline;
+  var i = timeline.length;
+
+  while (i--) {
+    var frame = timeline[i];
+    if (frame.span <= delta) {
+      // we got the frame here;
+      this.handle(frame, parseInt(frame.duration) - (delta - frame.span));
+      break;
+    }
+  }
+}
+
+XmlBg.prototype.handle = function (frame, next){
 
   var self = this;
 
-  while (i > 0) {
+  if (frame.type == "static") {
 
-    var item = this.$data.children()[i];
-
-    if (item.nodeName.toLowerCase() != "starttime" && delta >= item.delta ) {
-
-      console.log(item.nodeName.toLowerCase());
-      self.handleItem (item);
-
-      var hasNext = i < (this.$data.children().length - 1);
-      var nextItem;
-      var when = 0;
-
-      if (hasNext) {
-        // get next item
-        nextItem = this.$data.children()[ i + 1];
-        when = Math.ceil(nextItem.delta - delta);
-      } 
-
-      if (nextItem && when) {
-
-        if (window.handle.timeout) {
-          clearTimeout(window.handle.timeout);  
-        }
-        
-        window.handle.timeout = setTimeout(function(){
-          self.getItem();
-        }, when * 1000);
-
-        if (item.nodeName.toLowerCase() == "transition") {
-
-          self.transitionDuration = when;
-          self.transitionCounter = when;
-
-          if (window.handle.transition) {
-            clearInterval(window.handle.transition);
-          }
-
-          window.handle.transition = setInterval (function (){
-            var percentage = (self.transitionCounter + 0.0) / self.transitionDuration;
-
-            // set opacity
-            $("#bg").css("opacity", 1 - percentage);
-            $("#overlay").css("opacity", percentage);
-
-            self.transitionCounter--;
-
-          }, 1000);
-
-        }
-      }
-    }
-
-    i--;
-  }
-}
-
-XmlBackground.prototype.handleItem = function(item) {
-  
-  var file;
-
-  if (item.nodeName.toLowerCase() == "static") {
-
-    file = item.querySelector("file").textContent;
-    $("#bg").css("background-image", "url(" + file + ")");
+    // do render image    
+    $("#overlay").css("opacity", 0.0);
+    $("#bg").css("background-image", "url(" + frame.file + ")");
 
   } else {
-    
-    overlay = item.querySelector("from").textContent;
-    file = item.querySelector("to").textContent;
 
-    $("#bg").css("opacity", 0.0);
-    $("#bg").css("background-image", "url(" + file + ")");
+    // do css animation
+    $("#overlay").css("background-image", "url(" + frame.from + ")");
+    $("#bg").css("background-image", "url(" + frame.to + ")");
 
-    $("#overlay").css("opacity", 1.0);
-    $("#overlay").css("background-image", "url(" + overlay + ")");
+    var initialOpacity = next/frame.duration;
 
+    $("#overlay").css("opacity", initialOpacity);
+    $("#bg").css("opacity", 1 - initialOpacity);
+
+    self.next = next;
+
+    // next tick to set webkit transition
+    setTimeout(function(){
+      
+      $("#overlay").css("-webkit-transition-property", "opacity");
+      $("#overlay").css("-webkit-transition-duration", self.next + "s");
+      $("#overlay").css("-webkit-transition-timing-function", "linear");
+      $("#overlay").css("opacity", 0.0);
+
+      $("#bg").css("-webkit-transition-property", "opacity");
+      $("#bg").css("-webkit-transition-duration", self.next + "s");
+      $("#bg").css("-webkit-transition-timing-function", "linear");
+      $("#bg").css("opacity", 1.0);
+
+    }, 1);
   }
+
+  clearTimeout(window.handle.timeout);
+
+  window.handle.timeout = setTimeout(function(){
+    self.where();
+  }, next * 1000);
 }
 
-XmlBackground.prototype.reset = function() {
+XmlBg.prototype.reset = function (){
 
-  if (window.handle.timeout) {
-    clearTimeout(window.handle.timeout);
-  }
+  clearTimeout(window.handle.timeout);
+
+  $("#overlay").css("-webkit-transition-property", "none");
+  $("#overlay").css("-webkit-transition-duration",  "none");
+
+  $("#bg").css("-webkit-transition-property", "none");
+  $("#bg").css("-webkit-transition-duration",  "none");
   
-  if (window.handle.transition) {
-    clearInterval(window.handle.transition);
-  }
-
-  $("#overlay").css("opacity", 0.0);
-  $("#bg").css("opacity", 1.0);
-
+  setTimeout(function(){
+    $("#bg").css("opacity", 1.0);
+    $("#overlay").css("opacity", 0.0);
+  }, 1);
 }
 
-XmlBackground.prototype.run = function() {
-  var $startTime = this.$data.find("starttime");
-  this.startTime = new Date();
-  this.startTime.setHours($startTime.find("hour").text());
-  this.startTime.setMinutes($startTime.find("minute").text());
-  this.startTime.setSeconds($startTime.find("second").text());
-
-
-  var acc = 0;
-  /* Populate deltas of each item */
-  for (var i = 0; i < this.$data.children().length; i ++) {
-    var item = this.$data.children()[i];
-    item.delta = item.delta || 0;
-    item.i = i;
-
-    if (item.nodeName.toLowerCase() != "starttime") {
-      item.duration = parseInt(item.querySelector("duration").textContent); 
-      item.delta += (acc + item.duration);
-      acc = item.delta;
-    }
-  }
-
-  this.getItem();
-};
+$(function(){
+  var xmlBg = new XmlBg();
+  window.xmlBg = xmlBg;
+});

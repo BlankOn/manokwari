@@ -10,6 +10,7 @@ system_DATA = \
 	style.css \
 	texture.jpg \
 	xml-background.js \
+	xml2json.js \
 	$(NULL)
 
 CLEANFILES = \
