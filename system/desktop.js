@@ -23,10 +23,6 @@ var Utils = Utils || (function () {
 
 var desktop = (function() {
     var desktopData = null;
-    var xml = new XmlBackground();
-
-    window.xml = xml;
-
     var hideLauncher = function() {
         $("#launcher").css("display", "none");
     }
@@ -174,13 +170,13 @@ var desktop = (function() {
     var setBackground = function(file) { 
       if (file) {
         // reset 
-        xml.reset();
+        xmlBg.reset();
 
         // ends with
         if (file.split(".").pop() == "xml") {
 
           // set xml file
-          xml.setFile(file);
+          xmlBg.load(file);
 
         } else {
 
@@ -207,6 +203,13 @@ var desktop = (function() {
 $(document).ready(function() {
     desktop.init();
 
-    // testing using local file
-    // desktop.setBackground("file:///Users/diorahman/Experiments/projects/blankon/dir/temp/themes/Adwaita/backgrounds/adwaita-timed.xml");
+    // to do testing using local file, we can do following test:
+    //
+    //
+    desktop.setBackground("file:///Users/diorahman/Experiments/projects/blankon/dir/temp/themes/Adwaita/backgrounds/adwaita-timed.xml");
+
+    // setTimeout(function(){
+    //    desktop.setBackground("file:///Users/diorahman/Experiments/projects/blankon/dir/temp/themes/Adwaita/backgrounds/good-night.jpg");
+    // }, 1000);
+
 });
