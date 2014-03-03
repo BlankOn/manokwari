@@ -1,7 +1,6 @@
-.gitignore
 INSTALL
 Makefile
-Makefile.in
+Makefile.in*
 aclocal.m4
 autom4te.cache/
 compile
@@ -30,3 +29,13 @@ src/.libs
 src/*.o
 *swp
 vapi/*deps
+deps
+ltmain.sh
+missing
+mkinstalldirs
+po/POTFILES
+data/manokwari.desktop
+po/stamp-it
+src/manokwari
+src/manokwari_vala.stamp
+stamp-h1
