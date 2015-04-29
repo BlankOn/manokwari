@@ -20,7 +20,7 @@ public class PanelWindowPager : PanelAbstractWindow {
         box.pack_start (pager, false, false, 0);
         pager.show ();
 
-        var icon = new Image.from_icon_name ("user-desktop", IconSize.LARGE_TOOLBAR);
+        var icon = new Image.from_icon_name ("user-desktop-symbolic", IconSize.LARGE_TOOLBAR);
         desktop = new ToggleButton ();
         desktop.set_tooltip_text (_("Click here to hide all windows and show desktop"));
         desktop.add(icon);
@@ -80,9 +80,9 @@ public class PanelWindowPagerEntry : DrawingArea {
 
         var icon_theme = IconTheme.get_default ();
         try {
-            icon = icon_theme.load_icon ("user-desktop", 32, 0);
+            icon = icon_theme.load_icon ("user-desktop-symbolic", 32, 0);
         } catch (Error e) {
-            stderr.printf ("Unable to load icon 'user-desktop': %s\n", e.message);
+            stderr.printf ("Unable to load icon 'user-desktop-symbolic': %s\n", e.message);
         }
         pager = new PanelWindowPager ();
         show ();
