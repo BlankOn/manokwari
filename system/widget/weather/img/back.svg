@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   width="30"
+   height="26.9"
+   id="svg2"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="back.svg">
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1535"
+     inkscape:window-height="876"
+     id="namedview18"
+     showgrid="false"
+     inkscape:zoom="8.7732343"
+     inkscape:cx="15"
+     inkscape:cy="13.45"
+     inkscape:window-x="65"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2" />
+  <style
+     id="style4">
+  .style0{
+    fill: #ffffff;
+  }
+  .style1{
+    fill: #222222;
+  }
+</style>
+  <defs
+     id="defs6" />
+  <metadata
+     id="metadata8">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     transform="translate(-193.57518,-304.61648)"
+     id="g10"
+     style="fill:#ffffff">
+    <g
+       transform="translate(136.56768,-761.92394)"
+       class="style0"
+       id="g12"
+       style="fill:#ffffff">
+      <g
+         class="style0"
+         id="g14"
+         style="fill:#ffffff">
+        <path
+           d="m 72.6 1088.4 -10.4 -8.1 c -0.2 -0.2 -0.2 -0.4 -0 -0.6 l 10.4 -8.1 c 0.2 -0.2 0.4 -0.1 0.4 0.2 v 5.2 h 8.5 c 0.3 0 0.5 0.2 0.5 0.5 v 5 c 0 0.3 -0.2 0.5 -0.5 0.5 H 73 v 5.2 c 0 0.3 -0.2 0.4 -0.4 0.2 z"
+           class="style1"
+           id="path16"
+           style="fill:#ffffff" />
+      </g>
+    </g>
+  </g>
+</svg>
