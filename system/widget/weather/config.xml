@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--widget xmlns="http://www.w3.org/ns/widgets" id="https://github.com/mijortsa/Cuaca/" version="1.0" viewmodes="fullscreen">
+    <icon src="icon_128.png"/>
+    <content src="*.html"/>
+<name>Cuaca</name>
+</widget-->
+
+<widget xmlns       = "http://www.w3.org/ns/widgets"
+        id          = ""
+        version     = "git"
+        height      = "768"
+        width       = "1024">
+ 
+  <name short="cuaca">
+    Cuaca
+  </name>
+
+  <description>
+    BlankOn Cuaca
+    
+  </description>
+
+  <author href=""></author>
+
+  <icon src="icon_48.png"/>
+  <content src="index.html"/>
+
+  <license>
+    (cc by sa version 2.0) 
+  </license>
+</widget>
+
