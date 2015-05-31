@@ -5,6 +5,8 @@ using JSCore;
 interface SessionManager : GLib.Object {
     public abstract void register_client (string app_id, string startup_id, out ObjectPath path) throws IOError;
     public abstract async void shutdown () throws IOError;
+    public abstract async void reboot () throws IOError;
+
     public abstract async void logout (uint32 mode) throws IOError;
     public abstract bool can_shutdown () throws IOError;
 }
@@ -86,6 +88,17 @@ public class PanelSessionManager {
         }
     }
 
+    public async void reboot () {
+        if (session != null) {
+            try {
+                session.reboot ();
+            } catch (Error e) {
+                stderr.printf("Unable to reboot: %s\n", e.message);
+            }
+        }
+    }
+
+
     public async void shutdown () {
         if (session != null) {
             try {
@@ -117,9 +130,15 @@ public class PanelSessionManager {
         var s = new String.with_utf8_c_string ("canShutdown");
         var f = new JSCore.Object.function_with_callback (ctx, s, js_can_shutdown);
         o.set_property (ctx, s, f, 0, null);
+
         s = new String.with_utf8_c_string ("logout");
         f = new JSCore.Object.function_with_callback (ctx, s, js_logout);
         o.set_property (ctx, s, f, 0, null);
+
+        s = new String.with_utf8_c_string ("reboot");
+        f = new JSCore.Object.function_with_callback (ctx, s, js_reboot);
+        o.set_property (ctx, s, f, 0, null);
+
         s = new String.with_utf8_c_string ("shutdown");
         f = new JSCore.Object.function_with_callback (ctx, s, js_shutdown);
         o.set_property (ctx, s, f, 0, null);
@@ -158,6 +177,22 @@ public class PanelSessionManager {
         }
         return new JSCore.Value.undefined (ctx);
     }
+
+    public static JSCore.Value js_reboot (Context ctx,
+            JSCore.Object function,
+            JSCore.Object thisObject,
+            JSCore.Value[] arguments,
+
+            out JSCore.Value exception) {
+
+        exception = null;
+        var i = thisObject.get_private() as PanelSessionManager; 
+        if (i != null) {
+            i.reboot(); 
+        }
+        return new JSCore.Value.undefined (ctx);
+    }
+
 
     public static JSCore.Value js_logout (Context ctx,
             JSCore.Object function,
