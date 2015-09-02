@@ -97,52 +97,66 @@ public class PanelXdgData {
         } catch (Error e) {
             stdout.printf ("Can't monitor applications directory: %s\n", e.message);
         }
-
     }
 
     void update_tree (TreeDirectory root) {
-        foreach (TreeItem item in root.get_contents ()) {
-            switch (item.get_type()) {
+        var iter = root.iter();
+        GMenu.TreeItemType type;
+        while((type = iter.next ()) != GMenu.TreeItemType.INVALID) {
+            switch (type) {
             case TreeItemType.DIRECTORY:
                 if (depth > 0) {
-                  break;
+                    break;
                 }
-                var i = (TreeDirectory) item;
-
-                var s = "{icon: '%s', name: '%s',".printf(
-                            Utils.get_icon_path(i.get_icon ().replace(".svg", "").replace(".png", "").replace(".xpm","")),
-                            i.get_name ()
-                        );
-                json.append (s);
-                json.append ("children:[");
-                depth ++;
-                update_tree (i);
-                depth --;
+                var dir = iter.get_directory();
+                var name = dir.get_name();
+                var icon = dir.get_icon();
+                var iconString = icon != null ? icon.to_string() : "";
+                var data = "{
+                  \"name\": \"%s\",
+                  \"icon\": \"%s\",
+                  ".printf(name, Utils.get_icon_path(iconString));
+                json.append(data);
+                json.append("\"children\": [");
+                depth++;
+                update_tree(dir);
+                depth--;
                 if (json.str [json.len - 1] == ',') {
-                    json.erase (json.len - 1, 1); // Remove trailing comma
+                    json.erase(json.len - 1, 1);
                 }
-                json.append ("]"); // children
-                json.append("},"); // {
+                json.append("]");
+                json.append("},");
                 break;
 
+            case TreeItemType.ALIAS:
             case TreeItemType.ENTRY:
-                var i = (TreeEntry) item;
-               
-                var s = "{icon: '%s', name: '%s', desktop: '%s'},".printf(
-                            Utils.get_icon_path(i.get_icon ().replace(".svg", "").replace(".png", "").replace(".xpm","")),
-                            i.get_display_name (),
-                            i.get_desktop_file_path ()
-                        );
-                json.append (s);
+                var entry = iter.get_entry();
+                var app_info = entry.get_app_info();
+                var name = app_info.get_display_name();
+                var icon = app_info.get_string("Icon");
+                var desktop = entry.get_desktop_file_path();
+                var data = "{
+                  \"name\": \"%s\",
+                  \"icon\": \"%s\",
+                  \"desktop\": \"%s\"
+                },".printf(name, Utils.get_icon_path(icon), desktop);
+                json.append(data);
                 break;
             }
         }
     }
 
     void populate () { 
-        var tree = GMenu.Tree.lookup (catalog, TreeFlags.NONE);
+        var tree = new GMenu.Tree (catalog, GMenu.TreeFlags.INCLUDE_EXCLUDED);
+        stderr.printf("catalog: %s\n", catalog);
+        try {
+            if (!tree.load_sync()) {
+                stderr.printf("Could not load menu.");
+            }
+        } catch (Error e) {
+            stderr.printf("Error loading menu file: %s", e.message);
+        }
         var root = tree.get_root_directory ();
-
         json.assign("[");
         update_tree (root);
         if (json.str [json.len - 1] == ',') {
