@@ -1,4 +1,11 @@
 # Hacking Manokwari
+## Compiling
+You will need following packages installed on your system prior to compiling manokwari:
+
+``` gnome-common libglib2.0-dev gtk+-3.0-dev libunique-3.0-dev libwnck-3-dev libgee-dev libgnome-menu-dev valac```
+
+You can install it by executing ```./dev_require.sh``` located in the top directory of this repository, then execute ```./autogen.sh```, this will gather the dependency and let you know if anything amiss. If everything goes well, then it's time to do ```make```. The ```manokwari``` binary will then be available in ```src/``` directory.
+
 ## Use local system
 Instead of installing the "system" directory in the system, it is a good idea to hack your own "system", ie. just do the hacking inside
 system/ directory instead of /usr/share/manokwari/system, so no sudo required.
