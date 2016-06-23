@@ -1,0 +1,250 @@
+body {
+	background-color: transparent;
+/*
+	background:url("../bg-test.jpg") center center no-repeat;
+*/
+	background-size:cover;
+	overflow: hidden;
+	-webkit-user-select: none;
+	padding: 0px;
+	margin: 0px;
+	font-family: Cantarell, Sans-Serif;
+	width: 100%;
+	height: 100%;
+}
+
+#overlay {
+	background-color: transparent;
+	position: absolute;
+	z-index: 2;
+	width: 100%;
+	height: 100%;
+}
+
+/** activated #bg if mutter as window manager **/
+#bg {
+	background-color: transparent;
+	position: absolute;
+	z-index: 1;
+	width: 100%;
+	height: 100%;
+    background-repeat:no-repeat;
+    background-size: 100% 100%;
+	background-position: 50%;
+}
+
+#base {
+	position: absolute;
+	z-index: 3;
+	left: 0px;
+	width: 0px;
+	width: 100%;
+	height: 100%;
+  
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-box-pack: end;
+    -webkit-box-align: center;
+}
+
+.hidden {
+  opacity: 0;
+}
+
+[draggable] {
+    -webkit-user-select: none;
+}
+
+#launcher {
+	background: rgba(0,0,0,0);
+    height: 100px;
+    width: auto;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    z-index: 20;
+    -webkit-transition: all 200ms ease-in-out;
+    -webkit-box-align: center;
+	margin-bottom: -4px;
+	padding-right: 68px;
+}
+
+.ui-launcher-entry-wrapper {
+    display: inline-block;
+    height: 98px;
+    width: 56px;
+    margin: 0px;
+    vertical-align: middle;
+    -webkit-box-align: center;
+}
+
+.ui-launcher-entry-img-holder {
+    width: 56px;
+}
+
+.ui-launcher-entry {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-box-align: center;
+    text-align: center;
+    width: 120px;
+}
+
+.ui-launcher-entry span {
+    white-space: nowrap;
+    text-align: center;
+    overflow:hidden;
+    text-overflow: ellipsis;
+    color:transparent;
+    font-family: Aurulent Sans Bold;
+    font-size: 11px;
+   	height: 16px;
+    max-width: 105px;
+    padding: 4px 7px;
+    margin: 0;
+	-webkit-border-radius: 10px;
+	z-index: -5;
+}
+
+.ui-launcher-entry:hover span {
+	content: " ";
+	position:relative;
+	bottom: -2px;
+	display: block;
+	background: #fff;
+	color: #111;
+	z-index: 100;
+	margin-left: 3px;
+	border-radius: 5px;
+	-webkit-filter: drop-shadow(0px 1px 1px #000);
+	opacity: 0.6;
+}
+
+.ui-launcher-entry:hover:before {	
+	content: "";
+	width: 0px;
+	height: 0px;
+	border-width: 6px;
+	border-style:solid;
+	border-color: #fff transparent transparent transparent;
+	bottom: 58px;
+	margin-left: 56px;
+	position: fixed;
+	z-index: 110;
+	-webkit-filter: drop-shadow(0px 1px 2px #000);
+	opacity: 0.6;
+}
+
+.ui-launcher-entry-img-holder {
+	content:"";
+    display: -webkit-box;
+/*	background: -webkit-linear-gradient(rgba(187,187,187,0.8), rgba(34,34,34,0.8));*/
+	background:-webkit-linear-gradient(rgba(255,255,255,0.3), rgba(255,255,255,0.6));
+    height: 64px;
+    margin-top: 35px;
+    z-index: 12;
+    position:fixed;
+    margin-left: 34px;
+
+    -webkit-box-orient: vertical;
+    -webkit-box-pack: center;
+    -webkit-box-align: center;
+}
+.ui-launcher-entry-img-holder-first{
+	border-top-left-radius:5px;
+}
+.ui-launcher-entry-img-holder-last{
+	border-top-right-radius:5px;
+}
+
+.ui-launcher-entry img {
+    width: 42px;
+    height: 42px;
+    cursor: pointer;
+    margin: 4px 4px 12px 4px;
+    filter: drop-shadow(0px 0px 3px #000);
+    -webkit-filter: drop-shadow(0px 0px 6px #000);
+    -webkit-transition: all 150ms ease-in-out;
+    z-index: 25;
+    -webkit-transform: rotate(0deg);
+}
+
+.ui-launcher-entry:hover img {
+    -webkit-transform:scale(1.1);
+    opacity: 1;
+}
+.ui-launcher-entry:focus img {
+	
+
+}
+
+
+
+.ui-bin-img {
+    margin: auto;
+    width: 64px;
+    height: 64px;
+   	-webkit-filter: drop-shadow(0px 1px 2px #000);
+    -webkit-transition: all 100ms ease-in-out;
+    opacity: 1;
+}
+
+.ui-bin-img.enter,
+.ui-bin:hover {
+    width: 70px;
+    height: 70px;
+} 
+
+.ui-bin {
+    display: -webkit-box;
+    -webkit-box-pack: center;
+    -webkit-box-align: center;
+    margin: auto;
+    padding: 10px;
+    width: 70px;
+    height: 70px;
+    border: 2px solid rgba(204, 204, 204, 0.8);
+    border-radius: 50%;
+    -webkit-transition: all 100ms ease-out;
+    background-color: rgba(0,0,0,0.8);
+    opacity: 0;
+}
+
+.ui-bin.enter {
+    background-color: rgba(0,0,0,1);
+    opacity: 1;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0); 
+    background: rgba(191,191,191,0);
+    border-radius: 0px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 0px;
+    background: rgba(191,191,191,0.04);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    border-radius: 0px;
+    background: rgba(191,191,191,0.1)
+}
+
+/**********************
+ * Fonts Collections *
+ **********************/
+ 
+@font-face {
+    font-family: 'Aurulent Sans Bold';
+    src: url(../fonts/AurulentSans-Bold.otf);
+    font-weight: 600;
+}
+@font-face {
+    font-family: 'Aurulent Sans';
+    src: url(../fonts/AurulentSans-Regular.otf);
+    font-weight: 600;
+}
