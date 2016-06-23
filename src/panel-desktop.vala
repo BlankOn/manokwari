@@ -43,6 +43,16 @@ public class PanelDesktop: PanelAbstractWindow {
             resize_geometry ();
         });
 
+        
+        key_press_event.connect ((e) => {					//Printscreen
+            if (Gdk.keyval_name(e.keyval) == "Print") {
+                if (Utils.print_screen () == false) {
+                    stdout.printf ("Unable to take screenshot\n");
+                }
+            }
+            return false;
+        });
+
     }
 
     void resize_geometry() {

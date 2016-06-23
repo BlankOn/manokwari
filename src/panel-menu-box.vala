@@ -1,7 +1,7 @@
 using Gtk;
 
 public class PanelMenuBox : PanelAbstractWindow {
-    private const int COLUMN_WIDTH = 320;
+    private const int COLUMN_WIDTH = 265;
 
     public signal void dismissed ();
     public signal void shown ();

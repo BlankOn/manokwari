@@ -19,7 +19,7 @@ public class PanelMenuContent : VBox {
     }
 
     public override void get_preferred_width (out int min, out int max) {
-        min = max = 300;
+        min = max = 260;
     }
 
     public void insert_separator () {

@@ -1,92 +1,70 @@
-@define-color bg_color #00112B;
-@define-color fg_color #f2f2f2;
+@define-color panel_bg_color #1a1a1a;
+@define-color panel_fg_color #ededed;
 @define-color window_desc_bg_color #4e70b0;
 @define-color window_desc_fg_color #00001e;
 @define-color window_desc_bg_minimized_color #606090;
 @define-color window_desc_fg_minimized_color #010101;
 @define-color window_desc_bg_hover_color #a0a0a0;
 @define-color window_desc_fg_hover_color #010101;
+@define-color clock_bg_color @panel_bg_color;
+@define-color clock_fg_color @panel_fg_color; 
 
-@define-color clock_fg_color #eeeeee; 
-
-
-PanelWindowHost
-{
-    color: @fg_color;
-    background-color: @bg_color; 
+PanelWindowHost, 
+PanelWindowPagerEntry {
+	background-image:linear-gradient(rgba(26,26,26,1),rgba(26,26,26,1),rgba(31,31,31,1));
+	background-color: @panel_bg_color;
+	color: @panel_fg_color;
 }
 
-PanelMenuBox {
-    color: @fg_color;
-    background-color: @bg_color; 
+PanelWindowEntryDescriptions {
+	background-image:linear-gradient(rgba(0,0,0,1));
+	background-color: black;
+	color: @panel_fg_color;
+	text-shadow: -1px 1px 1px #000;
+	font: Sans;
+	font-size: 8px;
+	font-weight: bold;
 }
 
-PanelTray {
-    background-color: @bg_color; 
-}
-
-GtkWindow {
-    color: @fg_color;
-    background-color: @bg_color;
-}
-
-GtkMenu {
-    color: @fg_color;
-    background-color: @bg_color;
-}
-
-GtkMenuItem:hover {
-    color: #ffffff;
-    background-color: #0044AA; 
-}
-
-
-PanelMenuContent > GtkSeparator {
-    background-color: #000000;
-}
-
-PanelItem {
-    color: #aaaaaa;
-    font: Sans Bold;
-}
-
-PanelItem:prelight {
-    color: #ffffff;
-    background-color: #0044AA; 
-}
-
-PanelWindowPager,
-PanelWindowEntry {
-    background-color: #003380;
-    color: #cccccc; 
-}
-
-PanelWindowEntry:selected {
-    background-color: #AA0000; 
-    color: #ffffff;
-}
-
-PanelWindowEntry:active {
-    background-color: #0044AA; 
-    color: #ffffff; 
-}
-
-PanelWindowEntry:prelight {
-    background-color: #0044AA; 
-    color: #ffffff; 
-}
-
-PanelWindowEntry:insensitive {
-    background-color: #333333; 
-    color: #808080;
+PanelTray * {
+	background-color: @panel_bg_color;
+	color: @panel_fg_color;
 }
 
 PanelClock {
-    font: Sans Bold;
-    color: @clock_fg_color;
-    background-color: rgba(0.5, 0.5, 0.5, 0.5);
-    border-color: #000000;
-    border-style: solid;
-    border-width: 25;
-    border-radius: 10;
+	background: @clock_bg_color;
+	color: @clock_fg_color;
+	font: Droid Sans;
 }
+
+PanelWindowEntry,
+PanelWindowEntry:selected,
+PanelWindowEntry:insensitive {
+	background-color: transparent; 
+	color: transparent; 
+}
+
+PanelWindowEntry:active {
+	background-image: linear-gradient(#a2a2a2, #e0e0e0, #a2a2a2);
+	color: @panel_fg_color;
+}
+
+PanelWindowEntry:prelight {
+	background-image: linear-gradient(#cacaca, #ffffff, #cacaca);
+	color: @panel_fg_color;
+}
+
+PanelWindowPager {
+	background-color: @theme_bg_color;
+	color: @theme_fg_color;
+}
+
+PanelCalendar {
+	background: @theme_bg_color;
+	color: @theme_fg_color;
+}
+
+* {
+	color: @theme_fg_color;
+}
+

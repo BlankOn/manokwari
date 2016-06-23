@@ -147,7 +147,7 @@ public class PanelPlaces {
             }
 
             var s = "{icon: '%s', name: '%s', uri: '%s'},".printf(
-                        Utils.get_icon_path(mount.get_icon ().to_string ()),
+                        Utils.get_icon_path("drive-harddisk"),     // Utils.get_icon_path(mount.get_icon ().to_string ()),
                         mount.get_name (),
                         mount.get_root ().get_uri ()
                      );
