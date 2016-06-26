@@ -13,7 +13,7 @@ public class PanelWindowPager : PanelAbstractWindow {
 
     public PanelWindowPager () {
         set_type_hint (Gdk.WindowTypeHint.DOCK);
-        var box = new VBox (false, 0);
+        var box = new Box (Gtk.Orientation.VERTICAL, 0);
         var pager = new Wnck.Pager ();
         pager.set_orientation (Orientation.VERTICAL);
         add (box);
@@ -72,6 +72,8 @@ public class PanelWindowPagerEntry : DrawingArea {
     }
 
     public PanelWindowPagerEntry () {
+        get_style_context().add_class("manokwari-panel");
+        get_style_context().remove_class("background");
         add_events (Gdk.EventMask.STRUCTURE_MASK
             | Gdk.EventMask.BUTTON_PRESS_MASK
             | Gdk.EventMask.BUTTON_RELEASE_MASK
@@ -80,7 +82,7 @@ public class PanelWindowPagerEntry : DrawingArea {
 
         var icon_theme = IconTheme.get_default ();
         try {
-            icon = icon_theme.load_icon ("user-desktop-symbolic", 32, 0);
+            icon = icon_theme.load_icon ("user-desktop-symbolic", 24, 0);
         } catch (Error e) {
             stderr.printf ("Unable to load icon 'user-desktop-symbolic': %s\n", e.message);
         }
@@ -113,7 +115,7 @@ public class PanelWindowPagerEntry : DrawingArea {
         StyleContext style = get_style_context ();
         int w = get_window ().get_width ();
         int h = get_window ().get_height ();
-        Gtk.render_background (style, cr, 0, 0, w, h);
+        style.render_background (cr, 0, 0, w, h);
         if (icon != null)
             Gdk.cairo_set_source_pixbuf (cr, icon, (w - icon.width) / 2, (h - icon.height) / 2);
         cr.paint ();
@@ -161,6 +163,8 @@ public class PanelWindowEntry : DrawingArea {
     }
 
     public PanelWindowEntry (Wnck.Window info) {
+        get_style_context().add_class("manokwari-panel");
+        get_style_context().remove_class("background");
         pango = new Pango.Layout (get_pango_context ());
 
         add_events (Gdk.EventMask.STRUCTURE_MASK
@@ -243,7 +247,7 @@ public class PanelWindowEntry : DrawingArea {
         update_icon ();
         // TODO
         if (icon != null) {
-            min = max = icon.get_width () + Margin * 2; 
+            min = max = icon.get_width () + Margin * 2;
         } else {
             min = max = Margin; 
         }
@@ -257,7 +261,7 @@ public class PanelWindowEntry : DrawingArea {
         StyleContext style = get_style_context ();
         style.set_state (state);
 
-        Gtk.render_background (style, cr, 0, 0, get_allocated_width (), get_allocated_height ()); 
+        style.render_background (cr, 0, 0, get_allocated_width (), get_allocated_height ()); 
 
         update_icon ();
 
@@ -294,7 +298,6 @@ public class PanelWindowEntryDescriptions : PanelAbstractWindow {
     unowned PanelWindowEntry active_entry = null;
     unowned PanelWindowEntry old_entry = null;
     private Pango.Layout pango;
-    int margin; 
     bool hiding = false;
     AnimatedProperty anim;
 
@@ -303,6 +306,8 @@ public class PanelWindowEntryDescriptions : PanelAbstractWindow {
     }
 
     public PanelWindowEntryDescriptions (HashMap <Wnck.Window, PanelWindowEntry> entry_map) {
+        get_style_context().add_class("manokwari-panel-window-names");
+        get_style_context().remove_class("background");
         pango = new Pango.Layout (get_pango_context ());
         stack = new ArrayList<PanelWindowEntry>();
         position_map = new HashMap<PanelWindowEntry, int> ();
@@ -311,7 +316,6 @@ public class PanelWindowEntryDescriptions : PanelAbstractWindow {
 
         set_app_paintable(true);
         
-        margin = 0;
         hide ();
         PanelScreen.move_window (this, Gdk.Gravity.NORTH_WEST);
 
@@ -370,14 +374,14 @@ public class PanelWindowEntryDescriptions : PanelAbstractWindow {
         }
 
         var occupied = icon_margin * 3 + text_w + icon_width;
-        Gtk.render_background (style, cr, icon_x + offset - icon_margin, 0, occupied, get_allocated_height ()); 
+        style.render_background (cr, icon_x + offset - icon_margin, 0, occupied, get_allocated_height ()); 
         if (icon != null) {
             Gdk.cairo_set_source_pixbuf (cr, icon, icon_x + offset, 0);
         }
-        Gtk.render_layout (style, cr, text_x + offset, text_y, pango);
+        style.render_layout (cr, text_x + offset, text_y, pango);
 
         if (state == StateFlags.NORMAL) {
-            cr.paint_with_alpha (0.5);
+            cr.paint_with_alpha (0.3);
         } else {
             cr.paint ();
         }
@@ -393,11 +397,10 @@ public class PanelWindowEntryDescriptions : PanelAbstractWindow {
     public override bool draw (Context cr) {
         StyleContext style = get_style_context ();
 
-        stack.clear ();
         var state = StateFlags.NORMAL;
-        style.set_state (state);
-        Gtk.render_background (style, cr, 0, 0, get_allocated_width (), get_allocated_height ()); 
-        cr.paint ();
+
+        stack.clear ();
+        style.render_background (cr, 0, 0, get_allocated_width (), get_allocated_height ()); 
 
         if (active_entry != null)  {
             var start_x = -1;
@@ -499,12 +502,12 @@ public class PanelWindowEntryDescriptions : PanelAbstractWindow {
 public class PanelWindowHost : PanelAbstractWindow {
     private Image logo;
     private bool active;
-    private HBox box;
+    private Box box;
     private PanelTray tray;
     private new Wnck.Screen screen;
     private int num_visible_windows = 0;
     private HashMap <unowned Wnck.Window, unowned PanelWindowEntry> entry_map ;
-    private int height = 22;
+    private int height = 24;
     PanelWindowEntryDescriptions descriptions;
     PanelCalendar calendar;
 
@@ -538,8 +541,10 @@ public class PanelWindowHost : PanelAbstractWindow {
         set_type_hint (Gdk.WindowTypeHint.DOCK);
         active = false;
         screen = Wnck.Screen.get_default ();
-        var outer_box = new HBox (false, 0); 
-        box = new HBox (true, 0);
+        var outer_box = new Box (Gtk.Orientation.HORIZONTAL, 0);
+        box = new Box (Gtk.Orientation.HORIZONTAL, 1);
+        get_style_context().add_class("manokwari-panel");
+        get_style_context().remove_class("background");
         add(outer_box);
 
         var pager_entry = new PanelWindowPagerEntry ();
@@ -567,7 +572,7 @@ public class PanelWindowHost : PanelAbstractWindow {
         outer_box.pack_end (pager_entry, false, false, 1);
         outer_box.pack_end (clock_event, false, false, 0);
         outer_box.pack_end (tray, false, false, 0);
-        outer_box.pack_start (event_box, false, false, 0);
+        outer_box.pack_start (event_box, false, false, 6);
         outer_box.pack_start (box, false, false, 0);
         outer_box.show ();
         box.show();
@@ -721,4 +726,5 @@ public class PanelWindowHost : PanelAbstractWindow {
         calendar.update_position (height);
         set_keep_above(false);
     }
+
 }

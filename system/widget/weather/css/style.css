@@ -1,0 +1,422 @@
+#container {
+	width: 100%;
+    height: 175px;
+    color: #eee;
+    position: relative;
+    margin-top: 10px;
+    margin-left:1px;
+    margin-right:2px;
+	padding-right: 4px;
+    font-family:"Ubuntu Condensed";
+    overflow-y:hidden;
+    overflow-x:hidden;
+    border-top: 1px solid #0a0a0a;
+    -webkit-transition: 300ms background ease;
+    -webkit-transform-origin: 0 0;
+    opacity: 0.8;
+}
+#tittle {
+	position: absolute;
+	width: 100%;
+	height: auto;
+	text-align: left;
+	color: #eee;
+	font-size: 14px;
+	padding: 8px;
+	margin-left: 4px;
+}
+.full {
+	margin-top: 5px;
+}
+p, span, div {
+    cursor: default;
+}
+.border .sync {
+    position: absolute;
+    top: 10px;
+    right: 0px;
+    display: inline-block;
+    opacity: 0;
+    -webkit-transition: 500ms ease opacity;
+    cursor: pointer;
+}
+@-webkit-keyframes busy-spinning {
+    from {
+        -webkit-transform: rotate(0deg);
+        -webkit-transform-origin: 8px 8px;
+    }
+    to {
+        -webkit-transform: rotate(360deg);
+        -webkit-transform-origin: 8px 8px;
+    }
+}
+.border .sync.busy {
+    -webkit-animation: busy-spinning 0.5s infinite linear;
+}
+.border {
+    position: absolute;
+    width: 100%;
+}
+.border .settings {
+    position: absolute;
+    right: 28px;
+    top: 10px;
+    opacity: 0;
+    -webkit-transition: 200ms ease opacity;
+    cursor: pointer;
+}
+.border .sync:hover, .border .settings:hover {
+    opacity: 1 !important;
+}
+.border .sync img, .border .settings img {
+    width: 32px;
+    height: 32px;
+    -webkit-user-drag: none;
+    /* Retina Fix */
+    -webkit-transform: scale(0.5);
+    -webkit-transform-origin: 0 0;
+}
+#actualWeather {
+    display: none;
+}
+#ow-code {
+    /*font-family: ClimaconsRegular;*/
+    font-size: 62px;
+    position: absolute;
+    text-align: center;
+    width: 40%;
+    top: 52px;
+    height: 55px;
+}
+/* Sunny, Tornado, Moon, Mostly Cloudy*/
+#code.w0, #code.w2, #code.w31, #code.w32, #code.w34, #code.w33, #code.w36 {
+    left: 5px;
+}
+#code.w0, #code.w2 {
+    top: 20px;
+}
+#code.w31, #code.w33 {
+    font-size: 42px;
+    top: 20px;
+}
+#code.w28, #code.w30 {
+    top: 20px;
+}
+#city {
+    text-align: center;
+    margin-left: 0px;
+    font-size: 19px;
+    /*text-transform: uppercase;*/
+    letter-spacing: -1px;
+    position: relative;
+    height: 35px;
+    top: 30px;
+    width: 100%;
+    display: inline-block;
+}
+
+.details {
+    font-size: 0;
+    margin-top: 18px;
+}
+.details .left {
+    font-size: 38px;
+    width: 38%;
+    letter-spacing: -3px;
+    text-align: right;
+    display: inline-block;
+    box-sizing: border-box;
+    margin-left: 0px;
+}
+.details .right {
+    font-size: 14px;
+    box-sizing: border-box;
+    display: inline-block;
+    width: 20%;
+    padding-right: 5px;
+    text-align: right;
+    word-spacing: 0;
+    letter-spacing: 0px;
+}
+.week {
+    height: 20px;
+    width: 100%;
+    position: absolute;
+    bottom: 35px;
+    font-size: 0;
+    right: 0px;
+}
+.week div {
+    display: inline-block;
+    width: 20%;
+    text-align: center;
+    font-size: 10px;
+    height: 0px;
+    text-transform: uppercase;
+    background-position: 50% -2px;
+    background-repeat: no-repeat;
+    background-size: 78px;
+}
+.week .temp {
+    display: block;
+    position: relative;
+    top: 5px;
+}
+.week .temp span {
+    padding-left: 5px;
+    color: #eee;
+}
+.week .code {
+    display: block;
+    /*font-family:"ClimaconsRegular";*/
+    font-size: 22px;
+    text-align: center;
+    text-transform: lowercase;
+    position: relative;
+    left: 0px;
+    top: 4px;
+}
+/* Modals */
+#locationModal {
+    display: none;
+    background: transparent;
+    color: #eee;
+    position: absolute;
+    width: 100%;
+    height: 141px;
+    bottom: 0px;
+    top: 215px;
+    padding-top: 2px; 
+    padding-left: 0px;
+    padding-bottom: 0px;
+    -webkit-transform-origin: 0 0;
+}
+#errorMessage {
+    display: none;
+    background: #151515;
+    position: absolute;
+    width: 100%;
+    height: 120px;
+    top: 215px;
+    padding-top: 20px;
+    -webkit-transform-origin: 0 0;
+}
+#locationModal input[type=text] {
+    width: 190px;
+    border: 1px solid #333;
+    padding: 7px;
+    margin-bottom: 0px;
+    font-family:"Ubuntu Condensed";
+    font-size: 14px;
+    outline: none;
+}
+#locationModal input[type=checkbox] {
+    border: 2px solid #222;
+    -webkit-appearance: none;
+    width: 20px;
+    height: 0px;
+    margin: 0px;
+    background: #222;
+    background-size: 90%;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    outline: none;
+}
+#locationModal .speed span {
+    line-height: 17px;
+    padding: 0 7px;
+    width: 42px;
+    box-sizing: border-box;
+    font-size: 10px;
+    height: 22px;
+    text-align: center;
+}
+.toggleswitch {
+    margin-top: 1px;
+}
+.toggleswitch span {
+    display: inline-block;
+    /*line-height: 22px;*/
+    -webkit-transition: 150ms ease background-color;
+    border: 2px solid #222;
+    border-radius: 20px;
+    background-color: #333;
+    cursor: pointer;
+}
+.toggleswitch span.selected, #locationModal .toggleswitch span:hover {
+    background-color: #555;
+}
+.toggleswitch span:last-child {
+    border-right: 2px solid #222;
+}
+#locationModal .measurement {
+    font-family:"ClimaconsRegular";
+    font-size: 24px;
+}
+#locationModal .measurement span {
+    padding: 0 7px 2px 5px;
+}
+#locationModal .measurement span[data-type=k] {
+    font-family:"Ubuntu Condensed";
+    font-size: 14px;
+    line-height: 26px;
+    padding: 0px 11px 0px;
+    vertical-align: top;
+}
+#locationModal .launcher {
+    margin-top: 10px;
+}
+#locationModal label {
+    margin-left: 5px;
+    vertical-align: top;
+}
+#locationModal input[type=checkbox]:checked {
+    background-image: url(weather/img/tick.svg);
+}
+#locationModal .loader {
+    font-size: 27px;
+    display: inline-block;
+    vertical-align: top;
+    line-height: 30px;
+    height: 28px;
+    padding: 0 2px 0 5px;
+    margin-top: 4px;
+}
+#locationModal .loader.loading {
+    font-family:"ClimaconsRegular";
+    padding-right: 0;
+}
+#locationModal .loader.tick {
+    outline: 2px solid #333;
+    background: #222;
+    -webkit-transition: 150ms ease background;
+    cursor: pointer;
+}
+#locationModal .loader.tick:hover {
+    background: #333;
+}
+#locationModal a {
+    text-decoration: none;
+    color: #ffffff;
+    -webkit-user-drag: none;
+    outline: none;
+}
+#locationModal a:not([class*="btn"]):hover {
+    text-decoration: underline;
+}
+.color {
+    font-size: 0;
+    margin-top: 3px;
+    display: inline-block;
+    border: 0px solid transparent;
+    border-radius: 20px;
+    background: transparent;
+}
+.color span {
+    height: 14px;
+    width: 14px;
+    display: inline-block;
+    border-radius:20px;
+    border: 4px solid #222;
+    cursor: pointer;
+	-webkit-transition: all 150ms eease-out;
+}
+span[data-color=gradient] {
+    background: -webkit-linear-gradient(#0081d3, #e44211);
+    height: 14px;
+    width: 14px;
+    border: 4px solid #222;
+	-webkit-transition: all 150ms eease-out;
+}
+.color span:hover, span[data-color=gradient]:hover { 
+	 border: 4px solid #333;
+}
+/* Credits Button */
+ .btn {
+    border: 2px solid #222;
+    border-radius: 2px;
+    background: #333;
+    color: white;
+    -webkit-transition: 150ms ease background;
+    font-family:"Ubuntu Condensed";
+    font-size: 14px;
+    padding: 2px 10px;
+    letter-spacing: -1px;
+    margin-top: 10px;
+    display: inline-block;
+    cursor: pointer;
+    -webkit-user-drag: none;
+    outline: none;
+}
+.btn:hover {
+    background: #444;
+}
+input[type=range] {
+    -webkit-appearance: none;
+    width: 250px;
+    height: 5px;
+    margin: 0;
+    display: inline-block;
+    background-color: rgba(255, 255, 255, 0.3);
+    -webkit-border-radius: 15px;
+    border-radius: 15px;
+    cursor: default;
+    outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 30px;
+    height: 0px;
+    background: -webkit-radial-gradient(#f9f9f9, #fff);
+    -webkit-border-radius: 15px;
+    position: relative;
+}
+input[type="range"]::-webkit-slider-thumb:hover {
+    background: -webkit-radial-gradient(#ddd, #eee);
+}
+input[type="range"]::-webkit-slider-thumb:active {
+    background: -webkit-radial-gradient(#999, #ddd);
+}
+.credits  {
+    color: #ddd;
+    font-size: 12px;
+    font-family: 'Ubuntu Condensed';
+    width: auto;
+    height: 130px;
+    padding: 10px;
+    background-color: #111;
+ }
+.credits img {
+    cursor: pointer;
+    -webkit-user-drag: none;
+}
+.credits h1, .credits h3 {
+    margin-top: 0.2em;
+    margin-bottom: 0.1em;
+    color: #fff;
+    letter-spacing: 0;
+    text-align: ;
+ }
+.credits p {
+    margin-top: 0;
+    color: #fff;
+}
+.credits li {
+    color: #fff;
+}
+
+/******** Fonts Family *********/
+
+@font-face {
+    font-family:'ClimaconsRegular';
+    src: url('../weather/fonts/climacons-webfont.eot');
+    src: url('../weather/fonts/climacons-webfont.eot?#iefix') format('embedded-opentype'), url('../weather/fonts/climacons-webfont.woff') format('woff'), url('../weather/fonts/climacons-webfont.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family:'Ubuntu Condensed';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Ubuntu Condensed'), local('UbuntuCondensed-Regular'), url('../weather/fonts/ubuntu.woff') format('woff');
+}

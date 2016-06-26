@@ -203,6 +203,17 @@
     </Include>
   </Menu> <!-- End Graphics -->
 
+  <!-- Peta -->
+  <Menu>
+    <Name>Geo.BlankOn</Name>
+    <Directory>Peta.directory</Directory>
+    <Include>
+      <And>
+        <Category>Peta</Category>
+      </And>
+    </Include>
+  </Menu>   <!-- End Peta -->
+  
   <!-- Internet -->
   <Menu>
     <Name>Internet</Name>
@@ -322,7 +333,8 @@
 	<Menuname>Debian</Menuname>
 	<Menuname>Education</Menuname>
 	<Menuname>Games</Menuname>
-	<Menuname>Graphics</Menuname>
+	<Menuname>Geo.BlankOn</Menuname>
+  <Menuname>Graphics</Menuname>
 	<Menuname>Internet</Menuname>
 	<Menuname>Islamic-Software</Menuname>
 	<Menuname>Office</Menuname>

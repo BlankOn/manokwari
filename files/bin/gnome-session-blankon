@@ -6,10 +6,22 @@ if [ -x /usr/bin/blankon-session-try-installer ];then
 fi
 L=`dbus-send --system --print-reply --type=method_call --dest=org.freedesktop.Accounts /org/freedesktop/Accounts/User1000 org.freedesktop.DBus.Properties.Get string:'org.freedesktop.Accounts.User' string:'Language' 2>/dev/null|tail -1|awk '{print $3}'|sed -e s/\"//g`
 
+
 if [ "x$L" != "x" ];then
    LANG=$L
-   LC_ALL=$L
+else
+  LANG=XX
+fi
+
+FINAL_L=`locale -a | grep $LANG\$`
+FALLBACK=`locale -a | grep C.UTF-8 | tail -1`
+
+if [ "x$FINAL_L" != "x" ];then
+    LANG=$FINAL_L
+    LC_ALL=$FINAL_L
+else
+    LANG=$FALLBACK
+    LC_ALL=$FALLBACK
 fi
 
 exec gnome-session --session blankon "$@"
-

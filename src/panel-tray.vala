@@ -1,9 +1,11 @@
 using Gtk;
+using Cairo;
 using Gdk;
 using X;
 
-public class PanelTray : HBox {
+public class PanelTray : Box {
     private Invisible invisible;
+    HashTable<long?, long> hash = new HashTable<long?, long> (int64_hash, int64_equal);
 
     public signal void new_item_added ();
 
@@ -13,50 +15,47 @@ public class PanelTray : HBox {
         CANCEL
     }
 
-    private void add_client (long xid) {
-
+    private void add_client (X.Window xid) {
+        long id = (long) xid;
         // Skips already added clients
-        foreach (unowned Widget w in get_children ()) {
-            unowned Gtk.Socket socket = w as Gtk.Socket;
-            if (socket != null) {
-                long id = (long) socket.get_id ();
-                if (id == xid)
-                    return;
-                }
+        if (hash[id] == 1) {
+          stderr.printf("%ld Skipped\n", id);
+          return;
         }
 
-        var w = new Gtk.Socket();
+        var w = new PanelSocket(xid);
         pack_start (w, false, false, 0);
-        w.show ();
 
-        w.add_id (xid);
         new_item_added ();
-
-        hide ();
-        show_all ();
+        hash[id] = 1;
+        show_all();
+        stderr.printf("Added\n");
+        
         w.plug_removed.connect (() => {
-            w.destroy ();
-            show_all ();
-            return true;
+          stderr.printf("Removed\n");
+          long wid = (long) w.get_id ();
+          hash.remove(wid);
+          w.destroy ();
+          show_all ();
+          return true;
         });
-
     }
 
     private FilterReturn event_filter (Gdk.XEvent xev, Gdk.Event event) {
-        unowned X.Display display = x11_get_default_xdisplay ();
+        unowned X.Display display = Gdk.X11.get_default_xdisplay ();
         Gdk.FilterReturn return_value = Gdk.FilterReturn.CONTINUE;
         
-        void* pointer = &xev;
-        X.Event* xevent = (X.Event*) pointer;
+        X.Event* xevent = (X.Event*) xev;
                  
         if(xevent->type == X.EventType.ClientMessage) {
             if (xevent->xclient.message_type == display.intern_atom ("_NET_SYSTEM_TRAY_OPCODE", false)) {
                 if (xevent->xclient.data_l [1] == Message.REQUEST_DOCK) {
-                    add_client (xevent->xclient.data_l [2]);
+                    var id = xevent->xclient.data_l [2];
+                    add_client (id);
                     return Gdk.FilterReturn.REMOVE;
                 }
             } else {
-                    stdout.printf("req: d\n");
+                    stderr.printf("req: d\n");
             }
         }
 
@@ -64,60 +63,63 @@ public class PanelTray : HBox {
     }
 
     private bool setup_selection () {
-        unowned X.Display display = x11_get_default_xdisplay ();
-        var screen = get_screen();
-        var atom = Gdk.Atom.intern ("_NET_SYSTEM_TRAY_S%d".printf(screen.get_number()), false);
+      unowned X.Display display = Gdk.X11.get_default_xdisplay ();
+      var screen = get_screen();
+      stderr.printf("Tray get selection for %d\n", screen.get_number ());
+      var atom = Gdk.Atom.intern ("_NET_SYSTEM_TRAY_S%d".printf(screen.get_number()), false);
 
-        var owner = Selection.owner_get_for_display (get_display (), atom);
-        if (owner != null) {
-            stdout.printf ("Tray is already owned by someone else.\n");
-            return false;
-        }
+      var owner = Selection.owner_get_for_display (get_display (), atom);
+      if (owner != null) {
+          stderr.printf ("Tray is already owned by someone else.\n");
+          return false;
+      }
 
-        if (Selection.owner_set_for_display (get_display (), invisible.get_window (), atom, Gdk.CURRENT_TIME, true) == false) {
-            stdout.printf ("Unable to claim Tray.\n");
-            return false;
-        }
-        var xid = (long) X11Window.get_xid (invisible.get_window ());
-        var event = ClientMessageEvent();
-        event.type          = X.EventType.ClientMessage;
-        event.window        = display.root_window (screen.get_number ()); 
-        event.message_type  = display.intern_atom ("MANAGER", false);
-        event.format        = 32;
-        event.data_l [0]    = Gdk.CURRENT_TIME;
-        event.data_l [1]    = (long) display.intern_atom ("_NET_SYSTEM_TRAY_S%d".printf(screen.get_number()), false);
-        event.data_l [2]    = xid;
-        event.data_l [3]    = 0;
-        event.data_l [4]    = 0;
-        display.send_client_event (display.root_window (screen.get_number ()), false, X.EventMask.StructureNotifyMask, ref event);
+      if (Selection.owner_set_for_display (get_display (), invisible.get_window (), atom, Gdk.CURRENT_TIME, true) == false) {
+          stderr.printf ("Unable to claim Tray.\n");
+          return false;
+      }
 
-        ulong data[1] = {0};
-        display.change_property (xid, display.intern_atom ("_NET_SYSTEM_TRAY_ORIENTATION,", false), X.XA_CARDINAL, 32, X.PropMode.Replace, (uchar[])data, 1);
+      var win = (Gdk.X11.Window) invisible.get_window();
+      var xid = (long) win.get_xid ();
+      var event = ClientMessageEvent();
+      event.type          = X.EventType.ClientMessage;
+      event.window        = display.root_window (screen.get_number ()); 
+      event.message_type  = display.intern_atom ("MANAGER", false);
+      event.format        = 32;
+      event.data_l [0]    = Gdk.X11.get_server_time(win);
+      event.data_l [1]    = (long) display.intern_atom ("_NET_SYSTEM_TRAY_S%d".printf(screen.get_number()), false);
+      event.data_l [2]    = xid;
+      event.data_l [3]    = 0;
+      event.data_l [4]    = 0;
+      display.send_client_event (display.root_window (screen.get_number ()), false, X.EventMask.StructureNotifyMask, ref event);
 
-        invisible.get_window().add_filter(event_filter);
-        return true;
+      ulong data[1] = {0};
+      display.change_property (xid, display.intern_atom ("_NET_SYSTEM_TRAY_ORIENTATION,", false), X.XA_CARDINAL, 32, X.PropMode.Replace, (uchar[])data, 1);
+
+      invisible.get_window().add_filter(event_filter);
+      stderr.printf("Tray selected");
+      return true;
     }
 
     public PanelTray () {
-        invisible = new Invisible ();
-        invisible.add_events (Gdk.EventMask.PROPERTY_CHANGE_MASK |
-                              Gdk.EventMask.STRUCTURE_MASK);
-        invisible.realize();
-        show ();
-        setup_selection ();
-        var empty = new DrawingArea ();
-        empty.show ();
-        empty.set_size_request (10, 1);
-        pack_end (empty, false, false, 0);
+      stderr.printf ("Tray .\n");
+      invisible = new Invisible ();
+      invisible.add_events (Gdk.EventMask.PROPERTY_CHANGE_MASK |
+                            Gdk.EventMask.STRUCTURE_MASK);
+
+      unowned X.Display display = Gdk.X11.get_default_xdisplay ();
+      var visual_atom = display.intern_atom ("_NET_SYSTEM_TRAY_VISUAL", false);
+
+      var visual = get_screen().get_rgba_visual ();
+      var xvisual = ((Gdk.X11.Visual)visual).get_xvisual(); 
+      ulong      data[1] ={ xvisual.get_visual_id() };
+      var xid = (long) ((Gdk.X11.Window) invisible.get_window()).get_xid ();
+
+      display.change_property (xid, visual_atom, X.XA_VISUALID, 32, X.PropMode.Replace,(uchar[])data, 1);
+      setup_selection ();
+      invisible.realize();
     }
 
-    public override bool draw (Cairo.Context cr) {
-        StyleContext style = get_style_context ();
-        style.set_state (get_state_flags ());
-        Gtk.render_background (style, cr, 0, 0, get_window ().get_width (), get_window ().get_height ());
-        base.draw (cr);
-        return true;
-    }
 
 }
 
