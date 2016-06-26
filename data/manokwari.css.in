@@ -1,22 +1,13 @@
 @define-color panel_bg_color #1a1a1a;
 @define-color panel_fg_color #ededed;
-@define-color window_desc_bg_color #4e70b0;
-@define-color window_desc_fg_color #00001e;
-@define-color window_desc_bg_minimized_color #606090;
-@define-color window_desc_fg_minimized_color #010101;
-@define-color window_desc_bg_hover_color #a0a0a0;
-@define-color window_desc_fg_hover_color #010101;
-@define-color clock_bg_color @panel_bg_color;
-@define-color clock_fg_color @panel_fg_color; 
 
-PanelWindowHost, 
-PanelWindowPagerEntry {
+.manokwari-panel {
 	background-image:linear-gradient(rgba(26,26,26,1),rgba(26,26,26,1),rgba(31,31,31,1));
 	background-color: @panel_bg_color;
 	color: @panel_fg_color;
 }
 
-PanelWindowEntryDescriptions {
+.manokwari-panel-window-names {
 	background-image:linear-gradient(rgba(0,0,0,1));
 	background-color: black;
 	color: @panel_fg_color;
@@ -26,45 +17,4 @@ PanelWindowEntryDescriptions {
 	font-weight: bold;
 }
 
-PanelTray * {
-	background-color: @panel_bg_color;
-	color: @panel_fg_color;
-}
-
-PanelClock {
-	background: @clock_bg_color;
-	color: @clock_fg_color;
-	font: Droid Sans;
-}
-
-PanelWindowEntry,
-PanelWindowEntry:selected,
-PanelWindowEntry:insensitive {
-	background-color: transparent; 
-	color: transparent; 
-}
-
-PanelWindowEntry:active {
-	background-image: linear-gradient(#a2a2a2, #e0e0e0, #a2a2a2);
-	color: @panel_fg_color;
-}
-
-PanelWindowEntry:prelight {
-	background-image: linear-gradient(#cacaca, #ffffff, #cacaca);
-	color: @panel_fg_color;
-}
-
-PanelWindowPager {
-	background-color: @theme_bg_color;
-	color: @theme_fg_color;
-}
-
-PanelCalendar {
-	background: @theme_bg_color;
-	color: @theme_fg_color;
-}
-
-* {
-	color: @theme_fg_color;
-}
 
