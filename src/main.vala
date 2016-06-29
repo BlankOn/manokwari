@@ -1,10 +1,25 @@
 using Gtk;
 int main (string[] args) {
 
+    var settings = new GLib.Settings ("org.gnome.system.locale");
+    var region = settings.get_string ("region");
+
+    if (region != null && region != "") {
+      GLib.Environment.set_variable("LC_MESSAGES", region, true);
+      GLib.Environment.set_variable("LC_TIME", region, true);
+      GLib.Environment.set_variable("LC_ALL", region, true);
+      GLib.Environment.set_variable("LANG", region, true);
+    }
+
+    Intl.setlocale(LocaleCategory.ALL, "");
+    Intl.setlocale(LocaleCategory.MESSAGES, "");
+    Intl.setlocale(LocaleCategory.TIME, "");
+
     Intl.bindtextdomain( Config.GETTEXT_PACKAGE, Config.LOCALEDIR );
     Intl.bind_textdomain_codeset( Config.GETTEXT_PACKAGE, "UTF-8" );
     Intl.textdomain( Config.GETTEXT_PACKAGE );
 
+ 
     Gtk.init (ref args);
 
     var id = GLib.Environment.get_variable("DESKTOP_AUTOSTART_ID");
