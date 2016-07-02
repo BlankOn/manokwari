@@ -1,6 +1,6 @@
 [GNOME Session]
 Name=BlankOn
-RequiredComponents=mutter;manokwari;
+RequiredComponents=manokwari;mutter;
 #IsRunnableHelper=/usr/lib/gnome-session/gnome-session-check-accelerated
 #FallbackSession=blankon-fallback
 #DesktopName=GNOME
