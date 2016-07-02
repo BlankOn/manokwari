@@ -116,6 +116,10 @@ namespace X {
 		[CCode (cname = "XGrabKey")]
 		public int grab_key (int keycode, uint modifiers, Window grab_window, bool owner_events, int pointer_mode, int keyboard_mode);
 
+
+		[CCode (cname = "XGrabKeyboard")]
+		public int grab_keyboard (Window grab_window, bool owner_events, int pointer_mode, int keyboard_mode, uint32 time);
+
 		[CCode (cname = "XGrabPointer")]
 		public int grab_pointer (Window grab_window, bool owner_events, uint event_mask, int pointer_mode, int keyboard_mode, Window confine_to, uint cursor, int time);
 

@@ -300,6 +300,7 @@ public class PanelWindowEntryDescriptions : PanelAbstractWindow {
     private Pango.Layout pango;
     bool hiding = false;
     AnimatedProperty anim;
+    uint hiding_timeout = 0;
 
     public double offset {
         get; set; default = 0;
@@ -479,14 +480,27 @@ public class PanelWindowEntryDescriptions : PanelAbstractWindow {
     }
 
     public void try_hide () {
-        GLib.Timeout.add (250, real_hide);
+        if (hiding_timeout != 0) {
+          GLib.Source.remove(hiding_timeout);
+        }
+        hiding_timeout = GLib.Timeout.add (250, real_hide);
         hiding = true;
     }
+
+    public void slow_hide () {
+        if (hiding_timeout != 0) {
+          GLib.Source.remove(hiding_timeout);
+        }
+        hiding_timeout = GLib.Timeout.add (1000, real_hide);
+        hiding = true;
+    }
+
 
     bool real_hide () {
         if (hiding == true) {
             hide ();
         }
+        hiding_timeout = 0;
         return false;
     }
 
@@ -497,6 +511,39 @@ public class PanelWindowEntryDescriptions : PanelAbstractWindow {
         move (g.x, g.y + y);
     }
 
+    public void cycle() {
+        Wnck.Screen screen = Wnck.Screen.get_default ();
+        var current = screen.get_active_window();
+        unowned Wnck.Window first = null;
+        bool next = false;
+        unowned Wnck.Window selected = null;
+        foreach (Wnck.Window w in entry_map.keys) {
+            if (first == null) {
+                first = w;
+            }
+            if (next == true) {
+                selected = w;
+                break;
+            }
+            if (current == w) {
+                next = true;
+            } else {
+                next = false;
+            } 
+        }
+        if (selected == null) {
+            selected = first;
+        }
+
+        if (selected == null) return;
+
+        var e = entry_map[selected];
+        if (e != null) {
+            activate(e);
+            selected.activate(get_current_event_time());
+            slow_hide();
+        }
+    }
 }
 
 public class PanelWindowHost : PanelAbstractWindow {
@@ -510,6 +557,7 @@ public class PanelWindowHost : PanelAbstractWindow {
     private int height = 24;
     PanelWindowEntryDescriptions descriptions;
     PanelCalendar calendar;
+    PanelHotkey hotkey;
 
     public signal void windows_gone (); // Emitted when all windows have gone, either closed or minimized
     public signal void windows_visible (); // Emitted when there is at least one window visible
@@ -525,6 +573,14 @@ public class PanelWindowHost : PanelAbstractWindow {
     }
 
     public PanelWindowHost () {
+        hotkey = new PanelHotkey();
+
+        hotkey.bind("<Alt>Tab");
+        hotkey.bind("Print");
+        hotkey.triggered.connect((key) => {
+          handleKey(key);
+        });
+        
         logo = new Image.from_icon_name("distributor-logo", IconSize.LARGE_TOOLBAR);
         var event_box = new EventBox();
         event_box.add (logo);
@@ -725,6 +781,21 @@ public class PanelWindowHost : PanelAbstractWindow {
         descriptions.update_position (height);
         calendar.update_position (height);
         set_keep_above(false);
+    }
+
+    void handleKey(string key) {
+      if (key == "<Alt>Tab") {
+        handleWindowCycle();
+      }
+      else if (key == "Print") {
+    stderr.printf("--------> %s\n", key);
+        Utils.print_screen();
+      }
+
+    }
+
+    void handleWindowCycle() {
+        descriptions.cycle();      
     }
 
 }

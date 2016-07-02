@@ -52,15 +52,13 @@ public class PanelHotkey {
         display = x11_get_default_xdisplay ();
         x_id = X11Window.get_xid (root_window); 
         root_window.add_filter (event_filter);
-
     }
 
     public Gdk.FilterReturn event_filter (Gdk.XEvent gxevent, Gdk.Event event) {
 
         FilterReturn filter = FilterReturn.CONTINUE;
 
-        void* p = &gxevent;
-        X.Event* xevent = (X.Event*) p;
+        X.Event* xevent = (X.Event*) gxevent;
 
         if (xevent->type == X.EventType.KeyPress) {
             foreach (var binding in bindings) {
