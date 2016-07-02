@@ -20,3 +20,13 @@ E.g:
 }
 ```
 
+## Fullscreen dialogs
+Fullscreen dialogs are the shutdown, restart, and logout fullscreen dialogs. The styling can be done using `manokwari-fullscreen-dialog` class.
+E.g:
+
+```
+.manokwari-fullscreen-dialog {
+   background-color: rgba(10, 10, 10, 0.6);
+   color: white;
+}
+```

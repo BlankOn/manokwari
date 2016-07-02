@@ -45,6 +45,7 @@ public class PanelEndSessionDialog: Object {
     void show_dialog (uint type, string title, string button_text) {
         default_action = type;
         var d = new Dialog.with_buttons(_("Confirmation"), null, Gtk.DialogFlags.MODAL, null);
+        d.get_style_context().add_class("manokwari-fullscreen-dialog");
         dialog = d;
         d.fullscreen();
         if (update_title_source >= 0) {

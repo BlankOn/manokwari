@@ -31,9 +31,10 @@ namespace Utils {
 
     public bool print_screen () {
         try {
-            GLib.Process.spawn_command_line_async ("gnome-screenshot");
+            GLib.Process.spawn_command_line_async ("gnome-screenshot -i");
             return true;
         } catch (Error e) {
+            stderr.printf("Error running print_screen %s\n", e.message);
             return false;
         }
     }
