@@ -518,18 +518,21 @@ public class PanelWindowEntryDescriptions : PanelAbstractWindow {
         bool next = false;
         unowned Wnck.Window selected = null;
         foreach (Wnck.Window w in entry_map.keys) {
-            if (first == null) {
-                first = w;
-            }
-            if (next == true) {
-                selected = w;
-                break;
-            }
-            if (current == w) {
-                next = true;
-            } else {
-                next = false;
-            } 
+          if (entry_map[w].is_on_current_workspace () == false) {
+            continue;
+          }
+          if (first == null) {
+              first = w;
+          }
+          if (next == true) {
+              selected = w;
+              break;
+          }
+          if (current == w) {
+              next = true;
+          } else {
+              next = false;
+          } 
         }
         if (selected == null) {
             selected = first;
