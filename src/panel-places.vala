@@ -63,7 +63,6 @@ public class PanelPlaces {
         setup_home ();
         setup_special_dirs ();
         setup_mounts ();
-        setup_network ();
         if (json.str [json.len - 1] == ',') {
             json.erase (json.len - 1, 1); // Remove trailing comma
         }
@@ -153,27 +152,6 @@ public class PanelPlaces {
                      );
             json.append (s);
         }
-    }
-
-    private void setup_network () {
-        json.append("{name: '%s', isHeader: true},".printf(
-            _("Networks")
-        ));
-
-        var s = "{icon: '%s', name: '%s', uri: '%s'},".printf(
-                    Utils.get_icon_path("gtk-network"),
-                    _("My network"),
-                   "network:///" 
-                 );
-        json.append (s);
-
-        s = "{icon: '%s', name: '%s', command: '%s'},".printf(
-                    Utils.get_icon_path("gnome-fs-network"),
-                    _("Connect to server..."),
-                   "nautilus-connect-server" 
-                 );
-        json.append (s);
-
     }
 
     public static JSCore.Object js_constructor (Context ctx,
