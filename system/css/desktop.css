@@ -92,14 +92,14 @@ body {
 .ui-launcher-entry span {
     white-space: nowrap;
     text-align: center;
-    overflow:hidden;
+    overflow: hidden;
     text-overflow: ellipsis;
     color:transparent;
     font-family: Aurulent Sans Bold;
     font-size: 12px;
-   	height: 16px;
+   	height: 18px;
     max-width: 105px;
-    padding: 4px 7px;
+    padding: 3px 7px;
     margin: 0;
 	-webkit-border-radius: 10px;
 	z-index: -5;
