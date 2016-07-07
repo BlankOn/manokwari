@@ -96,7 +96,7 @@ body {
     text-overflow: ellipsis;
     color:transparent;
     font-family: Aurulent Sans Bold;
-    font-size: 11px;
+    font-size: 12px;
    	height: 16px;
     max-width: 105px;
     padding: 4px 7px;
@@ -110,13 +110,12 @@ body {
 	position:relative;
 	bottom: -2px;
 	display: block;
-	background: #fff;
+	background-color: rgba(230, 230, 230, 0.7);
 	color: #111;
 	z-index: 100;
 	margin-left: 3px;
 	border-radius: 5px;
-	-webkit-filter: drop-shadow(0px 1px 1px #000);
-	opacity: 0.6;
+	/*-webkit-filter: drop-shadow(0px 1px 1px #000);*/
 }
 
 .ui-launcher-entry:hover:before {	
@@ -125,13 +124,12 @@ body {
 	height: 0px;
 	border-width: 6px;
 	border-style:solid;
-	border-color: #fff transparent transparent transparent;
+	border-color: rgba(230, 230, 230, 0.7) transparent transparent transparent;
 	bottom: 58px;
 	margin-left: 56px;
 	position: fixed;
 	z-index: 110;
-	-webkit-filter: drop-shadow(0px 1px 2px #000);
-	opacity: 0.6;
+	/*-webkit-filter: drop-shadow(0px 1px 2px #000);*/
 }
 
 .ui-launcher-entry-img-holder {
