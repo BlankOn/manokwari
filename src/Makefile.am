@@ -35,6 +35,7 @@ manokwari_SOURCES = panel-item.vala \
     animated-property.vala \
 		panel-shell.vala \
 		panel-socket.vala \
+		panel-xdg-properties.vala \
 	$(NULL)
 
 manokwari_VALAFLAGS = \

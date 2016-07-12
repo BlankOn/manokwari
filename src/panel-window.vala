@@ -556,11 +556,14 @@ public class PanelWindowHost : PanelAbstractWindow {
     private PanelTray tray;
     private new Wnck.Screen screen;
     private int num_visible_windows = 0;
+    const string BRIGHTNESS_PROP_IFACE = "org.gnome.SettingsDaemon.Power.Screen";
+    const string BRIGHTNESS_PROP_NAME = "Brightness";
     private HashMap <unowned Wnck.Window, unowned PanelWindowEntry> entry_map ;
     private int height = 24;
     PanelWindowEntryDescriptions descriptions;
     PanelCalendar calendar;
     PanelHotkey hotkey;
+    DBusProperties bus;
 
     public signal void windows_gone (); // Emitted when all windows have gone, either closed or minimized
     public signal void windows_visible (); // Emitted when there is at least one window visible
@@ -576,10 +579,17 @@ public class PanelWindowHost : PanelAbstractWindow {
     }
 
     public PanelWindowHost () {
+        try {
+            bus = Bus.get_proxy_sync (BusType.SESSION, "org.gnome.SettingsDaemon.Power", "/org/gnome/SettingsDaemon/Power");
+        } catch (Error e) {
+            stderr.printf ("Unable to connect to power manager\n");
+        }
         hotkey = new PanelHotkey();
 
         hotkey.bind("<Alt>Tab");
         hotkey.bind("Print");
+        hotkey.bind("MonBrightnessUp");
+        hotkey.bind("MonBrightnessDown");
         hotkey.triggered.connect((key) => {
           handleKey(key);
         });
@@ -787,12 +797,17 @@ public class PanelWindowHost : PanelAbstractWindow {
     }
 
     void handleKey(string key) {
+    stderr.printf("--------> %s\n", key);
       if (key == "<Alt>Tab") {
         handleWindowCycle();
       }
       else if (key == "Print") {
-    stderr.printf("--------> %s\n", key);
         Utils.print_screen();
+      }
+      else if (key == "MonBrightnessUp") {
+        handleBrightnessUp();
+      } else if (key == "MonBrightnessDown") {
+        handleBrightnessDown();
       }
 
     }
@@ -801,4 +816,31 @@ public class PanelWindowHost : PanelAbstractWindow {
         descriptions.cycle();      
     }
 
+
+    void handleBrightnessUp() {
+        if (bus == null) return;
+        var value = bus.get(BRIGHTNESS_PROP_IFACE, BRIGHTNESS_PROP_NAME);
+        int32 val = value.get_int32();
+
+        if (val + 10 > 100) {
+          val = 100;
+        } else {
+          val += 10;
+        }
+
+        bus.set(BRIGHTNESS_PROP_IFACE, BRIGHTNESS_PROP_NAME, new Variant.int32(val));
+    }
+
+    void handleBrightnessDown() {
+        if (bus == null) return;
+        var value = bus.get(BRIGHTNESS_PROP_IFACE, BRIGHTNESS_PROP_NAME);
+        int32 val = value.get_int32();
+
+        if (val - 10 < 10) {
+          val = 0;
+        } else {
+          val -= 10;
+        }
+        bus.set(BRIGHTNESS_PROP_IFACE, BRIGHTNESS_PROP_NAME, new Variant.int32(val));
+    }
 }
