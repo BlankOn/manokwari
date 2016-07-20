@@ -592,7 +592,7 @@ public class PanelWindowHost : PanelAbstractWindow {
 
         hotkey.bind("<Alt>Tab");
         hotkey.bind("Print");
-        hotkey.bind("<Alt>Menu");
+        hotkey.bind("<Super_L>x");
         hotkey.bind("MonBrightnessUp");
         hotkey.bind("MonBrightnessDown");
         hotkey.triggered.connect((key) => {
@@ -806,7 +806,7 @@ public class PanelWindowHost : PanelAbstractWindow {
       if (key == "<Alt>Tab") {
         handleWindowCycle();
       }
-      else if (key == "<Alt>Menu") {
+      else if (key == "<Super_L>x") {
         menu_clicked();
       }
       else if (key == "Print") {
