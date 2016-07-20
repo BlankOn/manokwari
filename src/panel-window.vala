@@ -2,6 +2,7 @@ using Gtk;
 using Cairo;
 using Wnck;
 using Gee;
+using Notify;
 
 public class PanelWindowPager : PanelAbstractWindow {
     public signal void hidden ();
@@ -584,6 +585,9 @@ public class PanelWindowHost : PanelAbstractWindow {
         } catch (Error e) {
             stderr.printf ("Unable to connect to power manager\n");
         }
+
+        Notify.init ("Manokwari");
+
         hotkey = new PanelHotkey();
 
         hotkey.bind("<Alt>Tab");
@@ -821,6 +825,13 @@ public class PanelWindowHost : PanelAbstractWindow {
     }
 
 
+    void showBrightnessIndicator(int value) {
+        var indicator = new Notify.Notification("Manokwari", "", Utils.get_icon_path("display-brightness"));
+        indicator.set_timeout(1000);
+        indicator.set_hint("value", value);
+        indicator.show ();
+    }
+
     void handleBrightnessUp() {
         if (bus == null) return;
         var value = bus.get(BRIGHTNESS_PROP_IFACE, BRIGHTNESS_PROP_NAME);
@@ -831,7 +842,7 @@ public class PanelWindowHost : PanelAbstractWindow {
         } else {
           val += 10;
         }
-
+        showBrightnessIndicator(val);
         bus.set(BRIGHTNESS_PROP_IFACE, BRIGHTNESS_PROP_NAME, new Variant.int32(val));
     }
 
@@ -845,6 +856,7 @@ public class PanelWindowHost : PanelAbstractWindow {
         } else {
           val -= 10;
         }
+        showBrightnessIndicator(val);
         bus.set(BRIGHTNESS_PROP_IFACE, BRIGHTNESS_PROP_NAME, new Variant.int32(val));
     }
 }
