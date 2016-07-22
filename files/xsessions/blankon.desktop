@@ -1,5 +1,5 @@
 [Desktop Entry]
-Name=BlankOn
+Name=Manokwari
 Comment=This session logs you into BlankOn
 Exec=blankon-session
 TryExec=/usr/bin/manokwari
