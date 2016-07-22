@@ -1,8 +1,0 @@
-[Desktop Entry]
-Name=BlankOn Fallback
-Comment=This session logs you into GNOME with the traditional panel without any
-graphical effect.
-Exec=blankon-session-fallback
-TryExec=blankon-session-fallback
-Icon=
-Type=Application

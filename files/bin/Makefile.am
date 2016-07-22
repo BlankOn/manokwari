@@ -1,7 +1,7 @@
 sessiondir = $(bindir)
 
 session_DATA = \
-	gnome-session-blankon \
+	blankon-session \
 	$(NULL)
 
 CLEANFILES = \
