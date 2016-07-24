@@ -565,6 +565,7 @@ public class PanelWindowHost : PanelAbstractWindow {
     PanelCalendar calendar;
     PanelHotkey hotkey;
     DBusProperties bus;
+    Notify.Notification indicator;
 
     public signal void windows_gone (); // Emitted when all windows have gone, either closed or minimized
     public signal void windows_visible (); // Emitted when there is at least one window visible
@@ -586,6 +587,9 @@ public class PanelWindowHost : PanelAbstractWindow {
             stderr.printf ("Unable to connect to power manager\n");
         }
 
+
+        indicator = new Notify.Notification("Manokwari", "", Utils.get_icon_path("display-brightness"));
+        indicator.set_timeout(5);
         Notify.init ("Manokwari");
 
         hotkey = new PanelHotkey();
@@ -826,8 +830,6 @@ public class PanelWindowHost : PanelAbstractWindow {
 
 
     void showBrightnessIndicator(int value) {
-        var indicator = new Notify.Notification("Manokwari", "", Utils.get_icon_path("display-brightness"));
-        indicator.set_timeout(1000);
         indicator.set_hint("value", value);
         indicator.show ();
     }
