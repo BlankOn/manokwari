@@ -2,6 +2,7 @@ using Gtk;
 using Cairo;
 using Wnck;
 using Gee;
+using Notify;
 
 public class PanelWindowPager : PanelAbstractWindow {
     public signal void hidden ();
@@ -564,6 +565,7 @@ public class PanelWindowHost : PanelAbstractWindow {
     PanelCalendar calendar;
     PanelHotkey hotkey;
     DBusProperties bus;
+    Notify.Notification indicator;
 
     public signal void windows_gone (); // Emitted when all windows have gone, either closed or minimized
     public signal void windows_visible (); // Emitted when there is at least one window visible
@@ -584,11 +586,17 @@ public class PanelWindowHost : PanelAbstractWindow {
         } catch (Error e) {
             stderr.printf ("Unable to connect to power manager\n");
         }
+
+
+        indicator = new Notify.Notification("Manokwari", "", Utils.get_icon_path("display-brightness"));
+        indicator.set_timeout(5);
+        Notify.init ("Manokwari");
+
         hotkey = new PanelHotkey();
 
         hotkey.bind("<Alt>Tab");
         hotkey.bind("Print");
-        hotkey.bind("<Alt>Menu");
+        hotkey.bind("<Mod4>x");
         hotkey.bind("MonBrightnessUp");
         hotkey.bind("MonBrightnessDown");
         hotkey.triggered.connect((key) => {
@@ -802,7 +810,7 @@ public class PanelWindowHost : PanelAbstractWindow {
       if (key == "<Alt>Tab") {
         handleWindowCycle();
       }
-      else if (key == "<Alt>Menu") {
+      else if (key == "<Mod4>x") {
         menu_clicked();
       }
       else if (key == "Print") {
@@ -821,6 +829,11 @@ public class PanelWindowHost : PanelAbstractWindow {
     }
 
 
+    void showBrightnessIndicator(int value) {
+        indicator.set_hint("value", value);
+        indicator.show ();
+    }
+
     void handleBrightnessUp() {
         if (bus == null) return;
         var value = bus.get(BRIGHTNESS_PROP_IFACE, BRIGHTNESS_PROP_NAME);
@@ -831,7 +844,7 @@ public class PanelWindowHost : PanelAbstractWindow {
         } else {
           val += 10;
         }
-
+        showBrightnessIndicator(val);
         bus.set(BRIGHTNESS_PROP_IFACE, BRIGHTNESS_PROP_NAME, new Variant.int32(val));
     }
 
@@ -845,6 +858,7 @@ public class PanelWindowHost : PanelAbstractWindow {
         } else {
           val -= 10;
         }
+        showBrightnessIndicator(val);
         bus.set(BRIGHTNESS_PROP_IFACE, BRIGHTNESS_PROP_NAME, new Variant.int32(val));
     }
 }

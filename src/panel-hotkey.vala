@@ -60,10 +60,13 @@ public class PanelHotkey {
 
         X.Event* xevent = (X.Event*) gxevent;
 
+        stderr.printf("ev\n");
         if (xevent->type == X.EventType.KeyPress) {
+        stderr.printf("keypress\n");
             foreach (var binding in bindings) {
+stderr.printf("modifier ---------- %d %d %d\n", (int) binding.key_code, (int) binding.modifiers, (int) xevent->xkey.state);
                 if (xevent->xkey.keycode == binding.key_code &&
-                    (xevent->xkey.state & ~ (lock_modifiers[7]))  == binding.modifiers) {
+                    (xevent->xkey.state &~ (lock_modifiers[7])) == binding.modifiers) {
                     static_handler (binding.combination); 
                 }
             }
@@ -77,10 +80,12 @@ public class PanelHotkey {
         accelerator_parse (combination, out key_sym, out modifiers);
 
         var key_code = display.keysym_to_keycode (key_sym);
+stderr.printf("modifier ---------- %d %d\n", (int) key_code, (int) modifiers);
         if (key_code != 0) {
             error_trap_push ();
-            foreach (var mod in lock_modifiers) 
-                display.grab_key (key_code, modifiers | mod, x_id, false, X.GrabMode.Async, X.GrabMode.Async);
+            foreach(uint lock_modifier in lock_modifiers) {    
+              display.grab_key (key_code, lock_modifier | modifiers, x_id, false, X.GrabMode.Async, X.GrabMode.Async);
+            }
             flush();
             var binding = new KeyBinding (combination, key_code, modifiers);
             bindings.add (binding);

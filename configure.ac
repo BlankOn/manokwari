@@ -68,8 +68,9 @@ LIBWNCK_REQUIRED=3.0.0
 UNIQUE_REQUIRED=3.0.0
 WEBKIT_REQUIRED=1.3.0
 X11_REQUIRED=1.6.0
+LIBNOTIFY_REQUIRED=0.7.6
 
-PKG_CHECK_MODULES(MANOKWARI, glib-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED gtk+-3.0 >= $GTK_REQUIRED atk >= $ATK_REQUIRED gee-1.0 >= $GEE_REQUIRED cairo >= $CAIRO_REQUIRED libgnome-menu-3.0 >= $LIBGNOME_MENU_REQUIRED libwnck-3.0 >= $LIBWNCK_REQUIRED unique-3.0 >= $UNIQUE_REQUIRED webkitgtk-3.0 >= $WEBKIT_REQUIRED x11 >= $X11_REQUIRED)
+PKG_CHECK_MODULES(MANOKWARI, glib-2.0 >= $GLIB_REQUIRED gobject-2.0 >= $GLIB_REQUIRED gtk+-3.0 >= $GTK_REQUIRED atk >= $ATK_REQUIRED gee-1.0 >= $GEE_REQUIRED cairo >= $CAIRO_REQUIRED libgnome-menu-3.0 >= $LIBGNOME_MENU_REQUIRED libwnck-3.0 >= $LIBWNCK_REQUIRED unique-3.0 >= $UNIQUE_REQUIRED webkitgtk-3.0 >= $WEBKIT_REQUIRED x11 >= $X11_REQUIRED libnotify >= $LIBNOTIFY_REQUIRED)
 
 WNCK_GMENU_DISCLAIMER='-DGMENU_I_KNOW_THIS_IS_UNSTABLE -DWNCK_I_KNOW_THIS_IS_UNSTABLE'
 
@@ -77,7 +78,7 @@ AC_SUBST(WNCK_GMENU_DISCLAIMER)
 AC_SUBST(MANOKWARI_CFLAGS)
 AC_SUBST(MANOKWARI_LIBS)
 
-VALA_PACKAGES="--pkg atk --pkg x11 --pkg gdk-x11-3.0 --pkg gee-1.0 --pkg cairo --pkg gtk+-3.0 --pkg gio-unix-2.0 --pkg libgnome-menu-3.0 --pkg gdk-3.0 --pkg libwnck-3.0 --pkg unique-3.0 --pkg webkit-1.0 --pkg javascriptcore --pkg libsoup-2.4"
+VALA_PACKAGES="--pkg atk --pkg x11 --pkg gdk-x11-3.0 --pkg gee-1.0 --pkg cairo --pkg gtk+-3.0 --pkg gio-unix-2.0 --pkg libgnome-menu-3.0 --pkg gdk-3.0 --pkg libwnck-3.0 --pkg unique-3.0 --pkg webkit-1.0 --pkg javascriptcore --pkg libsoup-2.4 --pkg libnotify"
 
 AC_SUBST(VALA_PACKAGES)
 
