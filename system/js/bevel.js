@@ -86,13 +86,13 @@ function RunMouse() {
 	Utils.run_command("gnome-control-center mouse");
 }
 function RunNetwork() {
-	Utils.run_command("nm-connection-editor");
+	Utils.run_command("gnome-control-center network");
 }
 function RunOnline() {
 	Utils.run_command("gnome-control-center online-accounts");
 }
 function RunPrinter() {
-	Utils.run_command("system-config-printer");
+	Utils.run_command("gnome-control-center printers");
 }
 function RunShare() {
 	Utils.run_command("gnome-control-center sharing");
