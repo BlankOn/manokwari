@@ -1,20 +1,52 @@
+#show-top  {
+	position: absolute;
+	width: 30px;
+	height: 30px;
+	background-color: transparent;
+	right: 0px;
+	top: 24px;
+	border-bottom-left-radius:100%;
+	z-index: -50;
+}
+
+#show-bottom  {
+	position: absolute;
+	width: 30px;
+	height: 30px;
+	background-color: transparent;
+	right: 0px;
+	bottom: 0px;
+	border-top-left-radius:100%;
+	z-index: -50;
+}
+
+#hide {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background: transparent;
+	right: 0px;
+	top: 0px;
+	z-index: -100;
+}
+
 #bevel {
 	background: #111111;
-	color:#aaa;
+	color: #aaa;
 	height: 104%;
 	width: 265px;
 	overflow-x: hidden;
 	overflow-y: auto;
-	right:-264px;
+	right: -266px;
 	top: 0px;
 	bottom:0px;
 	position:absolute;
 	z-index: 150;
 	-webkit-transition: right 250ms ease-in-out;
 }
-#bevel:hover {
+/*#bevel:hover {
 	right: 0px;
-}
+}*/
 
 /* Sosmed */
 #sosial_media {
@@ -39,8 +71,8 @@
 	display:inline;
 	width:18px;
 	height:18px;
-	padding: 4px 17px;
-	background: #333;
+	padding: 6px 17px;
+	background: #222;
 	color: #aaa;
 	cursor:pointer;
 	border-radius: 3px;
@@ -159,7 +191,7 @@
 	width:28px;
 	height:28px;
 	margin-bottom: 5px;
-	padding: 0px 1px 0 1px;
+	padding: 0px 5px;
 	text-align:center;
 }
 .system span {
@@ -211,6 +243,26 @@
 	font-family: 'Aurulent Sans';
 	letter-spacing: 0;
 	text-shadow: 0 0px 2px #000;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0); 
+    background: rgba(191,191,191,0);
+    border-radius: 0px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 0px;
+    background: rgba(191,191,191,0.04);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    border-radius: 0px;
+    background: rgba(191,191,191,0.1)
 }
 
 /***********************************
