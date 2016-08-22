@@ -2,10 +2,12 @@ using Gtk;
 
 public class PanelMenuBox : PanelAbstractWindow {
     private const int COLUMN_WIDTH = 265;
+    private const int TOP = 24;
 
     public signal void dismissed ();
     public signal void shown ();
     public signal void about_to_show_content ();
+    
     PanelMenuHTML view;
 
     public PanelMenuBox () {
@@ -25,7 +27,8 @@ public class PanelMenuBox : PanelAbstractWindow {
         view = new PanelMenuHTML ();
         view.show_all ();
         add (view);
-        set_type_hint (Gdk.WindowTypeHint.DOCK);
+        set_keep_above (true);
+        set_type_hint (Gdk.WindowTypeHint.POPUP_MENU);
         set_title ("_manokwari_menu_");
         set_visual (this.screen.get_rgba_visual ());
 

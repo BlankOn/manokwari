@@ -19,14 +19,14 @@ int main (string[] args) {
     Intl.bind_textdomain_codeset( Config.GETTEXT_PACKAGE, "UTF-8" );
     Intl.textdomain( Config.GETTEXT_PACKAGE );
 
- 
+
     Gtk.init (ref args);
 
     var id = GLib.Environment.get_variable("DESKTOP_AUTOSTART_ID");
     var app = new Unique.App ("id.or.blankonlinux.Manokwari", id);
     if (app.is_running ()) {
         stdout.printf ("Manokwari is already running.\n");
-        return 0;    
+        return 0;
     }
 
     PanelSessionManager.getInstance ();
@@ -48,7 +48,7 @@ int main (string[] args) {
     var d = new PanelDesktop ();
     d.show ();
 
-    // Window 
+    // Window
     var w = new PanelWindowHost ();
     w.show();
 
@@ -62,7 +62,7 @@ int main (string[] args) {
             menu_box.show ();
         }
     });
-
+    
     w.dialog_opened.connect (() => {
         if (menu_box.visible) {
             menu_box.try_hide ();
@@ -78,6 +78,36 @@ int main (string[] args) {
     w.windows_visible.connect (() => {
         if (menu_box.visible) {
             menu_box.try_hide ();
+        }
+    });
+
+  //////////// extra ////////////
+    var extra_box = new PanelExtraBox();
+    // SIGNALS
+    w.extra_clicked.connect (() => {
+        if (extra_box.visible) {
+            extra_box.try_hide ();
+        } else {
+            // Otherwise we want to show it
+            extra_box.show ();
+        }
+    });
+
+    w.dialog_opened.connect (() => {
+        if (extra_box.visible) {
+            extra_box.try_hide ();
+        }
+    });
+
+    d.desktop_clicked.connect (() => {
+        if (extra_box.visible) {
+            extra_box.try_hide ();
+        }
+    });
+
+    w.windows_visible.connect (() => {
+        if (extra_box.visible) {
+            extra_box.try_hide ();
         }
     });
 

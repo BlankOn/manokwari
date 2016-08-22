@@ -11,24 +11,6 @@ function Run4() {
 	Utils.run_command("xdg-open https://twitter.com/BlankOnLinux/");
 }
 
-//mocp
-/*function MocpStart(){Utils.run_command("audacious");}
-
-function MocpState(){
-	document.getElementById("MocpTitle2").innerHTML = Utils.run_command('mocp -Q %title');
-}*/
-
-/*function MocpBackward(){Utils.run_command("audacious -r");}
-function MocpPause(){Utils.run_command("audacious -u");}
-function MocpPlay(){
-	if(Utils.run_command("audacious") == false){
-		Utils.run_command("audacious");
-		Utils.run_command("audacious -p");
-	}
-	else{
-		Utils.run_command("audacious -p");
-	}
-}*/
 function Play(){Utils.run_command("audacious -p");}
 function Stop(){Utils.run_command("audtool shutdown");}
 function Prev(){Utils.run_command("audacious -r");}
@@ -43,14 +25,7 @@ $(document).ready(function() {
 		else{$('#repeat').addClass("selected");}
 	});
 
-	//$('#shuffle').click(function(){
-		//if($('#shuffle').hasClass("selected")){ $('#shuffle').removeClass("selected");}
-		//else{$('#shuffle').addClass("selected");}
-	//});
-
 });
-
-// gnome control center
 
 function RunWallpaper() {
 	Utils.run_command("gnome-control-center background");
@@ -97,3 +72,93 @@ function RunPrinter() {
 function RunShare() {
 	Utils.run_command("gnome-control-center sharing");
 }
+
+//  slide  //
+
+var extra = (function() {
+    var activePage = null;
+    var prepareShow = function() {
+        $("#bevel").css("right", "0px");
+    }
+
+    var prepareHide = function() {
+        changePage($("#bevel"), {
+            transition: "none"
+        });
+        $("#bevel").addClass("ui-animation-slide");
+        $("#bevel").css("right", "-" + window.outerWidth + "px");
+    }
+
+    var changePage = function(page) {
+        if (typeof page === "undefined" || page.length == 0) {
+            console.log("The specified page is invalid");
+            return;
+        }
+
+        var withAnimation = true;
+
+        if (arguments.length == 2) {
+            withAnimation = (arguments[1].transition != "none");
+        }
+        var width = window.outerWidth;
+
+        if (activePage == null) {
+            activePage = $("#bevel");
+            activePage.addClass("ui-animation-slide");
+        }
+
+        if (activePage == page) {
+            console.log("Trying to change to same page, exiting.");
+            return;
+        }
+
+        page.show();
+        if (withAnimation == false) {
+            activePage.removeClass("ui-animation-slide");
+        }
+        page.removeClass("ui-animation-slide");
+
+        if (page.attr("id") == "bevel") {
+            console.log("going to bevel");
+
+            if (withAnimation) {
+                page.css("right", "-" + width + "px");
+            }
+            activePage.css("right", width + "px");
+        } else {
+            console.log("going away from bevel");
+
+            if (withAnimation) {
+                page.css("right", width + "px");
+            }
+            page.css("right");
+            activePage.css("right", "-" + width + "px");
+        }
+
+        if (withAnimation) {
+            page.addClass("ui-animation-slide");
+        }
+        page.css("right", "0px");
+        activePage = page;
+    }
+
+    var handleEsc = function(e) {
+        if (activePage != null) {
+            if (activePage.attr("id") != "bevel") {
+                changePage($("#bevel"));
+                return true;
+            }
+        }
+        return false; // Not handled
+    }
+
+    return {
+        handleEsc: handleEsc,
+        prepareHide: prepareHide,
+        prepareShow: prepareShow,
+    }
+})();
+
+//$(document).ready(function() {
+//    extra.init ();
+//});

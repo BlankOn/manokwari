@@ -11,7 +11,7 @@
     overflow-y:hidden;
     overflow-x:hidden;
     border-top: 1px solid #0a0a0a;
-    -webkit-transition: 300ms background ease;
+    -webkit-transition: 200ms background ease;
     -webkit-transform-origin: 0 0;
     opacity: 0.8;
 }
@@ -22,8 +22,8 @@
 	text-align: left;
 	color: #eee;
 	font-size: 14px;
-	padding: 8px;
-	margin-left: 4px;
+	padding-top: 8px;
+	margin-left: 15px;
 }
 .full {
 	margin-top: 5px;
@@ -185,7 +185,7 @@ p, span, div {
     width: 100%;
     height: 141px;
     bottom: 0px;
-    top: 215px;
+    top: 190px;
     padding-top: 2px; 
     padding-left: 0px;
     padding-bottom: 0px;
@@ -197,7 +197,7 @@ p, span, div {
     position: absolute;
     width: 100%;
     height: 120px;
-    top: 215px;
+    top: 190px;
     padding-top: 20px;
     -webkit-transform-origin: 0 0;
 }
@@ -280,7 +280,7 @@ p, span, div {
     line-height: 30px;
     height: 28px;
     padding: 0 2px 0 5px;
-    margin-top: 4px;
+    margin: 2px 0px 0px 2px;
 }
 #locationModal .loader.loading {
     font-family:"ClimaconsRegular";

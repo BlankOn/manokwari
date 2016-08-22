@@ -40,7 +40,7 @@ public class PanelWindowPager : PanelAbstractWindow {
         leave_notify_event.connect (() => {
 
             dismiss ();
-            return true; 
+            return true;
         });
 
         map_event.connect (() => {
@@ -93,7 +93,7 @@ public class PanelWindowPagerEntry : DrawingArea {
         button_press_event.connect ((event) => {
             pager.show_all ();
             pager_shown ();
-            return false; 
+            return false;
         });
 
     }
@@ -105,7 +105,7 @@ public class PanelWindowPagerEntry : DrawingArea {
 
     public override void get_preferred_height (out int min, out int max) {
         // TODO
-        min = max = 10; 
+        min = max = 10;
     }
 
     public override void get_preferred_width (out int min, out int max) {
@@ -209,7 +209,7 @@ public class PanelWindowEntry : DrawingArea {
             else
                 set_tooltip_text ("");
             entered ();
-            return false; 
+            return false;
         });
 
         button_press_event.connect ((event) => {
@@ -223,7 +223,7 @@ public class PanelWindowEntry : DrawingArea {
                 }
                 sync_window_states ();
             }
-            return false; 
+            return false;
         });
 
         drag_motion.connect (() => {
@@ -243,26 +243,26 @@ public class PanelWindowEntry : DrawingArea {
             icon = window_info.get_icon ();
         }
     }
- 
+
     public override void get_preferred_height (out int min, out int max) {
         update_icon ();
         // TODO
         if (icon != null) {
             min = max = icon.get_width () + Margin * 2;
         } else {
-            min = max = Margin; 
+            min = max = Margin;
         }
     }
 
     public override void get_preferred_width (out int min, out int max) {
-        get_preferred_height (out min, out max); 
+        get_preferred_height (out min, out max);
     }
 
     public override bool draw (Context cr) {
         StyleContext style = get_style_context ();
         style.set_state (state);
 
-        style.render_background (cr, 0, 0, get_allocated_width (), get_allocated_height ()); 
+        style.render_background (cr, 0, 0, get_allocated_width (), get_allocated_height ());
 
         update_icon ();
 
@@ -286,7 +286,7 @@ public class PanelWindowEntry : DrawingArea {
         menu.attach_to_widget (this, null);
 
         popup_shown = true;
-        menu.popup (null, null, null, button, event_time);
+        menu.popup (null, null, null, button, event_time); 
     }
 
 
@@ -317,13 +317,13 @@ public class PanelWindowEntryDescriptions : PanelAbstractWindow {
         set_type_hint (Gdk.WindowTypeHint.DOCK);
 
         set_app_paintable(true);
-        
+
         hide ();
         PanelScreen.move_window (this, Gdk.Gravity.NORTH_WEST);
 
         anim = new AnimatedProperty (this);
         anim.set_property ("offset");
-        
+
         anim.frame.connect (() => {
             queue_draw ();
         });
@@ -334,7 +334,7 @@ public class PanelWindowEntryDescriptions : PanelAbstractWindow {
     }
 
     public override void get_preferred_height (out int min, out int max) {
-        min = max = 34; 
+        min = max = 34;
     }
 
     public override void get_preferred_width (out int min, out int max) {
@@ -351,32 +351,32 @@ public class PanelWindowEntryDescriptions : PanelAbstractWindow {
         }
         pango.set_font_description (style.get_font (state));
         pango.set_markup ("<big>%s</big>".printf (text), -1);
-      
-        var h = get_window ().get_height (); 
+
+        var h = get_window ().get_height ();
         var icon_margin = 5;
 
         int text_x, text_y, text_w, text_h;
         pango.get_pixel_size (out text_w, out text_h);
-        text_y = h / 2 - text_h / 2; 
+        text_y = h / 2 - text_h / 2;
 
         if (backward) {
             icon_x = start - (icon_margin * 2 + icon_width + text_w);
             if (dir == TextDirection.LTR) {
                 text_x = start - (icon_margin + text_w);
             } else {
-                text_x = start; 
+                text_x = start;
             }
         } else {
             icon_x = start;
             if (dir == TextDirection.LTR) {
                 text_x = start + icon_width + icon_margin;
             } else {
-                text_x = start; 
+                text_x = start;
             }
         }
 
         var occupied = icon_margin * 3 + text_w + icon_width;
-        style.render_background (cr, icon_x + offset - icon_margin, 0, occupied, get_allocated_height ()); 
+        style.render_background (cr, icon_x + offset - icon_margin, 0, occupied, get_allocated_height ());
         if (icon != null) {
             Gdk.cairo_set_source_pixbuf (cr, icon, icon_x + offset, 0);
         }
@@ -402,7 +402,7 @@ public class PanelWindowEntryDescriptions : PanelAbstractWindow {
         var state = StateFlags.NORMAL;
 
         stack.clear ();
-        style.render_background (cr, 0, 0, get_allocated_width (), get_allocated_height ()); 
+        style.render_background (cr, 0, 0, get_allocated_width (), get_allocated_height ());
 
         if (active_entry != null)  {
             var start_x = -1;
@@ -533,7 +533,7 @@ public class PanelWindowEntryDescriptions : PanelAbstractWindow {
               next = true;
           } else {
               next = false;
-          } 
+          }
         }
         if (selected == null) {
             selected = first;
@@ -566,14 +566,15 @@ public class PanelWindowHost : PanelAbstractWindow {
     PanelHotkey hotkey;
     DBusProperties bus;
     Notify.Notification indicator;
+    private Image extra_logo;     ///////// extra logo //////////
 
     public signal void windows_gone (); // Emitted when all windows have gone, either closed or minimized
     public signal void windows_visible (); // Emitted when there is at least one window visible
     public signal void all_windows_visible (); // Emitted when all normal windows visible
     public signal void dialog_opened (); // Emitted when a dialog is opened
     public signal void menu_clicked (); // Emitted when the menu is clicked
-
     public signal void activated (); // Emitted when the window host is activated (the size is getting bigger)
+    public signal void extra_clicked (); /////////// extra panel /////////////// Emitted when the extra is clicked
 
     public bool no_windows_around () {
         update (false);
@@ -595,6 +596,7 @@ public class PanelWindowHost : PanelAbstractWindow {
         hotkey = new PanelHotkey();
 
         hotkey.bind("<Alt>Tab");
+        hotkey.bind("<Alt>Menu");
         hotkey.bind("Print");
         hotkey.bind("<Mod4>x");
         hotkey.bind("MonBrightnessUp");
@@ -602,15 +604,27 @@ public class PanelWindowHost : PanelAbstractWindow {
         hotkey.triggered.connect((key) => {
           handleKey(key);
         });
-        
+
         logo = new Image.from_icon_name("distributor-logo", IconSize.LARGE_TOOLBAR);
         var event_box = new EventBox();
+        event_box.set_tooltip_text (_("Menu applications "));
         event_box.add (logo);
         event_box.show_all ();
 
         logo.set_pixel_size (height);
 
-        entry_map = new HashMap <Wnck.Window, PanelWindowEntry> (); 
+        /////////////////// extra button logo ///////////////
+        extra_logo = new Image.from_icon_name("view-list-symbolic", IconSize.LARGE_TOOLBAR);
+        var extra_box = new EventBox();
+        extra_box.set_tooltip_text (_("Widget applications"));
+        extra_box.add (extra_logo);
+        extra_box.show_all ();
+
+        extra_logo.set_pixel_size (height);
+
+        //////////////////// end extra logo /////////////////
+
+        entry_map = new HashMap <Wnck.Window, PanelWindowEntry> ();
 
         tray = new PanelTray ();
         tray.show ();
@@ -647,7 +661,8 @@ public class PanelWindowHost : PanelAbstractWindow {
         calendar.update_position (height);
         calendar.hide ();
 
-        outer_box.pack_end (pager_entry, false, false, 1);
+        outer_box.pack_end (extra_box, false, false, 3);      ////////// extra //////////
+        outer_box.pack_end (pager_entry, false, false, 0);
         outer_box.pack_end (clock_event, false, false, 0);
         outer_box.pack_end (tray, false, false, 0);
         outer_box.pack_start (event_box, false, false, 6);
@@ -658,7 +673,7 @@ public class PanelWindowHost : PanelAbstractWindow {
         show();
         reposition ();
 
-        set_struts(); 
+        set_struts();
 
         screen_size_changed.connect (() => {
             queue_resize ();
@@ -714,14 +729,21 @@ public class PanelWindowHost : PanelAbstractWindow {
         });
 
         configure_event.connect (() => {
-            set_struts(); 
+            set_struts();
             return false;
         });
 
-        event_box.button_press_event.connect (() => {
+        event_box.button_press_event.connect (() => { 
             menu_clicked ();
             return false;
         });
+
+        ///////// extra panel /////////////
+        extra_box.button_press_event.connect (() => {
+            extra_clicked ();
+            return false;
+        });
+        ////////////// end ////////////////
 
         clock_event.button_release_event.connect(() => {
             if (calendar.visible) {
@@ -742,7 +764,7 @@ public class PanelWindowHost : PanelAbstractWindow {
     }
 
     public override void get_preferred_height (out int min, out int max) {
-        min = max = height; 
+        min = max = height;
     }
 
     public void update (bool emit_change_signals) {
@@ -758,7 +780,7 @@ public class PanelWindowHost : PanelAbstractWindow {
         var num_total_windows = 0;
         var num_windows = 0;
         foreach (unowned Wnck.Window w in screen.get_windows()) {
-            if (!w.is_skip_tasklist () 
+            if (!w.is_skip_tasklist ()
               && (w.get_name() != "_manokwari_menu_")
               && w.is_on_workspace (workspace)) {
                 var e = entry_map [w];
@@ -813,6 +835,9 @@ public class PanelWindowHost : PanelAbstractWindow {
       else if (key == "<Mod4>x") {
         menu_clicked();
       }
+      else if (key == "<Alt>Menu") {
+        extra_clicked();
+      }
       else if (key == "Print") {
         Utils.print_screen();
       }
@@ -825,7 +850,7 @@ public class PanelWindowHost : PanelAbstractWindow {
     }
 
     void handleWindowCycle() {
-        descriptions.cycle();      
+        descriptions.cycle();
     }
 
 
