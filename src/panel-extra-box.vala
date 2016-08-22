@@ -1,16 +1,16 @@
 using Gtk;
 
-public class PanelMenuBox : PanelAbstractWindow {
+public class PanelExtraBox : PanelAbstractWindow {
     private const int COLUMN_WIDTH = 265;
     private const int TOP = 24;
 
     public signal void dismissed ();
     public signal void shown ();
     public signal void about_to_show_content ();
-    
-    PanelMenuHTML view;
 
-    public PanelMenuBox () {
+    PanelExtraHTML view;
+
+    public PanelExtraBox () {
         try {
         var bus = Bus.get_sync (GLib.BusType.SESSION);
         bus.signal_subscribe (null,
@@ -24,12 +24,12 @@ public class PanelMenuBox : PanelAbstractWindow {
             stderr.printf ("Unable to subscribe to desktop launcher's \"Launched\" signal: %s\n", e.message);
         }
 
-        view = new PanelMenuHTML ();
+        view = new PanelExtraHTML ();
         view.show_all ();
         add (view);
         set_keep_above (true);
         set_type_hint (Gdk.WindowTypeHint.POPUP_MENU);
-        set_title ("_manokwari_menu_");
+        set_title ("_manokwari_extra_");
         set_visual (this.screen.get_rgba_visual ());
 
         Gdk.RGBA c = Gdk.RGBA();
@@ -40,7 +40,8 @@ public class PanelMenuBox : PanelAbstractWindow {
         override_background_color(StateFlags.NORMAL, c);
         set_app_paintable(true);
 
-        PanelScreen.move_window (this, Gdk.Gravity.NORTH_WEST);
+        PanelScreen.move_window (this, Gdk.Gravity.NORTH_EAST);
+
         view.start();
 
         hide ();
@@ -58,13 +59,13 @@ public class PanelMenuBox : PanelAbstractWindow {
         });
 
         screen_size_changed.connect (() =>  {
-            PanelScreen.move_window (this, Gdk.Gravity.NORTH_WEST);
+            PanelScreen.move_window (this, Gdk.Gravity.NORTH_EAST);
             queue_resize ();
         });
 
         map_event.connect (() => {
             shown ();
-            PanelScreen.move_window (this, Gdk.Gravity.NORTH_WEST);
+            PanelScreen.move_window (this, Gdk.Gravity.NORTH_EAST);
             get_window ().raise ();
             Utils.grab (this);
             view.triggerShowAnimation();
@@ -91,12 +92,12 @@ public class PanelMenuBox : PanelAbstractWindow {
     }
 
     public override void get_preferred_height (out int min, out int max) {
-        min = max = PanelScreen.get_primary_monitor_geometry ().height; 
+        min = max = PanelScreen.get_primary_monitor_geometry ().height;
     }
 
     private void dismiss () {
         if (visible) {
-            stdout.printf("Menu box dismissed \n");
+            stdout.printf("Extra box dismissed \n");
             Utils.ungrab (this);
             try_hide ();
         }

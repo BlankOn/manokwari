@@ -7,7 +7,7 @@ public class PanelAbstractWindow : Gtk.Window {
     protected void set_struts () {
         ulong[] struts = new ulong[12];
 
-        var r = PanelScreen.get_primary_monitor_geometry (); 
+        var r = PanelScreen.get_primary_monitor_geometry ();
 
         var left = 0;
         var right = 0;
@@ -89,7 +89,7 @@ public class PanelAbstractWindow : Gtk.Window {
         set_focus_on_map (true);
         set_accept_focus (true);
         stick ();
-     
+
         var screen = get_screen();
         screen.monitors_changed.connect (() => {
             screen_size_changed ();
