@@ -30,7 +30,7 @@ public class PanelExtraBox : PanelAbstractWindow {
         add_events(Gdk.EventMask.ENTER_NOTIFY_MASK);
         add_events(Gdk.EventMask.LEAVE_NOTIFY_MASK);
 
-        // Connecting some events, queue_draw() redraws the window. begin_move_drag sets up the window drag
+        // Connecting some events, entered, leave and button pressed
         button_press_event.connect(button_pressed);
         enter_notify_event.connect(mouse_entered);
         leave_notify_event.connect(mouse_leave);
@@ -106,23 +106,26 @@ public class PanelExtraBox : PanelAbstractWindow {
         min = max = PanelScreen.get_primary_monitor_geometry ().height;
     }
 
-	public bool mouse_entered(Gdk.EventCrossing e) {
-		inside = true;
-		shown();
-		return true;
-	}
+    public bool mouse_entered(Gdk.EventCrossing e) {
+        inside = true;
+        shown();
+        return true;
+    }
 
-	public bool mouse_leave(Gdk.EventCrossing e) {
-		inside = false;
-		try_hide();
-		return true;
-	}
+    public bool mouse_leave(Gdk.EventCrossing e) {
+        inside = false;
+        try_hide();
+        return true;
+    }
 
-	public bool button_pressed(Gdk.EventButton e) {
-		inside = true;
-		shown();
-		return true;
-	}
+    public bool button_pressed(Gdk.EventButton e) {
+        if (visible) {
+            shown();
+        }
+        inside = true;
+        return true;
+    }
+
     private void dismiss () {
         if (visible) {
             stdout.printf("Extra box dismissed \n");

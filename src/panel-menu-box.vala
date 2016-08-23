@@ -3,6 +3,7 @@ using Gtk;
 public class PanelMenuBox : PanelAbstractWindow {
     private const int COLUMN_WIDTH = 265;
     private const int TOP = 24;
+    private bool inside;
 
     public signal void dismissed ();
     public signal void shown ();
@@ -23,6 +24,16 @@ public class PanelMenuBox : PanelAbstractWindow {
         } catch (Error e) {
             stderr.printf ("Unable to subscribe to desktop launcher's \"Launched\" signal: %s\n", e.message);
         }
+
+        // We need to register which events we are interested in
+        add_events(Gdk.EventMask.BUTTON_PRESS_MASK);
+        add_events(Gdk.EventMask.ENTER_NOTIFY_MASK);
+        add_events(Gdk.EventMask.LEAVE_NOTIFY_MASK);
+
+        // Connecting some events, entered, leave and button pressed
+        button_press_event.connect(button_pressed);
+        enter_notify_event.connect(mouse_entered);
+        leave_notify_event.connect(mouse_leave);
 
         view = new PanelMenuHTML ();
         view.show_all ();
@@ -92,6 +103,26 @@ public class PanelMenuBox : PanelAbstractWindow {
 
     public override void get_preferred_height (out int min, out int max) {
         min = max = PanelScreen.get_primary_monitor_geometry ().height; 
+    }
+
+    public bool mouse_entered(Gdk.EventCrossing e) {
+        inside = true;
+        shown();
+        return true;
+    }
+
+    public bool mouse_leave(Gdk.EventCrossing e) {
+        inside = false;
+        try_hide();
+        return true;
+    }
+
+    public bool button_pressed(Gdk.EventButton e) {
+        if (visible) {
+            shown();
+        }
+        inside = true;
+        return true;
     }
 
     private void dismiss () {
