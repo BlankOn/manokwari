@@ -1,4 +1,4 @@
-NULL = 
+NULL =
 
 AM_CPPFLAGS = \
 	$(WNCK_GMENU_DISCLAIMER) \
@@ -36,6 +36,9 @@ manokwari_SOURCES = panel-item.vala \
 		panel-shell.vala \
 		panel-socket.vala \
 		panel-xdg-properties.vala \
+		panel-extra-content.vala \
+		panel-extra-box.vala \
+		panel-extra-html.vala \
 	$(NULL)
 
 manokwari_VALAFLAGS = \
@@ -53,5 +56,3 @@ EXTRA_DIST = \
 
 DISTCLEANFILES = \
 	$(NULL)
-
-

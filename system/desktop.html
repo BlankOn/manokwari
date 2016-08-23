@@ -4,20 +4,11 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1" /> 
 	<link rel="stylesheet" href="css/desktop.css" />
-	<link rel="stylesheet" href="css/bevel.css" />
 
 	<script type="text/javascript" src="js/jq.js"></script>
 	<script type="text/javascript" src="js/xml2json.js"></script>
 	<script type="text/javascript" src="js/xml-background.js"></script>
 	<script type="text/javascript" src="js/desktop.js"></script>
-	
-<!-- this is extra bevel -->
-	<script type="text/javascript" src="js/time.js"></script>
-	<script type="text/javascript" src="js/moment.min.js"></script>
-	<script type="text/javascript" src="js/bevel.js"></script>
-<!-- this is extra weather -->	
-	<link href="widget/weather/css/style.css" rel="stylesheet">
-	<link href="widget/weather/css/owfont-regular.min.css" rel="stylesheet">
 	
 </head>
 
@@ -28,165 +19,7 @@
     <!-- h1 id="debug"></h1 -->
 	<div id="launcher"></div>
 
-<div id="show-top"></div>
-<div id="show-bottom"></div>
 
-<div id="hide"></div>
-<div id="bevel">
-	<div id="sosial_media">Bookmarks</div>
-	<div class="sosmed">
-		<a href="#" value="Sosmed1" onclick="Run1();" title="http://blankonlinux.or.id"><img src="img/blankon.svg"></a>
-		<a href="#" value="Sosmed2" onclick="Run2();" title="http://panduan.blankonlinux.or.id"><img src="img/blankon-tutorial.svg"></a>
-		<a href="#" value="Sosmed3" onclick="Run3();" title="http://facebook.com/blankonlinux"><img src="img/facebook.svg"></a>
-		<a href="#" value="Sosmed4" onclick="Run4();" title="http://twitter.com/blankonlinux"><img src="img/twitter.svg"></a>
-	</div>
-	<div id="player">
-		<div class="header">Music Player</div>
-		<div class="control">
-		<div id="buttons">
-			<li id="stop" href="#" value="" onclick="Stop();" title="Stop/Quit"><img src="img/player/stop.svg"></li>
-			<li id="prev" href="#" value="" onclick="Prev();" title="Previous"><img src="img/player/prev.svg"></li>
-			<li id="play" href="#" value="" onclick="Play();" title="Play"><img src="img/player/play.svg"></li>
-			<li id="pause" href="#" value="" onclick="Pause();" title="Pause"><img src="img/player/pause.svg"></li>
-			<li id="next" href="#" value="" onclick="Next();" title="Next"><img src="img/player/next.svg"></li>
-			<li id="repeat" href="#" value="" onclick="Repeat();" title="Repeat"><img src="img/player/repeat.svg"></li>
-		 </div>
-
-	<!--script src="js/jquery.js"></script-->
-	<script src="js/main.js"></script>
-	</div>
-	
-<!-- Widget Weather -->
-
-<div id="container">
-	<div id="tittle"><span>Weather</span></div>
-	<div class="border">
-		<div class="settings"><img src="widget/weather/img/settings.svg"></div>
-		<div class="sync"><img src="widget/weather/img/sync.svg"></div>
-	</div>
-	<div id="actualWeather">
-		<div id="city"><span></span></div>
-		<div id="ow-code"><i id="icon"></i></div>
-		<div class="details">
-			<div class="left" id="temperature"></div>
-			<div class="right">
-					<span id="windSpeed"></span><span id="windUnit"></span><br>
-					<span id="humidity"></span>
-			</div>
-		</div>
-		<div class="week">
-			<div id="0">
-				<span class="day"></span>
-				<span class="code"></span>
-				<span class="temp"></span>
-			</div>
-			<div id="1">
-				<span class="day"></span>
-				<span class="code"></span>
-				<span class="temp"></span>
-			</div>
-			<div id="2">
-				<span class="day"></span>
-				<span class="code"></span>
-				<span class="temp"></span>
-			</div>
-			<div id="3">
-				<span class="day"></span>
-				<span class="code"></span>
-				<span class="temp"></span>
-			</div>
-			<div id="4">
-				<span class="day"></span>
-				<span class="code"></span>
-				<span class="temp"></span>
-			</div>
-		</div>
-		</div>
-	</div>
-	<div id="locationModal">
-		<div class="credits">
-		<img src="widget/weather/img/back.svg">
-		<h1 style="text-align: center">Tekukur 1.0</h1>
-		<p>Tekukur simple weather BlankOn Linux</p>
-
-		<h3 style="text-align: center">Thanks for using.</h3><br><br>
-	</div>
-	<div class="input">
-	<input type="text" placeholder="Location"><span class="loader"></span><br>
-	e.g Bandung, Jakarta<br>
-	</div>
-
-	<div class="full">
-		<div class="toggleswitch measurement">
-			<span data-type="c">R</span><span data-type="f">T</span><span data-type="k">K</span>
-		</div>
-		<div class="toggleswitch speed">
-			<span data-type="mph">mph</span><span data-type="kph">kph</span><span data-type="ms">m/s</span>
-		</div>
-		<div class="color">
-			<span data-color="101010"></span>
-			<span data-color="008000"></span>
-			<span data-color="004F1B"></span>
-			<span data-color="C9A100"></span>
-			<span data-color="C83608"></span>
-			<span data-color="920200"></span>
-			<span data-color="A52A2A"></span>
-			<span data-color="004E99"></span>
-			<span data-color="8A02A9"></span>
-			<span data-color="111837"></span>
-			<span data-color="gradient"></span>
-		</div>
-		<br>
-		<!--a class="btn" tag="credits">About</a-->
-		<br><br><br><br>
-	</div>
-	</div>
-	<div id="errorMessage">
-		Could not connect to server.<br>
-		Check your connection.<br>
-		<button class="btn">Try Again</button>
-	</div>
-	<script src="widget/weather/js/jquery.min.js"></script>
-	<script src="widget/weather/js/script.js"></script>
-
-<!-- System System --->
-	<div id="system_settings">System Settings</div>
-	<div class="system">
-		<li href="#" value="" onclick="RunWallpaper()"><img src="img/icons/personalization_normal.png"><span>Background</span></li>
-		<li href="#" value="" onclick="RunAccount()"><img src="img/icons/account_normal.png"><span>User</span></li>
-		<li href="#" value="" onclick="RunDate()"><img src="img/icons/date_time_normal.png"><span>Date/Time</span></li>
-		<li href="#" value="" onclick="RunOnline()"><img src="img/icons/default_applications_normal.png"><span>Online</span></li>
-		<li href="#" value="" onclick="RunRegional()"><img src="img/icons/network_normal.png"><span>Regional</span></li>
-		<li href="#" value="" onclick="RunDisplay()"><img src="img/icons/display_normal.png"><span>Display</span></li>
-		<li href="#" value="" onclick="RunNetwork()"><img src="img/icons/wireless.png"><span>Network</span></li>
-		<li href="#" value="" onclick="RunKeyboard()"><img src="img/icons/keyboard_normal.png"><span>Keyboard</span></li>
-		<li href="#" value="" onclick="RunMouse()"><img src="img/icons/mouse_normal.png"><span>Mouse</span></li>
-		<li href="#" value="" onclick="RunSound()"><img src="img/icons/sound_normal.png"><span>Sound</span></li>
-		<li href="#" value="" onclick="RunBluetooth()"><img src="img/icons/bluetooth_normal.png"><span>Bluetooth</span></li>
-		<li href="#" value="" onclick="RunPower()"><img src="img/icons/power_normal.png"><span>Power</span></li>
-		<li href="#" value="" onclick="RunInfo()"><img src="img/icons/system_info_normal.png"><span>Detail</span></li>
-		<li href="#" value="" onclick="RunPrinter()"><img src="img/icons/printer.png"><span>Printer</span></li>
-		<li href="#" value="" onclick="RunShare()"><img src="img/icons/share.png"><span>Sharing</span></li>
-	</div>
-	
-	<div id="time" class="clock"><span id="clock-time">00:00</span><span id="clock-date">16 Juli 2013</span>
-	</div>
-</div>
-
-<!-- this is function bevel hover -->
-<script> 
-$(document).ready(function(){
-    $("#show-top, #show-bottom").hover(function(){
-        $("#bevel").css({
-          right: '0px'
-		});
-    $("#hide").hover(function(){
-        $("#bevel").css({
-          right: '-267px'
-		});
-		});
-	});
-});
 </script>
 
 <!-- this is script disble tab key -->

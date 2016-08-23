@@ -211,10 +211,10 @@ span {
     position: fixed;
     clear: both;
     bottom: 0;
-    height: 65px;
+    height: 90px;
     width: 250px; 
     margin: 0px 0px -65px 0px;
-    padding: 10px 10px 0px 15px;
+    padding: 10px 10px 0px 20px;
     z-index: 100;
     background: #1a1a1a; 
     overflow: hidden;
@@ -235,6 +235,7 @@ span {
     width: 48;
     height: 48;
     margin-right: 10px;
+	margin-top: 3px;
     cursor: pointer;
 	opacity: 0.8;
 	-webkit-transition: all 0.2s ease-out;
@@ -250,6 +251,7 @@ span {
     margin: 0px;
     padding-top:5px;
     font-family: 'Aurulent Sans';
+	opacity: 0.8;
 }
 
 #userAccount span {
@@ -257,6 +259,7 @@ span {
     color: #e2e2e2;
     text-shadow: 0 1px 1px #000;
     font-family: 'Aurulent Sans';
+    opacity: 0.8;
 }
 
 ::-webkit-scrollbar {

@@ -24,33 +24,33 @@
 	position: absolute;
 	width: 100%;
 	height: 100%;
-	background: transparent;
+	background-color: transparent;
 	right: 0px;
 	top: 0px;
 	z-index: -100;
 }
 
 #bevel {
-	background: #111111;
+	background-color: rgba(17,17,17,0.98);
 	color: #aaa;
-	height: 104%;
+	height: 100%;
 	width: 265px;
 	overflow-x: hidden;
 	overflow-y: auto;
-	right: -266px;
+	right: 0px;
 	top: 0px;
-	bottom:0px;
+	bottom: 0px;
 	position:absolute;
 	z-index: 150;
-	-webkit-transition: right 250ms ease-in-out;
 }
-/*#bevel:hover {
-	right: 0px;
-}*/
+
+.ui-animation-slide {
+    -webkit-transition: all 0.2s ease-in-out;
+}
 
 /* Sosmed */
 #sosial_media {
-	margin-top: 30px;
+	margin-top: 5px;
 	padding: 2px 0;
 	width:100%;
 	height: 24px;
@@ -85,8 +85,8 @@
 
 /* Music Player */
 #player, #control {
-	margin-top: 10px;
-	padding-top: 8px;
+	margin-top: 15px;
+	padding-top: 5px;
 	color: #aaa;
 	width:100%;
 	height: auto;
@@ -97,7 +97,7 @@
 	cursor:default;
 }
 #buttons{
-    margin-top:20px;
+    margin-top:15px;
 	width:auto;
 	height: 34px;
 	float:center;
@@ -105,10 +105,10 @@
 #buttons #play img,
 #buttons #pause img {
 	position:absolute;
-	width: 32px;
-	height: 32px;
-	margin-top:-31px;
-	margin-left:-22px;
+	width: 24px;
+	height: 24px;
+	margin-top:-28px;
+	margin-left:-19px;
 	padding: 5px;
 	float:center;
 	background: #333;
@@ -160,8 +160,77 @@
 #buttons .selected {
 	background-color: #444;
 	-webkit-transition: all 0.2s ease-in-out;
-	-webkit-box-shadow: inset 0px 0px 1px 15px #492F2F;  /*#882626;*/
+	-webkit-box-shadow: inset 0px 0px 1px 15px #4084D6;  /*#882626;*/
 	border: 2px solid #000;
+}
+
+#volume-section{
+	width: 100%;
+	height: 34px;
+	float: right;
+	display: table;
+}
+
+#volume-wrapper{
+	text-align: center;
+	display: table-cell;
+  	vertical-align: middle;
+}
+#volume{
+	width: 20px;
+	height: 20px;
+	border: none;
+	vertical-align: 1px;
+	padding-right: 10px;
+}
+#volumeslider{
+	-webkit-appearance: none;
+    background:#ccc;
+    width: 70%;
+    height:1px;
+    vertical-align: 10px;
+}
+
+#volumeslider::-webkit-slider-thumb{
+	-webkit-appearance: none;
+	background:url(../img/knob.png) no-repeat;
+	height: 12px;
+	width: 12px;
+}
+div#progress-section{ 
+	position: absolute;
+   	width: 40%;
+   	left: 30%;
+   	height: 100%;
+   	display: table;
+}  
+
+div#progressbar-wrapper{
+	text-align: center;
+	height: 100%;
+	font-size: 14px;
+	display: table-cell;
+  	vertical-align: middle;
+}
+
+.progress{
+	display: inline-block;
+}
+
+#current-song-info{
+	width: 38%;
+	height: 35px;
+	margin: 0 auto;
+	word-wrap: break-word;
+	vertical-align: text-bottom;
+}
+
+div#progressbar{
+	background: url(../img/progressbar.png) no-repeat;
+	margin-left: 8px;
+	margin-right: 8px;
+	width: 48%;
+	height: 10px;
 }
 
 /* System setting */
@@ -224,7 +293,7 @@
 	background: #1a1a1a;
 	color: #bbb;
 	bottom: 0px;
-	padding: 5px 0 10px;
+	padding: 5px 0 34px;
     cursor: default;
     text-align: center;
     border-top: 1px solid #0C0C0C;
@@ -235,7 +304,7 @@
 	font-family: 'TrendexLightSSi.ttf';
 	display: block;
 	font-size: 42px;
-	letter-spacing: 0;
+	letter-spacing: 2;
 	text-shadow: 0 0px 2px #000;
 }
 #clock-date {
@@ -290,4 +359,21 @@
     font-style: normal;
     font-weight: 400;
     src: local('Ubuntu Condensed'), local('UbuntuCondensed-Regular'), url('../fonts/ubuntu.woff') format('woff');
+}
+
+body {
+	background-color: transparent;
+	overflow: hidden;
+	-webkit-user-select: none;
+	padding: 0px;
+	margin: 0px;
+	font-family: Cantarell, Sans-Serif;
+}
+
+#base {
+	background-color: transparent;
+	position: absolute;
+	z-index: 3;
+	width: 100%;
+	height: 100%;
 }
