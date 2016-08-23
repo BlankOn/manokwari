@@ -3,6 +3,7 @@ using Gtk;
 public class PanelExtraBox : PanelAbstractWindow {
     private const int COLUMN_WIDTH = 265;
     private const int TOP = 24;
+    private bool inside;
 
     public signal void dismissed ();
     public signal void shown ();
@@ -23,6 +24,16 @@ public class PanelExtraBox : PanelAbstractWindow {
         } catch (Error e) {
             stderr.printf ("Unable to subscribe to desktop launcher's \"Launched\" signal: %s\n", e.message);
         }
+
+        // We need to register which events we are interested in
+        add_events(Gdk.EventMask.BUTTON_PRESS_MASK);
+        add_events(Gdk.EventMask.ENTER_NOTIFY_MASK);
+        add_events(Gdk.EventMask.LEAVE_NOTIFY_MASK);
+
+        // Connecting some events, queue_draw() redraws the window. begin_move_drag sets up the window drag
+        button_press_event.connect(button_pressed);
+        enter_notify_event.connect(mouse_entered);
+        leave_notify_event.connect(mouse_leave);
 
         view = new PanelExtraHTML ();
         view.show_all ();
@@ -47,22 +58,16 @@ public class PanelExtraBox : PanelAbstractWindow {
         hide ();
 
         button_press_event.connect((event) => {
-            if (visible) {
-                stdout.printf("Extra box dismissed \n");
-                Utils.ungrab (this);
-                try_hide ();
-            }
-            return true;
-        });
-        //stdout.printf("xxx\n");
+
+        stdout.printf("xxx\n");
             // Only dismiss if within the area
             // TODO: multihead
-        //    if (event.x > get_window().get_width ()) {
-        //        dismiss ();
-        //        return true;
-        //    }
-        //    return false;
-        //});
+            if (event.x > get_window().get_width()) {
+                dismiss ();
+                return true;
+            }
+            return false;
+        });
 
         screen_size_changed.connect (() =>  {
             PanelScreen.move_window (this, Gdk.Gravity.NORTH_EAST);
@@ -101,6 +106,23 @@ public class PanelExtraBox : PanelAbstractWindow {
         min = max = PanelScreen.get_primary_monitor_geometry ().height;
     }
 
+	public bool mouse_entered(Gdk.EventCrossing e) {
+		inside = true;
+		shown();
+		return true;
+	}
+
+	public bool mouse_leave(Gdk.EventCrossing e) {
+		inside = false;
+		try_hide();
+		return true;
+	}
+
+	public bool button_pressed(Gdk.EventButton e) {
+		inside = true;
+		shown();
+		return true;
+	}
     private void dismiss () {
         if (visible) {
             stdout.printf("Extra box dismissed \n");
