@@ -35,7 +35,7 @@
 	// header is any element, list is an unordered list
    // create and add the filter form to the header
     var form = $("<div>").attr({"class":"filterform"}),
-        input = $("<input>").attr({"class":"filterinput","type":"text","id":"searchinput","placeholder":"Type to search..."});
+        input = $("<input>").attr({"class":"filterinput","type":"text","id":"searchinput","placeholder":"Type to search...","autofocus":"autofocus"});
     $(form).append(input).appendTo(header);
    
 	//arrow navigation
