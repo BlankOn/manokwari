@@ -52,7 +52,8 @@ html {
     padding-right:3px;
 }
 
-.ui-listview-item-icon {
+.ui-listview-item-icon,
+.runin-item img{
     vertical-align: middle;
     margin-right: 6px;
     margin-left: -2px;
@@ -67,7 +68,8 @@ html {
 .ui-system {
 }
 
-.ui-listview-item {
+.ui-listview-item,
+.runin-item {
     display: block;
     min-height: 26px;
     border-radius: inherit;
@@ -348,6 +350,12 @@ span {
 	color:#aaa;
 	font-size:12px;
 }
+.runin-item a{  
+  text-decoration: none;
+	font-family: 'Aurulent Sans';
+	color: #aaa;
+	letter-spacing: 0px;
+} 
 /**********************
  * Fonts Collections *
  **********************/
