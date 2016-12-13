@@ -39,6 +39,7 @@ public class PanelXdgData {
     }
 
     void schedule_for_kick_js () {
+        if (scheduled > 0) return;
         var d = new DateTime.now_local();
         if (d.to_unix () - last_schedule > 60) {
             // Last update was over a minute ago
@@ -49,8 +50,8 @@ public class PanelXdgData {
             // if it's not yet scheduled, let's do it
             // otherwise just skip this request
             if (scheduled == 0) {
-                // schedule to kick JS in the next minute
-                scheduled = Timeout.add (60000, kick_js);
+                // schedule to kick JS in the next 10 seconds
+                scheduled = Timeout.add (10000, kick_js);
             }
         }
     }
@@ -74,8 +75,11 @@ public class PanelXdgData {
         
         // Say that we're done
         scheduled = 0;
+
         return false;
-    }
+
+}
+
 
 
     void monitor () {
