@@ -144,6 +144,23 @@
               var runinWiki = $("<div class='ui-listview-item runin-item wiki'><a href='#' class='runin-item-text' runin='"+filter+"'><img src='img/logo_wikipedia.png'><span>Wikipedia: "+filter+"</span></a>");
               $(list).append(runinCommand).append(runinSearch).append(runinWiki);
             }
+            $('.runin-item').click(function(e){
+              var p = $(e.target).closest('a')
+              var r = p.attr('runin');
+              if (p.parent().hasClass('url')) {
+                visitLink(r);
+              } else if (p.parent().hasClass('search')) {
+                var a = "https://www.google.com/search?q="+r;
+                visitLink(a);
+              } else if (p.parent().hasClass('wiki')) {
+                var a = "https://en.wikipedia.org/wiki/"+r;
+                visitLink(a);
+              } else {
+                runTerminal(r);
+              }
+              firstCond();
+              unselect();
+            })
 					}, 500);
 				} else {
 					$(list).find(".ui-listview-item").hide();
