@@ -39,7 +39,7 @@
   }
 
   function visitLink(a) {
-    Utils.run_command('x-www-browser ' + a);
+    Utils.run_command('x-www-browser "' + a + '"');
   }
 
   function runTerminal(a) {
@@ -150,10 +150,10 @@
               if (p.parent().hasClass('url')) {
                 visitLink(r);
               } else if (p.parent().hasClass('search')) {
-                var a = "https://www.google.com/search?q="+r;
+                var a = encodeURIComponent("https://www.google.com/search?q=" + r);
                 visitLink(a);
               } else if (p.parent().hasClass('wiki')) {
-                var a = "https://en.wikipedia.org/wiki/"+r;
+                var a = encodeURIComponent("https://en.wikipedia.org/wiki/" + r);
                 visitLink(a);
               } else {
                 runTerminal(r);
