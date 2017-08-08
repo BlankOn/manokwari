@@ -78,7 +78,7 @@ AC_SUBST(WNCK_GMENU_DISCLAIMER)
 AC_SUBST(MANOKWARI_CFLAGS)
 AC_SUBST(MANOKWARI_LIBS)
 
-VALA_PACKAGES="--pkg atk --pkg x11 --pkg gdk-x11-3.0 --pkg gee-1.0 --pkg cairo --pkg gtk+-3.0 --pkg gio-unix-2.0 --pkg libgnome-menu-3.0 --pkg gdk-3.0 --pkg libwnck-3.0 --pkg unique-3.0 --pkg webkit-1.0 --pkg javascriptcore --pkg libsoup-2.4 --pkg libnotify"
+VALA_PACKAGES="--pkg atk --pkg x11 --pkg gdk-x11-3.0 --pkg gee-1.0 --pkg cairo --pkg gtk+-3.0 --pkg gio-unix-2.0 --pkg libgnome-menu-3.0 --pkg gdk-3.0 --pkg libwnck-3.0 --pkg unique-3.0 --pkg webkitgtk-3.0 --pkg javascriptcore --pkg libsoup-2.4 --pkg libnotify"
 
 AC_SUBST(VALA_PACKAGES)
 

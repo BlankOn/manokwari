@@ -39,3 +39,4 @@ po/stamp-it
 src/manokwari
 src/manokwari_vala.stamp
 stamp-h1
+/build/
