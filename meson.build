@@ -67,7 +67,6 @@ podir = join_paths(meson.source_root(), 'po')
 manokwari_system_path = join_paths(libdir, 'manokwari', 'system')
 manokwari_session_path = join_paths(datadir, 'gnome-session', 'sessions')
 manokwari_xsession_path = join_paths(datadir, 'xsessions')
-manokwari_bin_path = join_paths(datadir, 'xsessions')
 
 
 # Handle i18n on the .desktop file
