@@ -33,7 +33,7 @@ public class PanelClock : Label {
 	public override bool draw (Cairo.Context cr) {
         StyleContext style = get_style_context ();
         style.set_state (get_state_flags ());
-        Gtk.render_layout (style, cr, MARGIN/2, 0, pango);
+        style.render_layout (cr, MARGIN/2, 0, pango);
         return true;
     }
 	
