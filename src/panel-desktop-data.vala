@@ -204,12 +204,12 @@ public class PanelDesktopData {
         return new JSCore.Value.undefined (ctx);
     }
 
-    static const JSCore.StaticFunction[] js_funcs = {
+    const JSCore.StaticFunction[] js_funcs = {
         { "removeFromDesktop", js_remove_from_desktop, PropertyAttribute.ReadOnly },
         { null, null, 0 }
     };
 
-    static const ClassDefinition js_class = {
+    const ClassDefinition js_class = {
         0,
         ClassAttribute.None,
         "DesktopData",
