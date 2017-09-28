@@ -210,7 +210,7 @@ public class PanelSessionManager {
     }
 
 
-    static const ClassDefinition js_class = {
+    const ClassDefinition js_class = {
         0,
         ClassAttribute.None,
         "SessionManager",

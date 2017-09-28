@@ -303,12 +303,12 @@ public class PanelXdgData {
         return new JSCore.Value.undefined (ctx);
     }
 
-    static const JSCore.StaticFunction[] js_funcs = {
+    const JSCore.StaticFunction[] js_funcs = {
         { "put_to_desktop", js_put_to_desktop, PropertyAttribute.ReadOnly },
         { null, null, 0 }
     };
 
-    static const ClassDefinition js_class = {
+    const ClassDefinition js_class = {
         0,
         ClassAttribute.None,
         "XdgDataBackEnd",

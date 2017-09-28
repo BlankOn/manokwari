@@ -254,7 +254,7 @@ namespace Utils {
         return result;
     }
 
-    static const JSCore.StaticFunction[] js_funcs = {
+    const JSCore.StaticFunction[] js_funcs = {
         { "run_desktop", js_run_desktop, PropertyAttribute.ReadOnly },
         { "open_uri", js_open_uri, PropertyAttribute.ReadOnly },
         { "run_command", js_run_command, PropertyAttribute.ReadOnly },
@@ -266,7 +266,7 @@ namespace Utils {
     };
 
 
-    static const ClassDefinition js_class = {
+    const ClassDefinition js_class = {
         0,
         ClassAttribute.None,
         "Utils",

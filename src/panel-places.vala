@@ -212,7 +212,7 @@ public class PanelPlaces {
     }
 
 
-    static const ClassDefinition js_class = {
+    const ClassDefinition js_class = {
         0,
         ClassAttribute.None,
         "Places",
