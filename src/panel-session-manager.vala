@@ -81,7 +81,7 @@ public class PanelSessionManager {
     public async void logout () {
         if (session != null) {
             try {
-                session.logout (0);
+                yield session.logout (0);
             } catch (Error e) {
                 stderr.printf("Unable to logout: %s\n", e.message);
             }
@@ -91,7 +91,7 @@ public class PanelSessionManager {
     public async void reboot () {
         if (session != null) {
             try {
-                session.reboot ();
+                yield session.reboot ();
             } catch (Error e) {
                 stderr.printf("Unable to reboot: %s\n", e.message);
             }
@@ -102,7 +102,7 @@ public class PanelSessionManager {
     public async void shutdown () {
         if (session != null) {
             try {
-                session.shutdown ();
+                yield session.shutdown ();
             } catch (Error e) {
                 stderr.printf("Unable to shutdown: %s\n", e.message);
             }
@@ -173,7 +173,7 @@ public class PanelSessionManager {
         exception = null;
         var i = thisObject.get_private() as PanelSessionManager; 
         if (i != null) {
-            i.shutdown(); 
+            i.shutdown.begin();
         }
         return new JSCore.Value.undefined (ctx);
     }
@@ -188,7 +188,7 @@ public class PanelSessionManager {
         exception = null;
         var i = thisObject.get_private() as PanelSessionManager; 
         if (i != null) {
-            i.reboot(); 
+            i.reboot.begin();
         }
         return new JSCore.Value.undefined (ctx);
     }
@@ -204,7 +204,7 @@ public class PanelSessionManager {
         exception = null;
         var i = thisObject.get_private() as PanelSessionManager; 
         if (i != null) {
-            i.logout(); 
+            i.logout.begin();
         }
         return new JSCore.Value.undefined (ctx);
     }
