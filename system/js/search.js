@@ -2,8 +2,8 @@
     jQuery.expr[':'].Contains = function (a, i, m) {
         return (a.textContent || a.innerText || "").toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
     };
-    // First condition
-    function firstCond() {
+
+    function firstCondition() {
         $('input').val("");
         $('#listSearch .ui-listview-item').hide();
     };
@@ -12,27 +12,24 @@
         $('#listSearch').find('.selected').removeClass('selected');
         $('#listSearch').find('.active').removeClass('active');
     }
-    
-    function dsc_length_sort(a, b) {
-        return b.length - a.length;
-    }
 
-    function asc_length_sort(a, b) {
+    function compareByLengthAsc(a, b) {
         return a.length - b.length;
     }
 
-    // Accending sort
-    function asc_sort(a, b) {
+    function compareByLengthDesc(a, b) {
+        return b.length - a.length;
+    }
+
+    function compareAlphabeticallyAsc(a, b) {
         return ($(b).text()) < ($(a).text()) ? 1 : -1;
     }
 
-    // Decending sort
-    function dec_sort(a, b) {
+    function compareAlphabeticallyDesc(a, b) {
         return ($(b).text()) > ($(a).text()) ? 1 : -1;
     }
 
-    // Remove duplicate
-    function removeDup(a) {
+    function removeDuplicates(a) {
         var seen = {};
         $(a).each(function () {
             var txt = $(this).text();
@@ -69,7 +66,7 @@
 
         // Arrow navigation
         $(input)
-            .click(function () { firstCond(); unselect(); })
+            .click(function () { firstCondition(); unselect(); })
             .keyup(function (e) {
                 var $item = $('#listSearch a span:visible').not(':has(:empty)');
                 var o = { 38: 'up', 40: 'bottom', 37: 'prev', 39: 'next' }
@@ -103,7 +100,7 @@
                         Utils.run_desktop(a);
                     }
 
-                    firstCond();
+                    firstCondition();
                     unselect();
                 } else if (e.which === 38 || e.which === 40) {
                     var p = dir === 'up' ? (i - 1) : (i + 1);
@@ -167,7 +164,7 @@
                                 } else {
                                     runTerminal(r);
                                 }
-                                firstCond();
+                                firstCondition();
                                 unselect();
                             })
                         }, 500);
@@ -191,13 +188,13 @@
             listSearch_child = $('#listSearch .ui-listview-item');
         $(document).keydown(function () { $("input").focus(); });
         listFilter(header, listSearch);
-        listSearch_child.sort(asc_sort).appendTo(listSearch);
+        listSearch_child.sort(compareByLengthAsc).appendTo(listSearch);
         listSearch_child.mouseup(function () {
-            firstCond();
+            firstCondition();
         });
-        removeDup(listSearch_child);
+        removeDuplicates(listSearch_child);
         $("#listApplications").click(function () {
-            firstCond();
+            firstCondition();
         });
     });
 })(jQuery);																																								
