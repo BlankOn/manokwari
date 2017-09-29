@@ -12,6 +12,13 @@
 		$('#listSearch').find('.selected').removeClass('selected');
 		$('#listSearch').find('.active').removeClass('active');
 	}
+	function asc_length_sort(a,b) {
+    		return b.length - a.length;
+	}
+
+	function dsc_length_sort(a,b) {
+   		 return a.length - b.length;
+	}
 	// Accending sort
 	function asc_sort(a, b) {
 		return ($(b).text()) < ($(a).text()) ? 1 : -1;    
