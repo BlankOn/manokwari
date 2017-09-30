@@ -83,6 +83,7 @@ var desktop = (function() {
     this.classList.add('enter'); 
     $(this).children('img').addClass('ui-bin-img-enter');
     console.log('enter');
+  }
   
   var dragLeave = function(e) {
     this.classList.remove('enter'); 
