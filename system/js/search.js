@@ -13,8 +13,21 @@
         $('#listSearch').find('.active').removeClass('active');
     }
 
-    function ascLenghtAndAlphabeticalCompare(a, b) {
-        return (a.length - b.length) && a.localeCompare(b);
+    function ascLengthAndAlphabeticalCompare(a, b) {
+        return (a.length - b.length) || a.localeCompare(b);
+    }
+
+    function ascAlphabeticalCompare(a, b) {
+        return a.localeCompare(b);
+    }
+
+    function sortSearchResults(results) {
+        const sortByLengthThreshold = 10;
+        let compareMethod = ascAlphabeticalCompare;
+        if (results.length < sortByLengthThreshold) {
+            compareMethod = ascLengthAndAlphabeticalCompare;
+        }
+        return results.sort(compareMethod);
     }
 
     function removeDuplicates(a) {
@@ -176,7 +189,7 @@
             listSearch_child = $('#listSearch .ui-listview-item');
         $(document).keydown(function () { $("input").focus(); });
         listFilter(header, listSearch);
-        listSearch_child.sort(ascLenghtAndAlphabeticalCompare).appendTo(listSearch);
+        sortSearchResults(listSearch_child).appendTo(listSearch);
         listSearch_child.mouseup(function () {
             firstCondition();
         });
