@@ -23,7 +23,7 @@
 
     function sortSearchResults(results) {
         const sortByLengthThreshold = 10;
-        let compareMethod = ascAlphabeticalCompare;
+        var compareMethod = ascAlphabeticalCompare;
         if (results.length < sortByLengthThreshold) {
             compareMethod = ascLengthAndAlphabeticalCompare;
         }
@@ -189,7 +189,10 @@
             listSearch_child = $('#listSearch .ui-listview-item');
         $(document).keydown(function () { $("input").focus(); });
         listFilter(header, listSearch);
-        sortSearchResults(listSearch_child).appendTo(listSearch);
+
+        listSearch_child = sortSearchResults(listSearch_child);
+        listSearch_child.appendTo(listSearch);
+                
         listSearch_child.mouseup(function () {
             firstCondition();
         });
