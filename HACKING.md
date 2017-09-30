@@ -29,6 +29,8 @@ You can do the following:
 - export DISPLAY to whatever your nested X server display number is
 - Run manokwari as usual
 
+It is also possible to run Manokwari inside Docker. See `/scripts/deploy.sh`.
+
 ### Run without GNOME session
 With this you will lose GNOME session capabilities, eg. you can't logout, shutdown, testing different screen sizes, etc.
 But you can quickly run Manokwari in this way.
