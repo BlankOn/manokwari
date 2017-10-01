@@ -5,4 +5,5 @@ Exec=blankon-session
 TryExec=/usr/bin/manokwari
 Icon=
 Type=Application
+DesktopNames=Manokwari;GNOME
 
