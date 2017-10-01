@@ -1,4 +1,5 @@
 subdir('bin')
 subdir('menus')
 subdir('sessions')
+subdir('xdg-autostart')
 subdir('xsessions')
