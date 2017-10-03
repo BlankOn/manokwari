@@ -26,4 +26,5 @@ WORKDIR /manokwari
 RUN ./autogen.sh && \
     make && make install
 
-ENTRYPOINT ["/bin/bash"]
+# Run bash on start
+CMD ["bash"]
