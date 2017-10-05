@@ -10,6 +10,7 @@ project(
     default_options: [
         'c_std=c11',
     ],
+    meson_version: '>= 0.37',
 )
 
 am_cflags = [
