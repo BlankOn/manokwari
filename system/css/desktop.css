@@ -1,45 +1,45 @@
 body {
-	background-color: transparent;
+    background-color: transparent;
 /*
-	background:url("../bg-test.jpg") center center no-repeat;
+    background:url("../bg-test.jpg") center center no-repeat;
 */
-	background-size:cover;
-	overflow: hidden;
-	-webkit-user-select: none;
-	padding: 0px;
-	margin: 0px;
-	font-family: Cantarell, Sans-Serif;
-	width: 100%;
-	height: 100%;
+    background-size:cover;
+    overflow: hidden;
+    -webkit-user-select: none;
+    padding: 0px;
+    margin: 0px;
+    font-family: Cantarell, Sans-Serif;
+    width: 100%;
+    height: 100%;
 }
 
 #overlay {
-	background-color: transparent;
-	position: absolute;
-	z-index: 2;
-	width: 100%;
-	height: 100%;
+    background-color: transparent;
+    position: absolute;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
 }
 
 /** activated #bg if mutter as window manager **/
 #bg {
-	background-color: transparent;
-	position: absolute;
-	z-index: 1;
-	width: 100%;
-	height: 100%;
+    background-color: transparent;
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
     background-repeat:no-repeat;
-    background-size: 100% 100%;
-	background-position: 50%;
+    background-size: cover;
+    background-position: 50%;
 }
 
 #base {
-	position: absolute;
-	z-index: 3;
-	left: 0px;
-	width: 0px;
-	width: 100%;
-	height: 100%;
+    position: absolute;
+    z-index: 3;
+    left: 0px;
+    width: 0px;
+    width: 100%;
+    height: 100%;
   
     display: -webkit-box;
     -webkit-box-orient: vertical;
@@ -48,7 +48,7 @@ body {
 }
 
 .hidden {
-  opacity: 0;
+    opacity: 0;
 }
 
 [draggable] {
@@ -56,7 +56,7 @@ body {
 }
 
 #launcher {
-	background: rgba(0,0,0,0);
+    background: rgba(0,0,0,0);
     height: 100px;
     width: auto;
     overflow-x: hidden;
@@ -64,8 +64,8 @@ body {
     z-index: 20;
     -webkit-transition: all 200ms ease-in-out;
     -webkit-box-align: center;
-	margin-bottom: -4px;
-	padding-right: 68px;
+    margin-bottom: -4px;
+    padding-right: 68px;
 }
 
 .ui-launcher-entry-wrapper {
@@ -102,57 +102,56 @@ body {
     max-width: 105px;
     padding: 3px 7px;
     margin: 0;
-	-webkit-border-radius: 10px;
-	z-index: -5;
+    -webkit-border-radius: 10px;
+    z-index: -5;
 }
 
 .ui-launcher-entry:hover span {
-	content: " ";
-	position:relative;
-	bottom: -2px;
-	display: block;
-	background-color: rgba(230, 230, 230, 0.7);
-	color: #111;
-	z-index: 100;
-	margin-left: 3px;
-	border-radius: 5px;
-	/*-webkit-filter: drop-shadow(0px 1px 1px #000);*/
+    content: " ";
+    position:relative;
+    bottom: -2px;
+    display: block;
+    background-color: rgba(230, 230, 230, 0.7);
+    color: #111;
+    z-index: 100;
+    margin-left: 3px;
+    border-radius: 5px;
+    /*-webkit-filter: drop-shadow(0px 1px 1px #000);*/
 }
 
 .ui-launcher-entry:hover:before {	
-	content: "";
-	width: 0px;
-	height: 0px;
-	border-width: 6px;
-	border-style:solid;
-	border-color: rgba(230, 230, 230, 0.7) transparent transparent transparent;
-	bottom: 58px;
-	margin-left: 56px;
-	position: fixed;
-	z-index: 110;
-	/*-webkit-filter: drop-shadow(0px 1px 2px #000);*/
+    content: "";
+    width: 0px;
+    height: 0px;
+    border-width: 6px;
+    border-style:solid;
+    border-color: rgba(230, 230, 230, 0.7) transparent transparent transparent;
+    bottom: 58px;
+    margin-left: 56px;
+    position: fixed;
+    z-index: 110;
+    /*-webkit-filter: drop-shadow(0px 1px 2px #000);*/
 }
 
 .ui-launcher-entry-img-holder {
-	content:"";
+    content:"";
     display: -webkit-box;
 /*	background: -webkit-linear-gradient(rgba(187,187,187,0.8), rgba(34,34,34,0.8));*/
-	background:-webkit-linear-gradient(rgba(255,255,255,0.3), rgba(255,255,255,0.6));
+    background:-webkit-linear-gradient(rgba(255,255,255,0.3), rgba(255,255,255,0.6));
     height: 64px;
     margin-top: 35px;
     z-index: 12;
     position:fixed;
     margin-left: 34px;
-
     -webkit-box-orient: vertical;
     -webkit-box-pack: center;
     -webkit-box-align: center;
 }
 .ui-launcher-entry-img-holder-first{
-	border-top-left-radius:5px;
+    border-top-left-radius:5px;
 }
 .ui-launcher-entry-img-holder-last{
-	border-top-right-radius:5px;
+    border-top-right-radius:5px;
 }
 
 .ui-launcher-entry img {
@@ -172,12 +171,7 @@ body {
     opacity: 1;
 }
 .ui-launcher-entry:focus img {
-	
-
 }
-
-
-
 .ui-bin-img {
     margin: auto;
     width: 64px;
