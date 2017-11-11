@@ -1,8 +1,5 @@
-sessiondir = $(bindir)
+all:
+	install -m 755 blankon-session $(bindir)
 
-session_DATA = \
-	blankon-session \
-	$(NULL)
-
-CLEANFILES = \
-	$(sessiondir_DATA)
+CLEANFILES= \
+	$(bindir)/blankon-session
