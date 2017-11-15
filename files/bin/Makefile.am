@@ -1,4 +1,4 @@
-all:
+install:
 	install -m 755 blankon-session $(bindir)
 
 CLEANFILES= \
