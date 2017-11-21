@@ -24,7 +24,7 @@
 <body>
   	<div id="overlay"></div>
   	<div id="bg"></div>
-  	<div id="base">
+  	<div id="base" onDrop="onDrop(event)" ondragover="onDrag(event)">
 		<!-- h1 id="debug"></h1 -->
 		<div id="launcher"></div>
 
@@ -33,7 +33,7 @@
 
 		<div id="hide"></div>
 		<div id="bevel">
-			
+
 			<div id="sosial_media">Bookmarks</div>
 			<div class="sosmed">
 				<a href="#" value="Sosmed1" onclick="Run1();" title="http://blankonlinux.or.id"><img src="img/blankon.svg"></a>
@@ -202,6 +202,19 @@
 				e.stopPropagation();
 			}
 		});
+	</script>
+
+	<script>
+	function onDrop(e){
+		console.log('Something droped on desktop',e)
+		// TODO: Handle droped item
+		e.preventDefault()
+	}
+
+	function onDrag(e){
+		console.log('Something Draged on desktop')
+		e.preventDefault()
+	}
 	</script>
 
 </body>
