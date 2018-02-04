@@ -39,7 +39,7 @@ public class PanelMenuBox : PanelAbstractWindow {
         set_app_paintable(true);
 
         PanelScreen.move_window (this, Gdk.Gravity.NORTH_WEST);
-        view.start();
+        view.start("http://system/menu.html");
 
         hide ();
 

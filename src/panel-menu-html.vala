@@ -5,12 +5,14 @@ using JSCore;
 
 public class PanelMenuHTML: WebView {
     string translate_uri (string old) {
-        var uri = old.replace("http://system", "file://" + Config.SYSTEM_PATH + "/");
+        var uri = old.replace("http://system", "file://" + Config.SYSTEM_PATH);
+        stdout.printf("translate uri: " + uri + "\n");
         return uri;
     }
 
     string translate_theme (string old) {
         var uri = "file://%s".printf(Utils.get_icon_path (old.replace("theme://", "")));
+        stdout.printf("translate theme: " + uri + "\n");
         return uri;
     }
 
@@ -25,8 +27,6 @@ public class PanelMenuHTML: WebView {
         override_background_color(StateFlags.NORMAL, c);
         set_app_paintable(true);
 
-        // FIX: Webkit2
-        // set_transparent (true);
         var settings = new WebKit.Settings();
         settings.allow_file_access_from_file_urls = true;
         settings.allow_universal_access_from_file_urls = true;
@@ -36,15 +36,6 @@ public class PanelMenuHTML: WebView {
         //      settings.enable_default_context_menu = false;
         //  }
         set_settings(settings);
-
-        resource_load_started.connect((resource, request) => {
-            if (resource.uri.has_prefix("theme://")) {
-                request.set_uri(translate_theme(resource.uri));
-            } else {
-                var uri = translate_uri (resource.uri);
-                request.set_uri(uri);
-            }
-        });
 
         // FIX: Webkit2 web-extension
         //  window_object_cleared.connect ((frame, context) => {
@@ -56,8 +47,12 @@ public class PanelMenuHTML: WebView {
         //  });
     }
 
-    public void start() {
-        load_uri ("http://system/menu.html");
+    public void start(string uri) {
+        if (uri.has_prefix("theme://")) {
+            load_uri(translate_theme(uri));
+        } else {
+            load_uri(translate_uri (uri));
+        }
     }
 
     // FIX: Webkit2 web-extension
