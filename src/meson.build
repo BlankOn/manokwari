@@ -13,7 +13,7 @@ manokwari_panel_sources = [
     'utils.vala',
     'panel-hotkey.vala',
     'panel-session-manager.vala',
-    # 'panel-menu-html.vala',
+    'panel-menu-html.vala',
     'xdg-data.vala',
     'panel-user.vala',
     'panel-desktop.vala',

@@ -7,7 +7,7 @@ public class PanelMenuBox : PanelAbstractWindow {
     public signal void shown ();
     public signal void about_to_show_content ();
     // TODO: Webkit2
-    // PanelMenuHTML view;
+    PanelMenuHTML view;
 
     public PanelMenuBox () {
         try {
@@ -23,10 +23,9 @@ public class PanelMenuBox : PanelAbstractWindow {
             stderr.printf ("Unable to subscribe to desktop launcher's \"Launched\" signal: %s\n", e.message);
         }
 
-        // TODO: Webkit2
-        // view = new PanelMenuHTML ();
-        // view.show_all ();
-        // add (view);
+        view = new PanelMenuHTML ();
+        view.show_all ();
+        add (view);
         set_type_hint (Gdk.WindowTypeHint.DOCK);
         set_title ("_manokwari_menu_");
         set_visual (this.screen.get_rgba_visual ());
@@ -40,8 +39,7 @@ public class PanelMenuBox : PanelAbstractWindow {
         set_app_paintable(true);
 
         PanelScreen.move_window (this, Gdk.Gravity.NORTH_WEST);
-        // TODO: Webkit2
-        //  view.start();
+        view.start();
 
         hide ();
 
@@ -67,14 +65,14 @@ public class PanelMenuBox : PanelAbstractWindow {
             PanelScreen.move_window (this, Gdk.Gravity.NORTH_WEST);
             get_window ().raise ();
             Utils.grab (this);
-            // TODO: Webkit2
+            // FIX: Webkit2 web-extension
             // view.triggerShowAnimation();
             return true;
         });
 
         key_press_event.connect ((e) => {
             if (Gdk.keyval_name(e.keyval) == "Escape") {
-                // TODO: Webkit2
+                // FIX: Webkit2 web-extension
                 //  if (view.handleEsc () == false) {
                 //      dismiss ();
                 //  }
@@ -110,7 +108,7 @@ public class PanelMenuBox : PanelAbstractWindow {
     }
 
     public void try_hide () {
-        // TODO: Webkit2
+        // FIX: Webkit2 web-extension
         // view.triggerHideAnimation();
         GLib.Timeout.add (500, real_hide);
         dismissed ();
