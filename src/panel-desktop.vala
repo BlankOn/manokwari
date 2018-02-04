@@ -4,7 +4,8 @@ using GMenu;
 
 
 public class PanelDesktop: PanelAbstractWindow {
-    PanelDesktopHTML desktop;
+    // TODO: Webkit2
+    // PanelDesktopHTML desktop;
 
     public signal void desktop_clicked();
 
@@ -19,21 +20,24 @@ public class PanelDesktop: PanelAbstractWindow {
         override_background_color(StateFlags.NORMAL, c);
         set_app_paintable(true);
 
-        desktop = new PanelDesktopHTML ();
-        desktop.show ();
+        // TODO: Webkit2
+        // desktop = new PanelDesktopHTML ();
+        // desktop.show ();
 
         set_type_hint (Gdk.WindowTypeHint.DESKTOP);
         
-        add (desktop);
+        // TODO: Webkit2
+        // add (desktop);
         queue_resize ();
 
         move (0, 0);
         show_all ();
     
-        desktop.button_press_event.connect (() => {
-            desktop_clicked ();
-            return false;
-        });
+        // TODO: Webkit2
+        // desktop.button_press_event.connect (() => {
+        //      desktop_clicked ();
+        //      return false;
+        // });
 
         screen.size_changed.connect (() =>  {
             resize_geometry ();
@@ -59,7 +63,8 @@ public class PanelDesktop: PanelAbstractWindow {
         PanelScreen.move_window (this, Gdk.Gravity.NORTH_EAST);
 
         queue_resize ();
-        desktop.updateSize();
+        // TODO: Webkit2
+        // desktop.updateSize();
         stderr.printf("iii %d %d <--\n", screen.width(), screen.height());
     }
 

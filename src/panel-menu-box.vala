@@ -6,7 +6,8 @@ public class PanelMenuBox : PanelAbstractWindow {
     public signal void dismissed ();
     public signal void shown ();
     public signal void about_to_show_content ();
-    PanelMenuHTML view;
+    // TODO: Webkit2
+    // PanelMenuHTML view;
 
     public PanelMenuBox () {
         try {
@@ -22,9 +23,10 @@ public class PanelMenuBox : PanelAbstractWindow {
             stderr.printf ("Unable to subscribe to desktop launcher's \"Launched\" signal: %s\n", e.message);
         }
 
-        view = new PanelMenuHTML ();
-        view.show_all ();
-        add (view);
+        // TODO: Webkit2
+        // view = new PanelMenuHTML ();
+        // view.show_all ();
+        // add (view);
         set_type_hint (Gdk.WindowTypeHint.DOCK);
         set_title ("_manokwari_menu_");
         set_visual (this.screen.get_rgba_visual ());
@@ -38,7 +40,8 @@ public class PanelMenuBox : PanelAbstractWindow {
         set_app_paintable(true);
 
         PanelScreen.move_window (this, Gdk.Gravity.NORTH_WEST);
-        view.start();
+        // TODO: Webkit2
+        //  view.start();
 
         hide ();
 
@@ -64,15 +67,17 @@ public class PanelMenuBox : PanelAbstractWindow {
             PanelScreen.move_window (this, Gdk.Gravity.NORTH_WEST);
             get_window ().raise ();
             Utils.grab (this);
-            view.triggerShowAnimation();
+            // TODO: Webkit2
+            // view.triggerShowAnimation();
             return true;
         });
 
         key_press_event.connect ((e) => {
             if (Gdk.keyval_name(e.keyval) == "Escape") {
-                if (view.handleEsc () == false) {
-                    dismiss ();
-                }
+                // TODO: Webkit2
+                //  if (view.handleEsc () == false) {
+                //      dismiss ();
+                //  }
             } else if (Gdk.keyval_name(e.keyval) == "Print") {
                 if (Utils.print_screen () == false) {
                     stdout.printf ("Unable to take screenshot\n");
@@ -105,7 +110,8 @@ public class PanelMenuBox : PanelAbstractWindow {
     }
 
     public void try_hide () {
-        view.triggerHideAnimation();
+        // TODO: Webkit2
+        // view.triggerHideAnimation();
         GLib.Timeout.add (500, real_hide);
         dismissed ();
     }

@@ -41,7 +41,7 @@ dep_cairo = dependency('cairo', version: '>= 1.10.2')
 dep_libgnomemenu = dependency('libgnome-menu-3.0', version: '>= 2.30.5')
 dep_libwnck = dependency('libwnck-3.0', version: '>= 3.0.0')
 dep_unique = dependency('unique-3.0', version: '>= 3.0.0')
-dep_webkit = dependency('webkitgtk-3.0', version: '>= 1.3.0')
+dep_webkit = dependency('webkit2gtk-4.0', version: '>= 2.16.0')
 dep_x11 = dependency('x11', version: '>= 1.6.0')
 dep_libnotify = dependency('libnotify', version: '>= 0.7.6')
 
