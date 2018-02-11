@@ -66,16 +66,16 @@ public class PanelMenuBox : PanelAbstractWindow {
             get_window ().raise ();
             Utils.grab (this);
             // FIX: Webkit2 web-extension
-            // view.triggerShowAnimation();
+            view.triggerShowAnimation();
             return true;
         });
 
         key_press_event.connect ((e) => {
             if (Gdk.keyval_name(e.keyval) == "Escape") {
                 // FIX: Webkit2 web-extension
-                //  if (view.handleEsc () == false) {
-                //      dismiss ();
-                //  }
+                if (view.handleEsc () == false) {
+                    dismiss ();
+                }
             } else if (Gdk.keyval_name(e.keyval) == "Print") {
                 if (Utils.print_screen () == false) {
                     stdout.printf ("Unable to take screenshot\n");
@@ -109,7 +109,7 @@ public class PanelMenuBox : PanelAbstractWindow {
 
     public void try_hide () {
         // FIX: Webkit2 web-extension
-        // view.triggerHideAnimation();
+        view.triggerHideAnimation();
         GLib.Timeout.add (500, real_hide);
         dismissed ();
     }
