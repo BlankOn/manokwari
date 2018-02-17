@@ -40,6 +40,7 @@ manokwari_panel_deps = [
 libmanoext_src = [
     'helper.vala',
     'panel-desktop-data.vala',
+    'panel-init-webext.vala',
     'panel-places.vala',
     'panel-session-manager.vala',
     'panel-user.vala',
