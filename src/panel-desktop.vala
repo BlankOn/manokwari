@@ -1,43 +1,33 @@
-using Gtk;
-using Cairo;
-using GMenu;
-
-
 public class PanelDesktop: PanelAbstractWindow {
-    // TODO: Webkit2
-    // PanelDesktopHTML desktop;
+    PanelDesktopHTML desktop;
 
     public signal void desktop_clicked();
 
     public PanelDesktop() {
         set_visual (this.screen.get_rgba_visual ());
 
-        Gdk.RGBA c = Gdk.RGBA();
-        c.red = 0.0;
-        c.blue = 0.0;
-        c.green = 0.0;
-        c.alpha = 0.0;
-        override_background_color(StateFlags.NORMAL, c);
+        Gdk.RGBA color = Gdk.RGBA() {
+            red = 0.0, blue = 0.0, green = 0.0, alpha = 0.0
+        };
+
+        override_background_color(Gtk.StateFlags.NORMAL, color);
         set_app_paintable(true);
 
-        // TODO: Webkit2
-        // desktop = new PanelDesktopHTML ();
-        // desktop.show ();
+        desktop = new PanelDesktopHTML ();
+        desktop.show ();
 
         set_type_hint (Gdk.WindowTypeHint.DESKTOP);
         
-        // TODO: Webkit2
-        // add (desktop);
+        add (desktop);
         queue_resize ();
 
         move (0, 0);
         show_all ();
     
-        // TODO: Webkit2
-        // desktop.button_press_event.connect (() => {
-        //      desktop_clicked ();
-        //      return false;
-        // });
+        desktop.button_press_event.connect (() => {
+            desktop_clicked ();
+            return false;
+        });
 
         screen.size_changed.connect (() =>  {
             resize_geometry ();
@@ -64,7 +54,7 @@ public class PanelDesktop: PanelAbstractWindow {
 
         queue_resize ();
         // TODO: Webkit2
-        // desktop.updateSize();
+        //  desktop.updateSize();
         stderr.printf("iii %d %d <--\n", screen.width(), screen.height());
     }
 
@@ -77,7 +67,4 @@ public class PanelDesktop: PanelAbstractWindow {
         var r = PanelScreen.get_primary_monitor_geometry ().height;
         min = max = r;
     }
-
-
 }
-
