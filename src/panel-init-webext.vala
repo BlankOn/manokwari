@@ -6,12 +6,12 @@ public static void webkit_web_extension_initialize (WebKit.WebExtension web_exte
 
     WebKit.ScriptWorld.get_default().window_object_cleared.connect((page, frame) => {
         stdout.printf("WebExt: Adding some JS\n");
+        Helper.setup_js_class((JSCore.GlobalContext) frame.get_javascript_global_context());
+        PanelDesktopData.setup_js_class((JSCore.GlobalContext) frame.get_javascript_global_context());
         PanelXdgData.setup_js_class((JSCore.GlobalContext) frame.get_javascript_global_context());
         PanelPlaces.setup_js_class((JSCore.GlobalContext) frame.get_javascript_global_context());
         PanelSessionManager.setup_js_class((JSCore.GlobalContext) frame.get_javascript_global_context());
         PanelUser.setup_js_class((JSCore.GlobalContext) frame.get_javascript_global_context());
-        PanelDesktopData.setup_js_class((JSCore.GlobalContext) frame.get_javascript_global_context());
-        Helper.setup_js_class((JSCore.GlobalContext) frame.get_javascript_global_context());
         return;
     });    
 }

@@ -275,7 +275,7 @@ namespace Helper {
     const JSCore.ClassDefinition js_class = {
         0,
         JSCore.ClassAttribute.None,
-        "Helper",
+        "Utils",
         null,
 
         null,
@@ -300,7 +300,7 @@ namespace Helper {
         var c = new JSCore.Class (js_class);
         var o = new JSCore.Object (context, c, context);
         var g = context.get_global_object ();
-        var s = new JSCore.String.with_utf8_c_string ("Helper");
+        var s = new JSCore.String.with_utf8_c_string ("Utils");
         g.set_property (context, s, o, JSCore.PropertyAttribute.None, null);
     }
 }
