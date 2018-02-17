@@ -79,34 +79,49 @@ public class PanelSessionManager {
     }
 
     public async void logout () {
-        if (session != null) {
+        if (session == null) {
+            return;
+        }
+
+        Idle.add(() => {
             try {
-                yield session.logout (0);
+                session.logout(0);
             } catch (Error e) {
                 stderr.printf("Unable to logout: %s\n", e.message);
             }
-        }
+            return false;
+        });
     }
 
     public async void reboot () {
-        if (session != null) {
+        if (session == null) {
+            return;
+        }
+
+        Idle.add(() => {
             try {
-                yield session.reboot ();
+                session.reboot.begin();
             } catch (Error e) {
                 stderr.printf("Unable to reboot: %s\n", e.message);
             }
-        }
+            return false;
+        });
     }
 
 
     public async void shutdown () {
-        if (session != null) {
+        if (session == null) {
+            return;
+        }
+
+        Idle.add(() => {
             try {
-                yield session.shutdown ();
+                session.shutdown.begin();
             } catch (Error e) {
                 stderr.printf("Unable to shutdown: %s\n", e.message);
             }
-        }
+            return false;
+        });
     }
 
     public bool can_shutdown () {
