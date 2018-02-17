@@ -1,19 +1,13 @@
-using GMenu;
-using GLib;
-using JSCore;
-using Gtk;
-
 // This class opens an xdg menu and populates it
 public class PanelXdgData {
-
     FileMonitor xdg_menu_monitor = null;
     FileMonitor apps_monitor = null;
 
     string catalog;
     StringBuilder json; // use StringBuilder to avoid appending immutable strings
     int depth = 0;
-    IconTheme icon;
-    static Context* jsContext;
+    Gtk.IconTheme icon;
+    static JSCore.Context* jsContext;
     JSCore.Object* jsObject;
     uint scheduled = 0;
     uint64 last_schedule = 0;
@@ -23,7 +17,7 @@ public class PanelXdgData {
     public PanelXdgData (string catalog) {
         json = new StringBuilder ();
         this.catalog = catalog;
-        icon = IconTheme.get_default ();
+        icon = Gtk.IconTheme.get_default ();
         monitor();
 
         changed.connect (() => {
@@ -59,7 +53,7 @@ public class PanelXdgData {
     bool kick_js () {
         if (jsContext != null && jsObject != null) {
 
-            var s = new String.with_utf8_c_string ("updateCallback");
+            var s = new JSCore.String.with_utf8_c_string ("updateCallback");
             var v = jsObject->get_property (jsContext, s, null);
             if (v != null) {
                 s = v.to_string_copy (jsContext, null);
@@ -103,12 +97,12 @@ public class PanelXdgData {
         }
     }
 
-    void update_tree (TreeDirectory root) {
+    void update_tree (GMenu.TreeDirectory root) {
         var iter = root.iter();
         GMenu.TreeItemType type;
         while((type = iter.next ()) != GMenu.TreeItemType.INVALID) {
             switch (type) {
-            case TreeItemType.DIRECTORY:
+            case GMenu.TreeItemType.DIRECTORY:
                 if (depth > 0) {
                     break;
                 }
@@ -119,7 +113,7 @@ public class PanelXdgData {
                 var data = "{
                   \"name\": \"%s\",
                   \"icon\": \"%s\",
-                  ".printf(name, Utils.get_icon_path(iconString));
+                  ".printf(name, Helper.get_icon_path(iconString));
                 json.append(data);
                 json.append("\"children\": [");
                 depth++;
@@ -132,8 +126,8 @@ public class PanelXdgData {
                 json.append("},");
                 break;
 
-            case TreeItemType.ALIAS:
-            case TreeItemType.ENTRY:
+            case GMenu.TreeItemType.ALIAS:
+            case GMenu.TreeItemType.ENTRY:
                 var entry = iter.get_entry();
                 var app_info = entry.get_app_info();
                 var name = app_info.get_display_name();
@@ -143,7 +137,7 @@ public class PanelXdgData {
                   \"name\": \"%s\",
                   \"icon\": \"%s\",
                   \"desktop\": \"%s\"
-                },".printf(name, Utils.get_icon_path(icon), desktop);
+                },".printf(name, Helper.get_icon_path(icon), desktop);
                 json.append(data);
                 break;
             }
@@ -209,7 +203,7 @@ public class PanelXdgData {
             }
             output.close ();
             input.close ();
-            GLib.FileUtils.chmod (path, 0700);
+            FileUtils.chmod (path, 0700);
         } catch (Error e) {
             show_dialog (_("Unable to write %s shortcut in %s: %s").printf (input_file.get_basename (), path, e.message));
             try {
@@ -223,18 +217,17 @@ public class PanelXdgData {
 
     }
 
-    public static JSCore.Object js_constructor (Context ctx,
-            JSCore.Object constructor,
-            JSCore.Value[] arguments,
-            out JSCore.Value exception) {
-
+    public static JSCore.Object js_constructor(JSCore.Context ctx,
+                                               JSCore.Object constructor,
+                                               JSCore.Value[] arguments,
+                                               out JSCore.Value exception) {
         exception = null;
-        var c = new Class (js_class);
+        var c = new JSCore.Class (js_class);
         var o = new JSCore.Object (ctx, c, null);
-        var s = new String.with_utf8_c_string ("update");
+        var s = new JSCore.String.with_utf8_c_string ("update");
         var f = new JSCore.Object.function_with_callback (ctx, s, js_update);
         o.set_property (ctx, s, f, 0, null);
-        s = new String.with_utf8_c_string ("updateCallback");
+        s = new JSCore.String.with_utf8_c_string ("updateCallback");
         f = new JSCore.Object.function_with_callback (ctx, s, js_set_update_callback);
         o.set_property (ctx, s, f, 0, null);
 
@@ -249,35 +242,31 @@ public class PanelXdgData {
         return o;
     }
 
-    public static JSCore.Value js_set_update_callback (Context ctx,
-            JSCore.Object function,
-            JSCore.Object thisObject,
-            JSCore.Value[] arguments,
-
-            out JSCore.Value exception) {
-
+    public static JSCore.Value js_set_update_callback (JSCore.Context ctx,
+                                                       JSCore.Object function,
+                                                       JSCore.Object thisObject,
+                                                       JSCore.Value[] arguments,
+                                                       out JSCore.Value exception) {
         exception = null;
         var i = thisObject.get_private() as PanelXdgData; 
         if (i != null && arguments.length == 1) {
-            var s = new String.with_utf8_c_string ("updateCallback");
+            var s = new JSCore.String.with_utf8_c_string ("updateCallback");
             thisObject.set_property (ctx, s, arguments[0], 0, null);
         }
 
         return new JSCore.Value.undefined (ctx);
     }
 
-    public static JSCore.Value js_update (Context ctx,
-            JSCore.Object function,
-            JSCore.Object thisObject,
-            JSCore.Value[] arguments,
-
-            out JSCore.Value exception) {
-
+    public static JSCore.Value js_update (JSCore.Context ctx,
+                                          JSCore.Object function,
+                                          JSCore.Object thisObject,
+                                          JSCore.Value[] arguments,
+                                          out JSCore.Value exception) {
         exception = null;
         var i = thisObject.get_private() as PanelXdgData;
         if (i != null) {
             i.populate ();
-            var s = new String.with_utf8_c_string (i.json.str);
+            var s = new JSCore.String.with_utf8_c_string (i.json.str);
             var r = ctx.evaluate_script (s, null, null, 0, null);
             s = null;
             i.json.assign ("");
@@ -286,12 +275,11 @@ public class PanelXdgData {
         return new JSCore.Value.undefined (ctx);
     }
 
-    public static JSCore.Value js_put_to_desktop (Context ctx,
-            JSCore.Object function,
-            JSCore.Object thisObject,
-            JSCore.Value[] arguments,
-            out JSCore.Value exception) {
-
+    public static JSCore.Value js_put_to_desktop (JSCore.Context ctx,
+                                                  JSCore.Object function,
+                                                  JSCore.Object thisObject,
+                                                  JSCore.Value[] arguments,
+                                                  out JSCore.Value exception) {
         exception = null;
         if (arguments.length == 1) {
             var s = arguments [0].to_string_copy (ctx, null);
@@ -303,14 +291,14 @@ public class PanelXdgData {
         return new JSCore.Value.undefined (ctx);
     }
 
-    const JSCore.StaticFunction[] js_funcs = {
-        { "put_to_desktop", js_put_to_desktop, PropertyAttribute.ReadOnly },
+    private const JSCore.StaticFunction[] js_funcs = {
+        { "put_to_desktop", js_put_to_desktop, JSCore.PropertyAttribute.ReadOnly },
         { null, null, 0 }
     };
 
-    const ClassDefinition js_class = {
+    private const JSCore.ClassDefinition js_class = {
         0,
-        ClassAttribute.None,
+        JSCore.ClassAttribute.None,
         "XdgDataBackEnd",
         null,
 
@@ -332,22 +320,20 @@ public class PanelXdgData {
         null
     };
 
-
-    public static void setup_js_class (GlobalContext context) {
+    public static void setup_js_class (JSCore.GlobalContext context) {
         jsContext = context;
-        var c = new Class (js_class);
+        var c = new JSCore.Class (js_class);
         var o = new JSCore.Object (context, c, context);
         var g = context.get_global_object ();
-        var s = new String.with_utf8_c_string ("XdgDataBackEnd");
-        g.set_property (context, s, o, PropertyAttribute.None, null);
+        var s = new JSCore.String.with_utf8_c_string ("XdgDataBackEnd");
+        g.set_property (context, s, o, JSCore.PropertyAttribute.None, null);
     }
 
     static void show_dialog (string message) {
-        var dialog = new MessageDialog (null, DialogFlags.DESTROY_WITH_PARENT, MessageType.ERROR, ButtonsType.CLOSE, "%s", message);
+        var dialog = new Gtk.MessageDialog (null, Gtk.DialogFlags.DESTROY_WITH_PARENT, Gtk.MessageType.ERROR, Gtk.ButtonsType.CLOSE, "%s", message);
         dialog.response.connect (() => {
             dialog.destroy ();
         });
         dialog.show ();
     }
-
 }
