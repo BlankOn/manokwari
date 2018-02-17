@@ -1,12 +1,9 @@
-using Gtk;
-
 public class PanelMenuBox : PanelAbstractWindow {
     private const int COLUMN_WIDTH = 265;
 
     public signal void dismissed ();
     public signal void shown ();
     public signal void about_to_show_content ();
-    // TODO: Webkit2
     PanelMenuHTML view;
 
     public PanelMenuBox () {
@@ -30,12 +27,11 @@ public class PanelMenuBox : PanelAbstractWindow {
         set_title ("_manokwari_menu_");
         set_visual (this.screen.get_rgba_visual ());
 
-        Gdk.RGBA c = Gdk.RGBA();
-        c.red = 0.0;
-        c.blue = 0.0;
-        c.green = 0.0;
-        c.alpha = 0.0;
-        override_background_color(StateFlags.NORMAL, c);
+        Gdk.RGBA color = Gdk.RGBA() {
+            red = 0.0, blue = 0.0, green = 0.0, alpha = 0.0
+        };
+
+        override_background_color(Gtk.StateFlags.NORMAL, color);
         set_app_paintable(true);
 
         PanelScreen.move_window (this, Gdk.Gravity.NORTH_WEST);
@@ -65,14 +61,12 @@ public class PanelMenuBox : PanelAbstractWindow {
             PanelScreen.move_window (this, Gdk.Gravity.NORTH_WEST);
             get_window ().raise ();
             Utils.grab (this);
-            // FIX: Webkit2 web-extension
             view.triggerShowAnimation();
             return true;
         });
 
         key_press_event.connect ((e) => {
             if (Gdk.keyval_name(e.keyval) == "Escape") {
-                // FIX: Webkit2 web-extension
                 if (view.handleEsc () == false) {
                     dismiss ();
                 }
@@ -108,7 +102,6 @@ public class PanelMenuBox : PanelAbstractWindow {
     }
 
     public void try_hide () {
-        // FIX: Webkit2 web-extension
         view.triggerHideAnimation();
         GLib.Timeout.add (500, real_hide);
         dismissed ();

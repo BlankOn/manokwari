@@ -1,16 +1,13 @@
-using GMenu;
-using Gtk;
-
 // This class provides a header and containter to put contents 
-public class PanelMenuContent : VBox {
-    protected VBox bar;
+public class PanelMenuContent : Gtk.VBox {
+    protected Gtk.VBox bar;
 
     public signal void menu_clicked ();
 
     public PanelMenuContent (string? label) {
 
         if (label != null) {
-            var l = new Label ("");
+            var l = new Gtk.Label ("");
             l.set_markup ("<big>\n" + label + "</big>");
             l.show ();
             pack_start (l, false, false, 5);
@@ -23,7 +20,7 @@ public class PanelMenuContent : VBox {
     }
 
     public void insert_separator () {
-        var separator = new Separator (Orientation.HORIZONTAL);
+        var separator = new Gtk.Separator (Gtk.Orientation.HORIZONTAL);
         separator.show ();
         pack_start (separator, false, false, 10);
     }

@@ -28,20 +28,18 @@ public class PanelMenuHTML: WebKit.WebView {
         settings.allow_file_access_from_file_urls = true;
         settings.allow_universal_access_from_file_urls = true;
 
-        // FIX: Webkit2
-        //  if (Environment.get_variable("MANOKWARI_DEBUG") == null) {
-        //      settings.enable_default_context_menu = false;
-        //  }
+        if (GLib.Environment.get_variable("MANOKWARI_DEBUG") == null) {
+            context_menu.connect((ctx_menu, event, hts) => {
+                return true;
+            });
+        }
+        
         set_settings(settings);
+        
+        resource_load_started.connect((resource, request) => {
+            request.set_uri(resource.uri);
+        });
 
-        // FIX: Webkit2 web-extension
-        //  window_object_cleared.connect ((frame, context) => {
-        //      PanelXdgData.setup_js_class ((JSCore.GlobalContext) context);
-        //      Utils.setup_js_class ((JSCore.GlobalContext) context);
-        //      PanelPlaces.setup_js_class ((JSCore.GlobalContext) context);
-        //      PanelSessionManager.setup_js_class ((JSCore.GlobalContext) context);
-        //      PanelUser.setup_js_class ((JSCore.GlobalContext) context);
-        //  });
         handleEsc_ret = false;
     }
 
@@ -53,7 +51,6 @@ public class PanelMenuHTML: WebKit.WebView {
         }
     }
 
-    // FIX: Webkit2 web-extension
     public void triggerShowAnimation() {
         run_javascript.begin("menu.prepareShow()", null, (obj, res) => {
             try {
