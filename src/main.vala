@@ -22,8 +22,8 @@ static int main (string[] args) {
 
     var context = WebKit.WebContext.get_default();
     context.initialize_web_extensions.connect((event) => {
-        GLib.print("SIGNAL: initialize-web-extensions (webext) \n");
-        context.set_web_extensions_directory("/usr/lib64/manokwari/system");
+        GLib.print("SIGNAL: initialize-web-extensions (webext): " + Config.SYSTEM_PATH + "\n");
+        context.set_web_extensions_directory(Config.SYSTEM_PATH);
         return;
     });
 
