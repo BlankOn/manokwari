@@ -1,7 +1,7 @@
 public class PanelDesktopHTML: WebKit.WebView {
     GLib.Settings gsettings = null;
     string translate_uri (string old) {
-        var uri = old.replace("http://system", "file://" + Config.SYSTEM_PATH + "/");
+        var uri = old.replace("http://system", "file://" + Config.SYSTEM_PATH);
         return uri;
     }
 

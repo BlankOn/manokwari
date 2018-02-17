@@ -58,8 +58,10 @@ manokwari_vapi = join_paths(meson.source_root(), 'vapi')
 
 manoext = library(
     'manoext', libmanoext_src,
+    include_directories: extra_includes,
     vala_args: [
         '--vapidir', manokwari_vapi,
+        '--pkg', 'config',
         '--pkg', 'gio-unix-2.0',
         '--pkg', 'javascriptcore',
         '--library', 'webkit_webextension_02',
