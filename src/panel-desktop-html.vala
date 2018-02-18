@@ -12,11 +12,6 @@ public class PanelDesktopHTML: WebKit.WebView {
 
         set_app_paintable(true);
         set_background_color(panel_color);
-
-        gsettings = new GLib.Settings ("org.gnome.desktop.background");
-        gsettings.changed["picture-uri"].connect (() => {
-            setBackground();
-        });
         
         var settings = new WebKit.Settings();
         settings.set_enable_javascript(true);
@@ -38,32 +33,9 @@ public class PanelDesktopHTML: WebKit.WebView {
             request.set_uri(uri);
         });
         
-        load_changed.connect((event) => {
-            if (event == WebKit.LoadEvent.FINISHED) {
-                setBackground();
-            }
-        });
-
         load_uri(translate_uri("http://system/desktop.html"));
     }
     
-    bool setBackground () { 
-        var uri = gsettings.get_string("picture-uri");
-        try {
-            run_javascript.begin("desktop.setBackground('"+ uri + "')", null, (obj, res) => {
-                WebKit.JavascriptResult ret = run_javascript.end(res);
-                unowned JS.GlobalContext ctx = ret.get_global_context();
-                unowned JS.Value val = ret.get_value();
-                if (!val.is_boolean(ctx)) {
-                    Timeout.add(500, setBackground);
-                }
-            });
-        } catch (Error e) {
-            stdout.printf("setBackground: \"%s\"\n", e.message);
-        }
-        return false;
-    }
-
     //  FIX: Webkit2
     //  public void updateSize () {
     //      var attributes = get_viewport_attributes ();
