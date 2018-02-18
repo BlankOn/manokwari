@@ -599,6 +599,7 @@ public class PanelWindowHost : PanelAbstractWindow {
         hotkey.bind("<Mod4>x");
         hotkey.bind("MonBrightnessUp");
         hotkey.bind("MonBrightnessDown");
+        hotkey.bind("Super_L");
         hotkey.triggered.connect((key) => {
           handleKey(key);
         });
@@ -818,8 +819,12 @@ public class PanelWindowHost : PanelAbstractWindow {
       }
       else if (key == "MonBrightnessUp") {
         handleBrightnessUp();
-      } else if (key == "MonBrightnessDown") {
+      }
+      else if (key == "MonBrightnessDown") {
         handleBrightnessDown();
+      }
+      else if (key == "Super_L") {
+        menu_clicked();
       }
 
     }
