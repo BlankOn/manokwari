@@ -21,6 +21,7 @@ static int main (string[] args) {
     Gtk.init (ref args);
 
     var context = WebKit.WebContext.get_default();
+    context.set_cache_model(WebKit.CacheModel.DOCUMENT_VIEWER);
     context.initialize_web_extensions.connect((event) => {
         GLib.print("SIGNAL: initialize-web-extensions (webext): " + Config.SYSTEM_PATH + "\n");
         context.set_web_extensions_directory(Config.SYSTEM_PATH);
@@ -31,7 +32,7 @@ static int main (string[] args) {
     var app = new Unique.App ("id.or.blankonlinux.Manokwari", id);
     if (app.is_running ()) {
         stdout.printf ("Manokwari is already running.\n");
-        return 0;    
+        return 0;
     }
 
     // Shell
