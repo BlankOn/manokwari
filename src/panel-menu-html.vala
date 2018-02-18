@@ -27,6 +27,7 @@ public class PanelMenuHTML: WebKit.WebView {
         settings.set_enable_javascript(true);
         settings.allow_file_access_from_file_urls = true;
         settings.allow_universal_access_from_file_urls = true;
+        settings.set_hardware_acceleration_policy(WebKit.HardwareAccelerationPolicy.NEVER);
 
         if (GLib.Environment.get_variable("MANOKWARI_DEBUG") == null) {
             context_menu.connect((ctx_menu, event, hts) => {
