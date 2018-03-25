@@ -599,6 +599,7 @@ public class PanelWindowHost : PanelAbstractWindow {
         hotkey.bind("<Mod4>x");
         hotkey.bind("MonBrightnessUp");
         hotkey.bind("MonBrightnessDown");
+        hotkey.bind("<Alt>F2");
         hotkey.triggered.connect((key) => {
           handleKey(key);
         });
@@ -818,8 +819,12 @@ public class PanelWindowHost : PanelAbstractWindow {
       }
       else if (key == "MonBrightnessUp") {
         handleBrightnessUp();
-      } else if (key == "MonBrightnessDown") {
+      }
+      else if (key == "MonBrightnessDown") {
         handleBrightnessDown();
+      }
+      else if (key == "<Alt>F2") {
+        menu_clicked();
       }
 
     }

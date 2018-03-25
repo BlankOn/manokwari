@@ -34,6 +34,8 @@ add_global_arguments(am_cflags, language: 'c')
 gnome_minimum_version = '>= 3.0.8'
 
 dep_glib = dependency('glib-2.0', version: '>= 2.12.0')
+dep_gio_unix = dependency('gio-unix-2.0', version: '>= 2.12.0')
+dep_gdk_x11 = dependency('gdk-x11-3.0', version: gnome_minimum_version)
 dep_gtk3 = dependency('gtk+-3.0', version: gnome_minimum_version)
 dep_atk = dependency('atk', version: '>= 2.0.0')
 dep_gee = dependency('gee-1.0', version: '>= 0.6.1')
@@ -41,7 +43,8 @@ dep_cairo = dependency('cairo', version: '>= 1.10.2')
 dep_libgnomemenu = dependency('libgnome-menu-3.0', version: '>= 2.30.5')
 dep_libwnck = dependency('libwnck-3.0', version: '>= 3.0.0')
 dep_unique = dependency('unique-3.0', version: '>= 3.0.0')
-dep_webkit = dependency('webkitgtk-3.0', version: '>= 1.3.0')
+dep_webkit = dependency('webkit2gtk-4.0', version: '>= 2.16.0')
+dep_webkitext = dependency('webkit2gtk-web-extension-4.0', version: '>= 2.16.0')
 dep_x11 = dependency('x11', version: '>= 1.6.0')
 dep_libnotify = dependency('libnotify', version: '>= 0.7.6')
 

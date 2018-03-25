@@ -1,85 +1,91 @@
+public class PanelMenuHTML: WebKit.WebView {
+    bool handleEsc_ret;
 
-using Gtk;
-using WebKit;
-using JSCore;
-
-public class PanelMenuHTML: WebView {
-    string translate_uri (string old) {
-        var uri = old.replace("http://system", "file://" + Config.SYSTEM_PATH + "/");
+    private string translate_uri(string old) {
+        var uri = old.replace("http://system", "file://" + Config.SYSTEM_PATH);
+        stdout.printf("translate uri: " + uri + "\n");
         return uri;
     }
 
-    string translate_theme (string old) {
+    private string translate_theme(string old) {
         var uri = "file://%s".printf(Utils.get_icon_path (old.replace("theme://", "")));
+        stdout.printf("translate theme: " + uri + "\n");
         return uri;
     }
 
-    public PanelMenuHTML () {
-        set_visual (Gdk.Screen.get_default ().get_rgba_visual ());
+    public PanelMenuHTML() {
+        set_visual(Gdk.Screen.get_default().get_rgba_visual());
 
-        Gdk.RGBA c = Gdk.RGBA();
-        c.red = 0.0;
-        c.blue = 0.0;
-        c.green = 0.0;
-        c.alpha = 0.0;
-        override_background_color(StateFlags.NORMAL, c);
+        Gdk.RGBA panel_color = Gdk.RGBA() {
+            red = 0.0, blue = 0.0, green = 0.0, alpha = 0.0
+        };
+        
+        set_background_color(panel_color);
         set_app_paintable(true);
 
-        set_transparent (true);
-        var settings = new WebSettings();
-        settings.enable_file_access_from_file_uris = true;
-        settings.enable_universal_access_from_file_uris = true;
+        var settings = new WebKit.Settings();
+        settings.set_enable_javascript(true);
+        settings.allow_file_access_from_file_urls = true;
+        settings.allow_universal_access_from_file_urls = true;
+        settings.set_hardware_acceleration_policy(WebKit.HardwareAccelerationPolicy.NEVER);
 
-        if (Environment.get_variable("MANOKWARI_DEBUG") == null) {
-            settings.enable_default_context_menu = false;
+        if (GLib.Environment.get_variable("MANOKWARI_DEBUG") == null) {
+            context_menu.connect((ctx_menu, event, hts) => {
+                return true;
+            });
         }
+        
         set_settings(settings);
+        
+        resource_load_started.connect((resource, request) => {
+            request.set_uri(resource.uri);
+        });
 
-        resource_request_starting.connect((frame, resource, request, response) => {
-            if (resource.uri.has_prefix("theme://")) {
-                request.set_uri(translate_theme(resource.uri));
-            } else {
-                var uri = translate_uri (resource.uri);
-                request.set_uri(uri);
+        handleEsc_ret = false;
+    }
+
+    public void start(string uri) {
+        if (uri.has_prefix("theme://")) {
+            load_uri(translate_theme(uri));
+        } else {
+            load_uri(translate_uri (uri));
+        }
+    }
+
+    public void triggerShowAnimation() {
+        run_javascript.begin("menu.prepareShow()", null, (obj, res) => {
+            try {
+                run_javascript.end(res);
+            } catch (Error e) {
+                stdout.printf("triggerShowAnimation: \"%s\"\n", e.message);
             }
         });
+    }
 
-        window_object_cleared.connect ((frame, context) => {
-            PanelXdgData.setup_js_class ((JSCore.GlobalContext) context);
-            Utils.setup_js_class ((JSCore.GlobalContext) context);
-            PanelPlaces.setup_js_class ((JSCore.GlobalContext) context);
-            PanelSessionManager.setup_js_class ((JSCore.GlobalContext) context);
-            PanelUser.setup_js_class ((JSCore.GlobalContext) context);
+    public void triggerHideAnimation() {
+        run_javascript.begin("menu.prepareHide()", null, (obj, res) => {
+            try {
+                run_javascript.end(res);
+            } catch (Error e) {
+                stdout.printf("triggerHideAnimation: \"%s\"\n", e.message);
+            }
         });
-    }
-
-    public void start() {
-        load_uri ("http://system/menu.html");
-    }
-
-    public void triggerShowAnimation () {
-        unowned JSCore.Context context = get_focused_frame ().get_global_context();
-        var s = new String.with_utf8_c_string ("menu.prepareShow()");
-        context.evaluate_script (s, null, null, 0, null);
-    }
-
-    public void triggerHideAnimation () {
-        unowned JSCore.Context context = get_focused_frame ().get_global_context();
-        var s = new String.with_utf8_c_string ("menu.prepareHide()");
-        context.evaluate_script (s, null, null, 0, null);
     }
 
     public bool handleEsc() {
-        unowned JSCore.Context context = get_focused_frame ().get_global_context();
-        var s = new String.with_utf8_c_string ("menu.handleEsc()");
-        var r = context.evaluate_script (s, null, null, 0, null);
-        if (r.is_boolean (context)) {
-            return r.to_boolean (context);
+        try {
+            run_javascript.begin("menu.handleEsc()", null, (obj, res) => {
+                WebKit.JavascriptResult ret = run_javascript.end(res);
+                unowned JS.GlobalContext ctx = ret.get_global_context();
+                unowned JS.Value val = ret.get_value();
+                if (val.is_boolean(ctx)) {
+                    this.handleEsc_ret = val.to_boolean(ctx);
+                }
+            });
+            return this.handleEsc_ret;
+        } catch (Error e) {
+            stdout.printf("handleEsc: \"%s\"\n", e.message);
         }
-
         return false;
     }
-
-
 }
-

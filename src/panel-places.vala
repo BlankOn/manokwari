@@ -1,12 +1,8 @@
-using Gtk;
-using GLib;
-using JSCore;
-
 public class PanelPlaces {
-    StringBuilder json;
-    static Context* jsContext;
+    static JSCore.Context* jsContext;
     JSCore.Object* jsObject;
 
+    private StringBuilder json;
     private VolumeMonitor vol_monitor;
     private File bookmark_file;
     private FileMonitor bookmark_monitor;
@@ -16,7 +12,6 @@ public class PanelPlaces {
 
     public PanelPlaces () {
         json = new StringBuilder ();
-
         vol_monitor = VolumeMonitor.get ();
         bookmark_file = File.new_for_path (Environment.get_home_dir () + "/.gtk-bookmarks");
         try {
@@ -26,7 +21,6 @@ public class PanelPlaces {
         }
 
         init_contents ();
-
         vol_monitor.mount_added.connect (() => {
             reset ();
         });
@@ -36,20 +30,16 @@ public class PanelPlaces {
         vol_monitor.mount_removed.connect (() => {
             reset ();
         });
-
         bookmark_monitor.changed.connect (() => {
             reset ();
         });
     }
 
     public void reset () {
-
         json.assign ("");
         init_contents ();
-
         if (jsContext != null && jsObject != null) {
-
-            var s = new String.with_utf8_c_string ("updateCallback");
+            var s = new JSCore.String.with_utf8_c_string ("updateCallback");
             var v = jsObject->get_property (jsContext, s, null);
             if (v != null) {
                 s = v.to_string_copy (jsContext, null);
@@ -72,7 +62,7 @@ public class PanelPlaces {
     private void setup_home () {
         var f = File.new_for_path (Environment.get_home_dir ());
         var s = "{icon: '%s', name: '%s', uri: '%s'},".printf(
-                    Utils.get_icon_path("gtk-home"),
+                    Helper.get_icon_path("gtk-home"),
                     _("Home"),
                     f.get_uri ()
                 );
@@ -81,10 +71,7 @@ public class PanelPlaces {
     }
 
     private void setup_special_dirs () {
-        json.append("{name: '%s', isHeader: true},".printf(
-                _("Bookmarks")
-            ));
-
+        json.append("{name: '%s', isHeader: true},".printf(_("Bookmarks")));
         for (int i = UserDirectory.DESKTOP; i < UserDirectory.N_DIRECTORIES; i ++) {
             var path = Environment.get_user_special_dir ((UserDirectory) i);
             if (path == null)
@@ -96,15 +83,12 @@ public class PanelPlaces {
 
             var f = File.new_for_path (path);
             var s = "{icon: '%s', name: '%s', uri: '%s'},".printf(
-                        Utils.get_icon_path(icon),
+                        Helper.get_icon_path(icon),
                         Filename.display_basename(path),
                         f.get_uri ()
                      );
-
             json.append (s);
-
         }
-
 
         if (bookmark_file.query_exists ()) {
             try {
@@ -114,7 +98,7 @@ public class PanelPlaces {
                     var fields = line.split (" ");
                     if (fields.length == 2) {
                         var s = "{icon: '%s', name: '%s', uri: '%s'},".printf(
-                                    Utils.get_icon_path("gtk-directory"),
+                                    Helper.get_icon_path("gtk-directory"),
                                     fields [1],
                                     fields [0]
                                  );
@@ -126,7 +110,6 @@ public class PanelPlaces {
                 stdout.printf ("Unable to read the bookmarks\n");
             }
         }
-
     }
 
     private void setup_mounts () {
@@ -146,7 +129,7 @@ public class PanelPlaces {
             }
 
             var s = "{icon: '%s', name: '%s', uri: '%s'},".printf(
-                        Utils.get_icon_path("drive-harddisk"),     // Utils.get_icon_path(mount.get_icon ().to_string ()),
+                        Helper.get_icon_path("drive-harddisk"),     // Helper.get_icon_path(mount.get_icon ().to_string ()),
                         mount.get_name (),
                         mount.get_root ().get_uri ()
                      );
@@ -154,20 +137,19 @@ public class PanelPlaces {
         }
     }
 
-    public static JSCore.Object js_constructor (Context ctx,
+    public static JSCore.Object js_constructor (JSCore.Context ctx,
             JSCore.Object constructor,
             JSCore.Value[] arguments,
             out JSCore.Value exception) {
 
         exception = null;
-        var c = new Class (js_class);
+        var c = new JSCore.Class (js_class);
         var o = new JSCore.Object (ctx, c, null);
-        var s = new String.with_utf8_c_string ("updateCallback");
+        var s = new JSCore.String.with_utf8_c_string ("updateCallback");
         var f = new JSCore.Object.function_with_callback (ctx, s, js_set_update_callback);
         o.set_property (ctx, s, f, 0, null);
 
-
-        s = new String.with_utf8_c_string ("update");
+        s = new JSCore.String.with_utf8_c_string ("update");
         f = new JSCore.Object.function_with_callback (ctx, s, js_update);
         o.set_property (ctx, s, f, 0, null);
         
@@ -177,44 +159,40 @@ public class PanelPlaces {
         return o;
     }
 
-    public static JSCore.Value js_set_update_callback (Context ctx,
+    public static JSCore.Value js_set_update_callback (JSCore.Context ctx,
             JSCore.Object function,
             JSCore.Object thisObject,
             JSCore.Value[] arguments,
-
             out JSCore.Value exception) {
 
         exception = null;
         var i = thisObject.get_private() as PanelPlaces; 
         if (i != null && arguments.length == 1) {
-            var s = new String.with_utf8_c_string ("updateCallback");
+            var s = new JSCore.String.with_utf8_c_string ("updateCallback");
             thisObject.set_property (ctx, s, arguments[0], 0, null);
         }
 
         return new JSCore.Value.undefined (ctx);
     }
 
-    public static JSCore.Value js_update (Context ctx,
+    public static JSCore.Value js_update (JSCore.Context ctx,
             JSCore.Object function,
             JSCore.Object thisObject,
             JSCore.Value[] arguments,
-
             out JSCore.Value exception) {
-
         exception = null;
         var i = thisObject.get_private() as PanelPlaces; 
         if (i != null) {
             var result = i.get_json();
-            var s = new String.with_utf8_c_string (result);
+            var s = new JSCore.String.with_utf8_c_string (result);
             return ctx.evaluate_script (s, null, null, 0, null);
         }
         return new JSCore.Value.undefined (ctx);
     }
 
-
-    const ClassDefinition js_class = {
+    const JSCore.ClassDefinition js_class = {
         0,
-        ClassAttribute.None,
+        JSCore.ClassAttribute.None,
         "Places",
         null,
 
@@ -236,17 +214,16 @@ public class PanelPlaces {
         null
     };
 
-    public static void setup_js_class (GlobalContext context) {
+    public static void setup_js_class (JSCore.GlobalContext context) {
         jsContext = context;
-        var c = new Class (js_class);
+        var c = new JSCore.Class (js_class);
         var o = new JSCore.Object (context, c, context);
         var g = context.get_global_object ();
-        var s = new String.with_utf8_c_string ("Places");
-        g.set_property (context, s, o, PropertyAttribute.None, null);
+        var s = new JSCore.String.with_utf8_c_string ("Places");
+        g.set_property (context, s, o, JSCore.PropertyAttribute.None, null);
     }
 
     string get_json () {
         return json.str;
     }
-
 }

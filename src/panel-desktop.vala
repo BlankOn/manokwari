@@ -1,8 +1,3 @@
-using Gtk;
-using Cairo;
-using GMenu;
-
-
 public class PanelDesktop: PanelAbstractWindow {
     PanelDesktopHTML desktop;
 
@@ -11,12 +6,11 @@ public class PanelDesktop: PanelAbstractWindow {
     public PanelDesktop() {
         set_visual (this.screen.get_rgba_visual ());
 
-        Gdk.RGBA c = Gdk.RGBA();
-        c.red = 0.0;
-        c.blue = 0.0;
-        c.green = 0.0;
-        c.alpha = 0.0;
-        override_background_color(StateFlags.NORMAL, c);
+        Gdk.RGBA color = Gdk.RGBA() {
+            red = 0.0, blue = 0.0, green = 0.0, alpha = 0.0
+        };
+
+        override_background_color(Gtk.StateFlags.NORMAL, color);
         set_app_paintable(true);
 
         desktop = new PanelDesktopHTML ();
@@ -59,7 +53,8 @@ public class PanelDesktop: PanelAbstractWindow {
         PanelScreen.move_window (this, Gdk.Gravity.NORTH_EAST);
 
         queue_resize ();
-        desktop.updateSize();
+        // TODO: Webkit2
+        //  desktop.updateSize();
         stderr.printf("iii %d %d <--\n", screen.width(), screen.height());
     }
 
@@ -72,7 +67,4 @@ public class PanelDesktop: PanelAbstractWindow {
         var r = PanelScreen.get_primary_monitor_geometry ().height;
         min = max = r;
     }
-
-
 }
-

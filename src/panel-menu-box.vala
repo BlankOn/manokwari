@@ -1,5 +1,3 @@
-using Gtk;
-
 public class PanelMenuBox : PanelAbstractWindow {
     private const int COLUMN_WIDTH = 265;
 
@@ -29,16 +27,15 @@ public class PanelMenuBox : PanelAbstractWindow {
         set_title ("_manokwari_menu_");
         set_visual (this.screen.get_rgba_visual ());
 
-        Gdk.RGBA c = Gdk.RGBA();
-        c.red = 0.0;
-        c.blue = 0.0;
-        c.green = 0.0;
-        c.alpha = 0.0;
-        override_background_color(StateFlags.NORMAL, c);
+        Gdk.RGBA color = Gdk.RGBA() {
+            red = 0.0, blue = 0.0, green = 0.0, alpha = 0.0
+        };
+
+        override_background_color(Gtk.StateFlags.NORMAL, color);
         set_app_paintable(true);
 
         PanelScreen.move_window (this, Gdk.Gravity.NORTH_WEST);
-        view.start();
+        view.start("http://system/menu.html");
 
         hide ();
 

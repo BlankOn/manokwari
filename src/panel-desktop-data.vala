@@ -1,14 +1,8 @@
-using GMenu;
-using GLib;
-using JSCore;
-using Gtk;
-
 // This class prepares data in desktop 
 public class PanelDesktopData {
-
     FileMonitor desktop_monitor = null;
     StringBuilder json; // use StringBuilder to avoid appending immutable strings
-    static Context* jsContext;
+    static JSCore.Context* jsContext;
     JSCore.Object* jsObject;
     uint scheduled = 0;
     uint64 last_schedule = 0;
@@ -53,7 +47,7 @@ public class PanelDesktopData {
     bool kick_js () {
         if (jsContext != null && jsObject != null) {
 
-            var s = new String.with_utf8_c_string ("updateCallback");
+            var s = new JSCore.String.with_utf8_c_string ("updateCallback");
             var v = jsObject->get_property (jsContext, s, null);
             if (v != null) {
                 s = v.to_string_copy (jsContext, null);
@@ -96,7 +90,7 @@ public class PanelDesktopData {
                 if (name.has_suffix (".desktop")) {
                     var info = new DesktopAppInfo.from_filename (path + "/" + name);
                     var s = "{icon: '%s', name: '%s', desktop: '%s'},".printf(
-                                Utils.get_icon_path(info.get_icon ().to_string (), 120),
+                                Helper.get_icon_path(info.get_icon ().to_string (), 120),
                                 info.get_name (),
                                 name
                             );
@@ -129,18 +123,18 @@ public class PanelDesktopData {
         };
     }
 
-    public static JSCore.Object js_constructor (Context ctx,
+    public static JSCore.Object js_constructor (JSCore.Context ctx,
             JSCore.Object constructor,
             JSCore.Value[] arguments,
             out JSCore.Value exception) {
 
         exception = null;
-        var c = new Class (js_class);
+        var c = new JSCore.Class (js_class);
         var o = new JSCore.Object (ctx, c, null);
-        var s = new String.with_utf8_c_string ("update");
+        var s = new JSCore.String.with_utf8_c_string ("update");
         var f = new JSCore.Object.function_with_callback (ctx, s, js_update);
         o.set_property (ctx, s, f, 0, null);
-        s = new String.with_utf8_c_string ("updateCallback");
+        s = new JSCore.String.with_utf8_c_string ("updateCallback");
         f = new JSCore.Object.function_with_callback (ctx, s, js_set_update_callback);
         o.set_property (ctx, s, f, 0, null);
 
@@ -150,7 +144,7 @@ public class PanelDesktopData {
         return o;
     }
 
-    public static JSCore.Value js_set_update_callback (Context ctx,
+    public static JSCore.Value js_set_update_callback (JSCore.Context ctx,
             JSCore.Object function,
             JSCore.Object thisObject,
             JSCore.Value[] arguments,
@@ -160,14 +154,14 @@ public class PanelDesktopData {
         exception = null;
         var i = thisObject.get_private() as PanelDesktopData; 
         if (i != null && arguments.length == 1) {
-            var s = new String.with_utf8_c_string ("updateCallback");
+            var s = new JSCore.String.with_utf8_c_string ("updateCallback");
             thisObject.set_property (ctx, s, arguments[0], 0, null);
         }
 
         return new JSCore.Value.undefined (ctx);
     }
 
-    public static JSCore.Value js_update (Context ctx,
+    public static JSCore.Value js_update (JSCore.Context ctx,
             JSCore.Object function,
             JSCore.Object thisObject,
             JSCore.Value[] arguments,
@@ -178,7 +172,7 @@ public class PanelDesktopData {
         var i = thisObject.get_private() as PanelDesktopData;
         if (i != null) {
             i.populate ();
-            var s = new String.with_utf8_c_string (i.json.str);
+            var s = new JSCore.String.with_utf8_c_string (i.json.str);
             var r = ctx.evaluate_script (s, null, null, 0, null);
             s = null;
             i.json.assign ("");
@@ -187,7 +181,7 @@ public class PanelDesktopData {
         return new JSCore.Value.undefined (ctx);
     }
 
-    public static JSCore.Value js_remove_from_desktop (Context ctx,
+    public static JSCore.Value js_remove_from_desktop (JSCore.Context ctx,
             JSCore.Object function,
             JSCore.Object thisObject,
             JSCore.Value[] arguments,
@@ -205,13 +199,13 @@ public class PanelDesktopData {
     }
 
     const JSCore.StaticFunction[] js_funcs = {
-        { "removeFromDesktop", js_remove_from_desktop, PropertyAttribute.ReadOnly },
+        { "removeFromDesktop", js_remove_from_desktop, JSCore.PropertyAttribute.ReadOnly },
         { null, null, 0 }
     };
 
-    const ClassDefinition js_class = {
+    const JSCore.ClassDefinition js_class = {
         0,
-        ClassAttribute.None,
+        JSCore.ClassAttribute.None,
         "DesktopData",
         null,
 
@@ -234,13 +228,13 @@ public class PanelDesktopData {
     };
 
 
-    public static void setup_js_class (GlobalContext context) {
+    public static void setup_js_class (JSCore.GlobalContext context) {
         jsContext = context;
-        var c = new Class (js_class);
+        var c = new JSCore.Class (js_class);
         var o = new JSCore.Object (context, c, context);
         var g = context.get_global_object ();
-        var s = new String.with_utf8_c_string ("DesktopData");
-        g.set_property (context, s, o, PropertyAttribute.None, null);
+        var s = new JSCore.String.with_utf8_c_string ("DesktopData");
+        g.set_property (context, s, o, JSCore.PropertyAttribute.None, null);
     }
 
 }

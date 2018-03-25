@@ -183,41 +183,13 @@ var desktop = (function() {
   var refresh = function() {
     setupLauncher();
   }
-
-  var setBackground = function(file) { 
-    if (file) {
-      // reset 
-      xmlBg.reset();
-      // ends with
-      if (file.split('.').pop() == 'xml') {
-        // set xml file
-        xmlBg.load(file);
-      } else {
-        // set background url
-        $('#bg').css('background-image', 'url(' + file + ')');
-      }
-      return true;
-    } else {
-      //
-      return false;
-    }
-  }
     
   return { 
     init: init, 
     refresh: refresh, 
-    setBackground: setBackground 
   }
 })();
 
 $(document).ready(function() {
    desktop.init();
-   // to do testing using local file, we can do following test:
-   //
-   //
-   desktop.setBackground('file:///Users/diorahman/Experiments/projects/blankon/dir/temp/themes/Adwaita/backgrounds/adwaita-timed.xml');
-
-  // setTimeout(function(){
-  //    desktop.setBackground('file:///Users/diorahman/Experiments/projects/blankon/dir/temp/themes/Adwaita/backgrounds/good-night.jpg');
-  // }, 1000);
 });

@@ -1,6 +1,4 @@
-using Gtk;
-int main (string[] args) {
-
+static int main (string[] args) {
     var settings = new GLib.Settings ("org.gnome.system.locale");
     var region = settings.get_string ("region");
 
@@ -22,39 +20,35 @@ int main (string[] args) {
  
     Gtk.init (ref args);
 
+    var context = WebKit.WebContext.get_default();
+    context.set_cache_model(WebKit.CacheModel.DOCUMENT_VIEWER);
+    context.initialize_web_extensions.connect((event) => {
+        GLib.print("SIGNAL: initialize-web-extensions (webext): " + Config.SYSTEM_PATH + "\n");
+        context.set_web_extensions_directory(Config.SYSTEM_PATH);
+        return;
+    });
+
     var id = GLib.Environment.get_variable("DESKTOP_AUTOSTART_ID");
     var app = new Unique.App ("id.or.blankonlinux.Manokwari", id);
     if (app.is_running ()) {
         stdout.printf ("Manokwari is already running.\n");
-        return 0;    
+        return 0;
     }
 
-    PanelSessionManager.getInstance ();
-    Bus.own_name(
-        BusType.SESSION,
-        "org.gnome.Panel",
-        0,
-        () => {},
-        () => {},
-        () => {
-          stderr.printf ("Unable to claim Panel from gnome-session");
-        }
-    );
-
     // Shell
-    var shell = new PanelShell();
+    var manoshell = new PanelShell();
 
     // Desktop
-    var d = new PanelDesktop ();
-    d.show ();
+    var manodesk = new PanelDesktop ();
+    manodesk.show ();
 
     // Window 
-    var w = new PanelWindowHost ();
-    w.show();
+    var manowin = new PanelWindowHost ();
+    manowin.show();
 
     var menu_box = new PanelMenuBox();
     // SIGNALS
-    w.menu_clicked.connect (() => {
+    manowin.menu_clicked.connect (() => {
         if (menu_box.visible) {
             menu_box.try_hide ();
         } else {
@@ -63,24 +57,23 @@ int main (string[] args) {
         }
     });
 
-    w.dialog_opened.connect (() => {
+    manowin.dialog_opened.connect (() => {
         if (menu_box.visible) {
             menu_box.try_hide ();
         }
     });
 
-    d.desktop_clicked.connect (() => {
+    manodesk.desktop_clicked.connect (() => {
         if (menu_box.visible) {
             menu_box.try_hide ();
         }
     });
 
-    w.windows_visible.connect (() => {
+    manowin.windows_visible.connect (() => {
         if (menu_box.visible) {
             menu_box.try_hide ();
         }
     });
-
 
     Gtk.main ();
     return 0;

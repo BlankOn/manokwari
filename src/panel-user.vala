@@ -1,6 +1,3 @@
-using Gtk;
-using JSCore;
-
 [DBus (name = "org.freedesktop.Accounts")]
 interface XdgAccounts: GLib.Object {
     public abstract void find_user_by_name (string user, out ObjectPath path) throws IOError;
@@ -28,13 +25,13 @@ public class PanelUser {
             if (user == null || 
                 user.icon_file == null ||
                 user.icon_file == "") {
-                return Utils.get_icon_path("avatar-default");
+                return Helper.get_icon_path("avatar-default");
             }
             var f = File.new_for_path(user.icon_file);
             if (f.query_exists()) {
                 return user.icon_file;
             } else {
-                return Utils.get_icon_path("avatar-default");
+                return Helper.get_icon_path("avatar-default");
             }
         }
     }
@@ -81,24 +78,24 @@ public class PanelUser {
         }
     }
 
-    public static JSCore.Object js_constructor (Context ctx,
+    public static JSCore.Object js_constructor (JSCore.Context ctx,
             JSCore.Object constructor,
             JSCore.Value[] arguments,
             out JSCore.Value exception) {
 
         exception = null;
-        var c = new Class (js_class);
+        var c = new JSCore.Class (js_class);
         var o = new JSCore.Object (ctx, c, null);
         PanelUser* i = new PanelUser ();
-        var s = new String.with_utf8_c_string ("getRealName");
+        var s = new JSCore.String.with_utf8_c_string ("getRealName");
         var f = new JSCore.Object.function_with_callback (ctx, s, js_get_real_name);
         o.set_property (ctx, s, f, 0, null);
  
-        s = new String.with_utf8_c_string ("getHostName");
+        s = new JSCore.String.with_utf8_c_string ("getHostName");
         f = new JSCore.Object.function_with_callback (ctx, s, js_get_host_name);
         o.set_property (ctx, s, f, 0, null);
 
-        s = new String.with_utf8_c_string ("getIconFile");
+        s = new JSCore.String.with_utf8_c_string ("getIconFile");
         f = new JSCore.Object.function_with_callback (ctx, s, js_get_icon_file);
         o.set_property (ctx, s, f, 0, null);
 
@@ -106,7 +103,7 @@ public class PanelUser {
         return o;
     }
 
-    public static JSCore.Value js_get_real_name (Context ctx,
+    public static JSCore.Value js_get_real_name (JSCore.Context ctx,
             JSCore.Object function,
             JSCore.Object thisObject,
             JSCore.Value[] arguments,
@@ -117,13 +114,13 @@ public class PanelUser {
         var i = thisObject.get_private() as PanelUser;
         if (i != null) {
             i.update ();
-            var s = new String.with_utf8_c_string (i.real_name);
+            var s = new JSCore.String.with_utf8_c_string (i.real_name);
             return new JSCore.Value.string (ctx, s);
         }
         return new JSCore.Value.undefined (ctx);
     }
 
-    public static JSCore.Value js_get_host_name (Context ctx,
+    public static JSCore.Value js_get_host_name (JSCore.Context ctx,
             JSCore.Object function,
             JSCore.Object thisObject,
             JSCore.Value[] arguments,
@@ -133,13 +130,13 @@ public class PanelUser {
         exception = null;
         var i = thisObject.get_private() as PanelUser;
         if (i != null) {
-            var s = new String.with_utf8_c_string (GLib.Environment.get_host_name ());
+            var s = new JSCore.String.with_utf8_c_string (GLib.Environment.get_host_name ());
             return new JSCore.Value.string (ctx, s);
         }
         return new JSCore.Value.undefined (ctx);
     }
 
-    public static JSCore.Value js_get_icon_file (Context ctx,
+    public static JSCore.Value js_get_icon_file (JSCore.Context ctx,
             JSCore.Object function,
             JSCore.Object thisObject,
             JSCore.Value[] arguments,
@@ -150,15 +147,15 @@ public class PanelUser {
         var i = thisObject.get_private() as PanelUser;
         if (i != null) {
             i.update ();
-            var s = new String.with_utf8_c_string (i.icon_file);
+            var s = new JSCore.String.with_utf8_c_string (i.icon_file);
             return new JSCore.Value.string (ctx, s);
         }
         return new JSCore.Value.undefined (ctx);
     }
 
-    const ClassDefinition js_class = {
+    const JSCore.ClassDefinition js_class = {
         0,
-        ClassAttribute.None,
+        JSCore.ClassAttribute.None,
         "UserAccount",
         null,
 
@@ -181,12 +178,12 @@ public class PanelUser {
     };
 
 
-    public static void setup_js_class (GlobalContext context) {
-        var c = new Class (js_class);
+    public static void setup_js_class (JSCore.GlobalContext context) {
+        var c = new JSCore.Class (js_class);
         var o = new JSCore.Object (context, c, context);
         var g = context.get_global_object ();
-        var s = new String.with_utf8_c_string ("UserAccount");
-        g.set_property (context, s, o, PropertyAttribute.None, null);
+        var s = new JSCore.String.with_utf8_c_string ("UserAccount");
+        g.set_property (context, s, o, JSCore.PropertyAttribute.None, null);
     }
 
 }
