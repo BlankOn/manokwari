@@ -41,7 +41,7 @@ function RunSound() {
   Utils.run_command("gnome-control-center sound");
 }
 function RunInfo() {
-  Utils.run_command("gnome-control-center info");
+  Utils.run_command("gnome-control-center info-overview");
 }
 function RunBluetooth() {
   Utils.run_command("gnome-control-center bluetooth");
