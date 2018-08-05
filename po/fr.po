@@ -1,0 +1,184 @@
+# BlankOn Panel
+# Copyright (C) 2011 THE blankon-panel'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the blankon-panel package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: blankon-panel VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-07-19 19:34+0000\n"
+"PO-Revision-Date: 2018-01-28 22:35+0300\n"
+"Last-Translator: Max le Fou <buttbadger (at) gmail dot com>, 2011.\n"
+"Language-Team: French <blankon-dev@googlegroups.com>\n"
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.0.6\n"
+
+#: ../src/panel-menu-box.vala:104 ../src/panel-menu-favorites.vala:139
+#: src/panel-menu-favorites.vala:173
+msgid "Favorites"
+msgstr "Favoris"
+
+#: ../src/panel-menu-box.vala:113 ../src/panel-menu-box.vala:126
+#: ../src/panel-menu-box.vala:134 src/panel-menu-box.vala:122
+msgid "All applications"
+msgstr "Toutes les applications"
+
+#: ../src/panel-menu-box.vala:117 ../src/panel-menu-box.vala:175
+#: ../src/panel-menu-box.vala:130 ../src/panel-menu-box.vala:196
+#: ../src/panel-menu-box.vala:138 ../src/panel-menu-box.vala:217
+#: src/panel-menu-box.vala:127 src/panel-menu-box.vala:226
+msgid "Settings"
+msgstr "Paramètres"
+
+#: ../src/panel-menu-box.vala:121 ../src/panel-menu-box.vala:134
+#: ../src/panel-places.vala:13 ../src/panel-menu-box.vala:142
+#: src/panel-menu-box.vala:132 src/panel-places.vala:13
+msgid "Places"
+msgstr "Répertoires"
+
+#: ../src/panel-menu-box.vala:126 ../src/panel-menu-box.vala:139
+#: ../src/panel-menu-box.vala:157 src/panel-menu-box.vala:162
+msgid "Logout..."
+msgstr "Déconnexion"
+
+#: ../src/panel-menu-box.vala:134 ../src/panel-menu-box.vala:153
+#: ../src/panel-menu-box.vala:171 src/panel-menu-box.vala:177
+msgid "Shutdown..."
+msgstr "Eteindre"
+
+#. All application (2nd) column
+#: ../src/panel-menu-box.vala:160 ../src/panel-menu-box.vala:183
+#: ../src/panel-menu-box.vala:201 src/panel-menu-box.vala:209
+msgid "Applications"
+msgstr "Applications"
+
+#: ../src/panel-places.vala:54 ../src/panel-places.vala:58
+#: src/panel-places.vala:58
+msgid "Home"
+msgstr "Accueil"
+
+#: ../src/panel-places.vala:98 ../src/panel-places.vala:171
+#: ../src/panel-places.vala:102 ../src/panel-places.vala:176
+#: ../src/panel-places.vala:180 src/panel-places.vala:102
+#: src/panel-places.vala:180
+#, c-format
+msgid "Error opening '%s': %s"
+msgstr "Erreur à l'ouverture de '%s' : %s"
+
+#: ../src/panel-places.vala:128 ../src/panel-places.vala:133
+#: ../src/panel-places.vala:137 src/panel-places.vala:137
+#, c-format
+msgid "Error opening mount point '%s': %s"
+msgstr "Erreur au montage de '%s' : %s"
+
+#: ../src/panel-places.vala:136 ../src/panel-places.vala:141
+#: ../src/panel-places.vala:145 src/panel-places.vala:145
+msgid "Network"
+msgstr "Réseau"
+
+#: ../src/panel-places.vala:145 ../src/panel-places.vala:158
+#: ../src/panel-places.vala:150 ../src/panel-places.vala:163
+#: ../src/panel-places.vala:154 ../src/panel-places.vala:167
+#: src/panel-places.vala:154 src/panel-places.vala:167
+#, c-format
+msgid "Error opening Network: %s"
+msgstr "Erreur d'ouverture réseau : %s"
+
+#: ../src/panel-places.vala:148 ../src/panel-places.vala:153
+#: ../src/panel-places.vala:157 src/panel-places.vala:157
+msgid "Connect to server..."
+msgstr "Connexion au serveur..."
+
+#: ../src/panel-clock.vala:15
+msgid "%I:%M"
+msgstr "%H:%M"
+
+#: ../src/panel-clock.vala:16 src/panel-clock.vala:20
+msgid "%a, %e %b %Y"
+msgstr "%a, %e %b %Y"
+
+#: ../src/panel-menu-box.vala:147 ../src/panel-menu-box.vala:165
+#: src/panel-menu-box.vala:171
+#, c-format
+msgid "Unable to logout: %s"
+msgstr "Déconnexion impossible : %s"
+
+#: ../src/panel-menu-box.vala:161 ../src/panel-menu-box.vala:179
+#: src/panel-menu-box.vala:186
+#, c-format
+msgid "Unable to shutdown: %s"
+msgstr "Extinction impossible: %s"
+
+#: ../src/panel-menu-favorites.vala:170 ../src/panel-menu-xdg.vala:54
+#: ../src/panel-menu-xdg.vala:55 src/panel-menu-favorites.vala:205
+#: src/panel-menu-xdg.vala:55
+#, c-format
+msgid "Error opening menu item %s: %s"
+msgstr "Erreur à l'ouverture de %s : %s"
+
+#: ../src/panel-menu-favorites.vala:196 src/panel-menu-favorites.vala:231
+msgid "Remove from Favorites"
+msgstr "Supprimer des favoris"
+
+#: ../src/panel-menu-xdg.vala:89 ../src/panel-menu-xdg.vala:90
+#: src/panel-menu-xdg.vala:90
+msgid "Add to Favorites"
+msgstr "Ajouter aux favoris"
+
+#: ../src/panel-menu-xdg.vala:97 ../src/panel-menu-xdg.vala:98
+#: src/panel-menu-xdg.vala:98
+#, c-format
+msgid "Add to %s"
+msgstr "Ajouter à %s"
+
+#: ../src/panel-menu-xdg.vala:122 ../src/panel-menu-xdg.vala:123
+#: src/panel-menu-xdg.vala:123
+#, c-format
+msgid "Shortcut %s already exists in %s"
+msgstr "Le raccourci %s existe déjà dans %s"
+
+#: ../src/panel-menu-xdg.vala:132 ../src/panel-menu-xdg.vala:133
+#: src/panel-menu-xdg.vala:133
+#, c-format
+msgid "Unable to read %s: %s"
+msgstr "Impossible de lire %s : %s"
+
+#: ../src/panel-menu-xdg.vala:140 ../src/panel-menu-xdg.vala:141
+#: src/panel-menu-xdg.vala:141
+#, c-format
+msgid "Unable to create %s shortcut in %s: %s"
+msgstr "Impossible de créer le raccourci %s dans %s : %s"
+
+#: ../src/panel-menu-xdg.vala:155 ../src/panel-menu-xdg.vala:156
+#: src/panel-menu-xdg.vala:156
+#, c-format
+msgid "Unable to write %s shortcut in %s: %s"
+msgstr "Impossible d'écrire le raccourci %s dans %s : %s"
+
+#: ../src/panel-window.vala:44 ../src/panel-window.vala:45
+#: src/panel-window.vala:26
+msgid "Click here to hide all windows and show desktop"
+msgstr "Cliquez ici pour cacher toutes les fenêtres et afficher le bureau"
+
+#: ../src/panel-menu-box.vala:146 src/panel-menu-box.vala:149
+msgid "Lock Screen"
+msgstr "Verrouiller l'écran"
+
+#: ../src/panel-menu-box.vala:152 src/panel-menu-box.vala:156
+msgid "Unable to lock screen"
+msgstr "Impossible de verrouiller l'écran"
+
+#: src/panel-clock.vala:19
+msgid "%H:%M"
+msgstr "%H:%M"
+
+#: src/panel-menu-box.vala:137
+msgid "Search..."
+msgstr "Rechercher..."
+
+#: src/panel-menu-box.vala:144
+msgid "Unable to search"
+msgstr "Recherche impossible"
