@@ -44,6 +44,7 @@ dep_unique = dependency('unique-3.0', version: '>= 3.0.0')
 dep_webkit = dependency('webkitgtk-3.0', version: '>= 1.3.0')
 dep_x11 = dependency('x11', version: '>= 1.6.0')
 dep_libnotify = dependency('libnotify', version: '>= 0.7.6')
+dep_gsd = dependency('gnome-settings-daemon', version: gnome_minimum_version)
 
 # Create config.h
 cdata = configuration_data()

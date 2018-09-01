@@ -1,0 +1,3 @@
+[GNOME Session]
+Name=Manokwari
+RequiredComponents=@SESSION_COMPONENTS@;
