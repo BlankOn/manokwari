@@ -5,6 +5,7 @@ langs = [
     'id',
     'jv',
     'su',
+    'fr',
 ]
 
 # Stole this from gnome-twitch, ty TingPing
